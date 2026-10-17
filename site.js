@@ -1,10 +1,22 @@
-// Loads approved reviews onto the home page from the Submit Later backend
-// (server/report-mailer.gs). Paste the same Web app URL as REPORT_URL in the
-// extension's config.js. While empty, the reviews section stays hidden.
+// Chrome Web Store page for Submit Later, e.g.
+// 'https://chromewebstore.google.com/detail/submit-later/<extension-id>'.
+// While empty, the "Add to Chrome" buttons stay hidden.
+const STORE_URL = '';
+
+// Submit Later backend (server/report-mailer.gs): the same Web app URL as
+// REPORT_URL in the extension's config.js. Loads approved reviews onto the
+// home page. While empty, the reviews section stays hidden.
 const BACKEND_URL = '';
 
+if (STORE_URL) {
+  document.querySelectorAll('[data-store-link]').forEach((a) => {
+    a.href = STORE_URL;
+    a.hidden = false;
+  });
+}
+
 (async () => {
-  if (!BACKEND_URL) return;
+  if (!BACKEND_URL || !document.getElementById('testimonials')) return;
   try {
     const res = await fetch(`${BACKEND_URL}?action=testimonials`);
     const data = await res.json();

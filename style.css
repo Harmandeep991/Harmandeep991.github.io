@@ -198,3 +198,7 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; }
 .testimonial figcaption { margin-top: auto; font-weight: 700; font-size: 14.5px; }
 .testimonial figcaption small { color: var(--muted); font-weight: 500; }
 @media (max-width: 820px) { .testimonials { grid-template-columns: 1fr; } }
+
+/* "Add to Chrome" in the header */
+.nav-cta { margin-left: 6px; color: #fff !important; background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+.nav-cta:hover { filter: brightness(1.08); }
