@@ -212,6 +212,8 @@ function initStrength(input, meter) {
 
 function signedIn(result) {
   session.set({ accessToken: result.accessToken, refreshToken: result.refreshToken, user: result.user });
+  // The theme saved on the account follows you to this browser.
+  if (result.user?.prefs) globalThis.SLTheme?.adopt(result.user.prefs);
   const plan = PLANS[params.get('plan')] ? `?buy=${params.get('plan')}` : '';
   location.href = safeNext(params.get('from') === 'extension' ? 'account.html?connect=1' : `account.html${plan}`);
 }
@@ -937,6 +939,16 @@ async function initAccount() {
   acct.user = me.user;
   acct.plan = me.plan;
   session.set({ ...session.get(), user: me.user });
+  // Theme: the account's choice wins; a first choice made here is saved to it.
+  // Changes from the picker are saved to the account and the extension.
+  if (globalThis.SLTheme) {
+    if (me.user.prefs) SLTheme.adopt(me.user.prefs);
+    else api('/me', { method: 'PATCH', body: { prefs: SLTheme.get() } }).catch(() => {});
+    SLTheme.onChange((prefs) => {
+      api('/me', { method: 'PATCH', body: { prefs } }).catch(() => {});
+      if (acct.ext === 'connected') toExtension({ type: 'theme', ...prefs });
+    });
+  }
   if (PAY_MSG[pay]) {
     notice(box, ...PAY_MSG[pay]);
     if (!location.hash) showView(pay === 'success' ? 'invoices' : 'billing');

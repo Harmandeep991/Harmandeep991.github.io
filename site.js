@@ -32,6 +32,27 @@ if (hasSession) {
   });
 }
 
+// Header: highlight the current page, and the menu button on small screens.
+const here = location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.main-nav a').forEach((a) => {
+  if (a.getAttribute('href') === here) a.classList.add('on');
+});
+const menuBtn = document.querySelector('.menu-btn');
+const mainNav = document.getElementById('main-nav');
+if (menuBtn && mainNav) {
+  const setOpen = (open) => {
+    mainNav.classList.toggle('open', open);
+    menuBtn.setAttribute('aria-expanded', String(open));
+  };
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setOpen(!mainNav.classList.contains('open'));
+  });
+  mainNav.addEventListener('click', (e) => e.target.closest('a') && setOpen(false));
+  document.addEventListener('click', (e) => !e.target.closest('.top') && setOpen(false));
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
+}
+
 // Use-case filter on the home page. Without JS every card simply shows.
 const filters = document.querySelector('.filters');
 if (filters) {

@@ -28,7 +28,7 @@
 .um-name { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .av {
   width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; flex: none;
-  color: #fff; font-weight: 700; font-size: 13px; background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: #fff; font-weight: 700; font-size: 13px; background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
 }
 .av.lg { width: 56px; height: 56px; font-size: 22px; }
 .um-pop {
@@ -64,8 +64,8 @@
 
 .nav-plan {
   padding: 16px; border-radius: 16px; color: #fff;
-  background: radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.22), transparent 60%), linear-gradient(140deg, #4f46e5, #7c3aed);
-  box-shadow: 0 14px 30px color-mix(in srgb, #4f46e5 30%, transparent);
+  background: radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.22), transparent 60%), linear-gradient(140deg, var(--brand-1), var(--brand-2));
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--brand-1) 30%, transparent);
 }
 .nav-plan[data-status="active"] { background: radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.2), transparent 60%), linear-gradient(140deg, #059669, #0d9488); box-shadow: 0 14px 30px rgba(5, 150, 105, 0.25); }
 .nav-plan[data-status="expired"] { background: radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.2), transparent 60%), linear-gradient(140deg, #ea580c, #db2777); box-shadow: 0 14px 30px rgba(234, 88, 12, 0.25); }
@@ -74,7 +74,7 @@
 .mini-bar { height: 6px; border-radius: 3px; overflow: hidden; background: rgba(255, 255, 255, 0.25); }
 .mini-bar i { display: block; height: 100%; border-radius: 3px; background: #fff; }
 .nav-plan p { margin: 10px 0 12px; font-size: 13px; line-height: 1.45; opacity: 0.88; }
-.nav-plan a { display: block; padding: 9px; border-radius: 10px; text-align: center; font-weight: 700; font-size: 13.5px; color: #4338ca; background: #fff; }
+.nav-plan a { display: block; padding: 9px; border-radius: 10px; text-align: center; font-weight: 700; font-size: 13.5px; color: var(--brand-1); background: #fff; }
 .nav-plan a:hover { text-decoration: none; filter: brightness(0.97); }
 
 /* ---- Views ---- */
@@ -118,7 +118,7 @@ a.card:hover { text-decoration: none; border-color: color-mix(in srgb, var(--acc
 a.stat:hover .stat-link svg { transform: translateX(3px); }
 
 .bar { height: 6px; border-radius: 3px; overflow: hidden; background: var(--soft); }
-.bar > i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #6366f1, #a855f7); transition: width 0.5s; }
+.bar > i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--brand-1), var(--brand-2)); transition: width 0.5s; }
 .bar.ok > i { background: linear-gradient(90deg, #34d399, #059669); }
 
 /* Checklist */
@@ -139,7 +139,7 @@ a.stat:hover .stat-link svg { transform: translateX(3px); }
 .how h2 { margin-bottom: 16px; }
 .how-steps { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 14px; }
 .how-steps li { display: flex; gap: 14px; }
-.how-steps li > span { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; flex: none; font-weight: 800; font-size: 13.5px; color: #fff; background: linear-gradient(135deg, #6366f1, #a855f7); }
+.how-steps li > span { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; flex: none; font-weight: 800; font-size: 13.5px; color: #fff; background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); }
 .how-steps b { font-size: 14.5px; }
 .how-steps p { margin: 2px 0 0; color: var(--muted); font-size: 13.5px; }
 
@@ -154,7 +154,7 @@ a.stat:hover .stat-link svg { transform: translateX(3px); }
 
 /* ---- Billing ---- */
 .plan-now { display: flex; align-items: center; gap: 32px; position: relative; overflow: hidden; }
-.plan-now::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: linear-gradient(90deg, #6366f1, #a855f7); }
+.plan-now::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: linear-gradient(90deg, var(--brand-1), var(--brand-2)); }
 .plan-now[data-status="active"]::before { background: linear-gradient(90deg, #34d399, #059669); }
 .plan-now[data-status="expired"]::before { background: linear-gradient(90deg, #f59e0b, #ef4444); }
 .ring { position: relative; width: 132px; height: 132px; flex: none; }

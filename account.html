@@ -7,6 +7,10 @@
 <meta name="description" content="Manage your Submit Later plan, invoices, extension and profile.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="icon32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="auth.css">
 <link rel="stylesheet" href="dashboard.css">
@@ -14,7 +18,7 @@
 <body data-page="account" class="dash-body">
 <svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
   <defs>
-    <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#a855f7"/></linearGradient>
+    <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--brand-1)"/><stop offset="1" style="stop-color:var(--brand-2)"/></linearGradient>
     <linearGradient id="rg-ok" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#059669"/></linearGradient>
     <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
     <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></g></symbol>
@@ -43,6 +47,7 @@
     <div class="dash-top-r">
       <a class="dash-link" href="index.html">Website</a>
       <a class="dash-link" href="contact.html">Help</a>
+      <button type="button" class="theme-btn" data-theme-btn aria-label="Choose a theme" title="Theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.9 0-.5-.2-.9-.5-1.3-.3-.3-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="10" cy="7.5" r="1.2"/><circle cx="14.5" cy="7.5" r="1.2"/></svg></button>
       <div class="user-menu">
         <button id="um-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="um-pop"><span class="av" id="um-av">·</span><span class="um-name" id="um-name">Account</span><svg class="chev"><use href="#i-chev"/></svg></button>
         <div class="um-pop" id="um-pop" role="menu" hidden>

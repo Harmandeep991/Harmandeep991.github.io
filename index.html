@@ -14,6 +14,10 @@
 <meta property="og:image" content="https://submitlater.co.in/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="icon32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later","applicationCategory":"BrowserApplication","operatingSystem":"Google Chrome","description":"Submit Later is a free Chrome extension that presses any button at the exact time you choose: schedule WhatsApp Web and Discord messages, auto-submit Google Forms, join Google Meet or Zoom automatically, and register the second a form opens.","url":"https://submitlater.co.in/","downloadUrl":"https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"INR"},{"@type":"Offer","name":"Pro Monthly","price":"49","priceCurrency":"INR"},{"@type":"Offer","name":"Pro Annual","price":"399","priceCurrency":"INR"}]}
@@ -23,56 +27,173 @@
 <header class="top">
   <div class="wrap top-inner">
     <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-    <nav><a href="index.html" class=on>Home</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-login" href="login.html">Log in</a><a class="nav-cta" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Add to Chrome</a></nav>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <a href="index.html#features">Features</a>
+      <a href="whatsapp-scheduler.html">WhatsApp</a>
+      <a href="index.html#uses">Use cases</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a class="nav-mobile-cta" href="login.html">Log in</a>
+      <a class="nav-mobile-cta" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Add to Chrome, it's free</a>
+    </nav>
+    <div class="top-actions">
+      <button type="button" class="theme-btn" data-theme-btn aria-label="Choose a theme" title="Theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.9 0-.5-.2-.9-.5-1.3-.3-.3-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="10" cy="7.5" r="1.2"/><circle cx="14.5" cy="7.5" r="1.2"/></svg></button>
+      <a class="nav-login" href="login.html">Log in</a>
+      <a class="nav-cta" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Add to Chrome</a>
+      <button type="button" class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="main-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
   </div>
 </header>
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow">Free Chrome extension · Pro from ₹33/month</span>
-      <h1>Fill it in now.<br>Send it later.</h1>
-      <p class="lead">Submit Later clicks any button for you at exactly the time you choose. Send a WhatsApp message, submit a form, join a meeting or register the second it opens, right on time.</p>
+      <a class="eyebrow" href="whatsapp-scheduler.html"><span>Schedule WhatsApp messages on PC</span><span class="tag">New</span></a>
+      <h1>Press any button.<br><em>Exactly on time.</em></h1>
+      <p class="lead">Write the message, fill the form, open the meeting. Submit Later clicks Send, Submit or Join for you at the second you choose, on almost any website.</p>
       <div class="cta-row">
-        <a class="btn primary install" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Add to Chrome, it's free</a>
-        <a class="btn ghost" href="#demo">Watch the demo</a>
+        <a class="btn light lg install" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Add to Chrome, it's free</a>
+        <a class="btn ghost lg" href="#how">See how it works</a>
       </div>
-      <p class="trust">Free plan forever · 30 days of Pro free · No card needed</p>
-      <p class="mobile-note">Submit Later is a desktop Chrome extension. Open this page on your computer to install it.</p>
+      <p class="trust"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Free plan forever</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>30 days of Pro free</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>No card needed</span></p>
+      <p class="mobile-note">Submit Later is a Chrome extension for computers. Open this page on your laptop or desktop to install it.</p>
     </div>
-    <div class="mock" aria-hidden="true">
-      <div class="mock-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Submit later</div>
-      <div class="mock-body">
-        <div class="mock-target"><span>Button</span> <b>Send</b></div>
-        <div class="mock-chips"><span>In 15 min</span><span>In 1 hour</span><span class="on">Today 5 PM</span></div>
-        <div class="mock-sub">Presses in <b>2h 14m</b> · Fri 16 Oct</div>
-        <span class="mock-btn">Schedule</span>
+    <div class="hero-visual">
+      <div class="browser">
+        <div class="browser-bar"><i></i><i></i><i></i><span>Submit Later in action</span></div>
+        <img src="how-it-works.gif" width="960" height="600" alt="Animated demo: an email is written, the Send button is picked with Submit Later, Tomorrow 9 AM is chosen, and the next morning it's pressed on time and a notification confirms it.">
       </div>
+      <div class="float-card float-a"><span class="ok-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span><b>Sent at 9:00:00 AM</b><small>Pressed "Send" and the page responded</small></span></div>
+      <div class="float-card float-b"><span class="mui-tag">↻ Every weekday</span><span><b>Join now</b><small>10:00 AM · Team stand-up</small></span></div>
     </div>
   </div>
 </section>
-<main class="wrap">
 
-<section id="demo" class="block">
-  <h2 class="center">See it in action</h2>
-  <p class="center sub">Write it, pick the button, choose a time. Submit Later does the rest, even overnight.</p>
-  <figure class="demo">
-    <img src="how-it-works.gif" width="960" height="600" loading="lazy" alt="Animated demo: an email is written, the Send button is picked with Submit Later, Tomorrow 9 AM is chosen, and the next morning the button is pressed on time and a notification confirms it.">
-  </figure>
+<section class="logos" aria-label="Works with">
+  <div class="wrap">
+    <p>Works with</p>
+    <span>Gmail</span><span>WhatsApp Web</span><span>Google Forms</span><span>Google Meet</span><span>Zoom</span><span>Outlook</span><span>Teams</span><span>Discord</span><span>Slack</span><span>LinkedIn</span>
+  </div>
 </section>
 
+<main class="wrap">
+
 <section id="how" class="block">
-  <h2 class="center">How it works</h2>
+  <div class="section-head">
+    <span class="kicker">How it works</span>
+    <h2>Three steps. No setup.</h2>
+    <p>If you can click a button, you can schedule it. There's nothing to configure and no code.</p>
+  </div>
   <div class="steps">
-    <div class="step"><span class="ic g1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/></svg></span><b>Fill it in</b><p>Write the email or complete the form as usual.</p></div>
-    <div class="step"><span class="ic g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span><b>Pick the button</b><p>Click the extension, then click the button to press later.</p></div>
-    <div class="step"><span class="ic g3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><b>Choose a time</b><p>Quick picks or an exact date and time, to the second.</p></div>
-    <div class="step"><span class="ic g4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><b>Done</b><p>It's pressed on time and you get a notification.</p></div>
+    <div class="step"><span class="ic g1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/></svg></span><b>Fill it in</b><p>Write the email, the WhatsApp message or the form exactly as you normally would.</p></div>
+    <div class="step"><span class="ic g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span><b>Pick the button</b><p>Click the Submit Later icon, then click Send, Submit or Join. It's only selected, not pressed.</p></div>
+    <div class="step"><span class="ic g4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><b>Choose the time</b><p>A quick pick or any date and time, to the second. It's pressed on time and you're notified.</p></div>
+  </div>
+</section>
+
+<section id="features" class="block">
+  <div class="section-head">
+    <span class="kicker">Features</span>
+    <h2>Built for the moments that matter</h2>
+    <p>Deadlines, openings, meetings and messages that need to go out at exactly the right time.</p>
+  </div>
+
+  <div class="spot">
+    <div class="spot-text">
+      <span class="pro-badge">PRO</span>
+      <h3>Schedule WhatsApp messages from your computer</h3>
+      <p>WhatsApp can't schedule messages on PC. Submit Later can: write it now, and it's sent from WhatsApp Web at the exact minute.</p>
+      <ul class="ticks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Midnight birthday wishes, reminders and follow-ups</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Any number, any country, with repeats if you like</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Personal messages only, never bulk sending</span></li>
+      </ul>
+      <a class="btn primary" href="whatsapp-scheduler.html">Learn about WhatsApp scheduling <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="spot-visual"><div class="shot"><img src="whatsapp-demo.gif" width="960" height="600" loading="lazy" alt="Animated demo: a WhatsApp message is written in Submit Later, scheduled for midnight, and sent from WhatsApp Web at 12:00 AM."></div></div>
+  </div>
+
+  <div class="spot rev">
+    <div class="spot-text">
+      <span class="pro-badge">PRO</span>
+      <h3>Reopen &amp; press. No tab left open.</h3>
+      <p>For buttons that need nothing typed, like Join, Register or Check in, Submit Later opens the page itself at the time and presses the button. Close the tab and forget about it.</p>
+      <ul class="ticks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Join Google Meet, Zoom or Teams automatically</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Asks for access to that one site only, never all sites</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Works even if you closed the tab hours ago</span></li>
+      </ul>
+    </div>
+    <div class="spot-visual">
+      <div class="mock-ui">
+        <div class="mui-card">
+          <div class="mui-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Submit later</div>
+          <div class="mui-body">
+            <div class="mui-label">Button</div>
+            <div class="mui-row"><b>Join now</b></div>
+            <div class="mui-label">At that time</div>
+            <div class="mui-opt"><span class="mui-radio"></span><span><b>Press it in this tab</b><small>Keep this tab open. Anything you've typed is kept.</small></span></div>
+            <div class="mui-opt on"><span class="mui-radio"></span><span><b>Reopen this page and press it</b><small>No need to keep the tab open. Great for Join, Register, Claim.</small></span></div>
+            <span class="mui-btn">Schedule</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spot">
+    <div class="spot-text">
+      <span class="pro-badge">PRO</span>
+      <h3>Repeat it every day, weekday or week</h3>
+      <p>Daily stand-ups, weekly reports, check-ins that reset at midnight. Set it once, and it keeps happening at the same time.</p>
+      <ul class="ticks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Every day, every weekday (Mon–Fri) or every week</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Skips days the computer was off; never fires late</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Pause or cancel any time from the toolbar</span></li>
+      </ul>
+    </div>
+    <div class="spot-visual">
+      <div class="mock-ui">
+        <div class="mui-row"><span class="mui-av g2">M</span><span class="mui-txt"><b>Team stand-up</b><small>"Join now" · Mon 10:00 AM</small></span><span class="mui-tag">↻ Weekdays</span></div>
+        <div class="mui-row"><span class="mui-av g-wa">W</span><span class="mui-txt"><b>WhatsApp to +91 98765 43210</b><small>"Good morning! Daily update…" · 9:00 AM</small></span><span class="mui-tag">↻ Every day</span></div>
+        <div class="mui-row"><span class="mui-av g5">R</span><span class="mui-txt"><b>Weekly report</b><small>"Submit" · Fri 5:00 PM</small></span><span class="mui-tag">↻ Weekly</span></div>
+        <div class="mui-row"><span class="mui-av g4">✓</span><span class="mui-txt"><b>Daily check-in</b><small>Pressed "Check in" and the page responded</small></span><span class="mui-tag ok">Sent</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spot rev">
+    <div class="spot-text">
+      <span class="pro-badge">PRO</span>
+      <h3>Wait until the button is ready</h3>
+      <p>Registration opens at 10:00, but the Register button stays grey for a few seconds? Submit Later keeps trying, and reloads the page if you ask, then presses it the moment it unlocks.</p>
+      <ul class="ticks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Keeps trying for 1 to 10 minutes</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Optional reload every 5, 10 or 30 seconds</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Pressed once. Never twice.</span></li>
+      </ul>
+    </div>
+    <div class="spot-visual">
+      <div class="mock-ui">
+        <div class="mui-card">
+          <div class="mui-body">
+            <div class="mui-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Scheduled for <b>10:00:00 AM</b></span></div>
+            <div class="mui-row"><span class="mui-txt"><b>10:00:00</b><small>"Register" is still disabled, waiting…</small></span><span class="mui-tag warn">Waiting</span></div>
+            <div class="mui-row"><span class="mui-txt"><b>10:00:05</b><small>Reloaded the page</small></span><span class="mui-tag">Reload</span></div>
+            <div class="mui-row"><span class="mui-txt"><b>10:00:06</b><small>Pressed "Register" the moment it unlocked</small></span><span class="mui-tag ok">Done</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section id="uses" class="block">
-  <h2 class="center">One extension, endless things to schedule</h2>
-  <p class="center sub">If it's a button on a web page, Submit Later can press it for you later. Here are a few ideas.</p>
+  <div class="section-head">
+    <span class="kicker">Use cases</span>
+    <h2>One extension, endless things to schedule</h2>
+    <p>If it's a button on a web page, Submit Later can press it for you later. Here are a few ideas.</p>
+  </div>
   <div class="filters" role="group" aria-label="Filter use cases" hidden>
     <button type="button" class="on" data-filter="all" aria-pressed="true">All</button>
     <button type="button" data-filter="msg" aria-pressed="false">💬 Messages &amp; posts</button>
@@ -103,35 +224,54 @@
 </section>
 
 <section class="block">
-  <h2 class="center">Built to be reliable</h2>
+  <div class="section-head">
+    <span class="kicker">Reliable</span>
+    <h2>It presses on time, or tells you why not</h2>
+  </div>
   <div class="features">
-    <div class="feature"><span class="ic g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg></span><div><b>Works on modern web apps</b><p>Real clicks for Gmail and apps that ignore scripted ones.</p></div></div>
-    <div class="feature"><span class="ic g1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg></span><div><b>Always tells you</b><p>A notification for every result. It never submits late without telling you.</p></div></div>
-    <div class="feature"><span class="ic g3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><div><b>Private by design</b><p>Your scheduled jobs stay on your computer. No tracking, no ads.</p></div></div>
-    <div class="feature"><span class="ic g4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.9 0-.5-.2-.9-.5-1.3-.3-.3-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/></svg></span><div><b>Your style</b><p>Six colour themes with light and dark mode.</p></div></div>
+    <div class="feature"><span class="ic g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg></span><div><b>Real clicks</b><p>A genuine mouse click, so Gmail, WhatsApp Web and modern web apps respond just like when you click.</p></div></div>
+    <div class="feature"><span class="ic g3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span><div><b>Keeps your computer awake</b><p>While something is scheduled, your computer won't fall asleep and miss it. Free and Pro.</p></div></div>
+    <div class="feature"><span class="ic g5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg></span><div><b>A heads-up 10 minutes early</b><p>Signed out? Field empty? Page reloaded? You're warned while there's still time to fix it.</p></div></div>
+    <div class="feature"><span class="ic g4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><div><b>Private by design</b><p>What you schedule stays on your computer. It only works on the sites you choose. No tracking, no ads.</p></div></div>
   </div>
 </section>
 
 <section class="block" id="reviews" hidden>
-  <h2 class="center">What users say</h2>
+  <div class="section-head"><span class="kicker">Reviews</span><h2>What users say</h2></div>
   <div class="testimonials" id="testimonials"></div>
 </section>
 
-<section class="block install-band">
-  <div>
-    <h2>Stop watching the clock</h2>
-    <p>Set it once and get on with your day. Submit Later presses the button on time and tells you how it went.</p>
+<section class="block" id="pricing-preview">
+  <div class="section-head">
+    <span class="kicker">Pricing</span>
+    <h2>Free to start. Pro when you need it.</h2>
+    <p>Every new account gets 30 days of Pro free. No card, and nothing renews by itself.</p>
   </div>
-  <a class="btn install" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Add to Chrome, it's free</a>
+  <div class="mini-tiers">
+    <div class="mt"><h3>Free</h3><div class="amt">₹0 <small>forever</small></div><p>5 scheduled buttons every month, in an open tab.</p><a class="btn alt" href="signup.html" data-plan-link>Create free account</a></div>
+    <div class="mt best"><span class="rib">Best value</span><h3>Pro Annual</h3><div class="amt">₹399 <small>/ year</small></div><p>Just ₹33 a month. Unlimited, plus WhatsApp, repeats and reopen &amp; press.</p><a class="btn primary" href="signup.html?plan=annual" data-plan-link>Choose Pro Annual</a></div>
+    <div class="mt"><h3>Pro Monthly</h3><div class="amt">₹49 <small>/ month</small></div><p>Every Pro feature for 30 days. Good for a one-off project.</p><a class="btn alt" href="signup.html?plan=monthly" data-plan-link>Choose Pro Monthly</a></div>
+  </div>
+  <p class="price-foot">Prices in INR, including all taxes. <a href="pricing.html">Compare plans in detail →</a></p>
 </section>
 
-<section class="block support-band">
-  <span class="ic g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></span>
-  <div>
-    <h2>Simple, honest pricing</h2>
-    <p>Free forever for 5 scheduled buttons a month. Pro adds unlimited schedules, repeats, WhatsApp messages and reopen-and-press for ₹49 a month or ₹399 a year. No auto-renewal.</p>
+<section class="block">
+  <div class="section-head"><span class="kicker">FAQ</span><h2>Questions, answered</h2></div>
+  <div class="faq">
+    <details open><summary>Do I need to keep the tab open?</summary><p>For buttons in a form you've filled in, yes, so what you typed is kept. With Pro's "Reopen &amp; press", Submit Later opens the page itself at the time, so you can close the tab. Chrome needs to be running either way.</p></details>
+    <details><summary>What if my computer goes to sleep?</summary><p>While something is scheduled, Submit Later keeps your computer awake (the screen can still turn off). Closing a laptop lid still puts it to sleep, so leave it open or plugged in with the lid up.</p></details>
+    <details><summary>Does it work with WhatsApp?</summary><p>Yes. With Pro you can schedule WhatsApp Web messages to any number, once or on repeat. Stay signed in to WhatsApp Web on that computer. <a href="whatsapp-scheduler.html">Read more</a>.</p></details>
+    <details><summary>Is my data safe?</summary><p>What you schedule (pages, buttons, messages) stays on your computer. Your account only stores your name, email and plan. See the <a href="privacy.html">privacy policy</a>.</p></details>
+    <details><summary>What can't it do?</summary><p>It can't solve CAPTCHAs, sign in for you, or bypass a site's rules, and it won't send bulk messages. It presses buttons you could press yourself.</p></details>
   </div>
-  <a class="btn primary" href="pricing.html">See pricing</a>
+</section>
+
+<section class="install-band">
+  <div>
+    <h2>Stop watching the clock</h2>
+    <p>Set it once and get on with your day. Free forever, with 30 days of Pro to try everything.</p>
+  </div>
+  <a class="btn lg install" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Add to Chrome, it's free</a>
 </section>
 
 </main>
@@ -139,22 +279,22 @@
   <div class="wrap foot-grid">
     <div>
       <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-      <p>A Chrome extension that presses any button at the time you choose.</p>
+      <p>A Chrome extension that presses any button at exactly the time you choose. Free plan forever; Pro is ₹49 a month or ₹399 a year.</p>
     </div>
     <div>
       <h4>Product</h4>
-      <a href="pricing.html">Pricing</a><a href="signup.html">Create free account</a><a href="login.html">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
+      <a href="index.html#features">Features</a><a href="whatsapp-scheduler.html">WhatsApp scheduler</a><a href="pricing.html">Pricing</a><a href="signup.html">Create free account</a><a href="login.html">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
     </div>
     <div>
       <h4>Legal</h4>
-      <a href="privacy.html">Privacy policy</a><a href="terms.html">Terms & conditions</a><a href="refund.html">Refund & cancellation</a><a href="shipping.html">Delivery policy</a>
+      <a href="privacy.html">Privacy policy</a><a href="terms.html">Terms &amp; conditions</a><a href="refund.html">Refund &amp; cancellation</a><a href="shipping.html">Delivery policy</a>
     </div>
     <div>
       <h4>Contact</h4>
-      <p>Harmandeep Singh<br><a href="mailto:singh.harmandeep09@gmail.com">singh.harmandeep09@gmail.com</a><br><a href="tel:+918054334017">+91 80543 34017</a><br>B-34/6378, Street No. 3, Jagat Nagar<br>Jassian Road, Haibowal Kalan<br>Ludhiana (East), Ludhiana<br>Punjab 141001, India</p>
+      <p style="margin:0">Harmandeep Singh<br><a href="mailto:singh.harmandeep09@gmail.com">singh.harmandeep09@gmail.com</a><br><a href="tel:+918054334017">+91 80543 34017</a><br>B-34/6378, Street No. 3, Jagat Nagar<br>Jassian Road, Haibowal Kalan<br>Ludhiana (East), Ludhiana<br>Punjab 141001, India</p>
     </div>
   </div>
-  <div class="wrap copy">© 2026 Harmandeep Singh. All rights reserved.</div>
+  <div class="wrap copy"><span>© 2026 Harmandeep Singh. All rights reserved.</span><span>Made in Ludhiana, India</span></div>
 </footer>
 <script src="site.js"></script>
 </body>
