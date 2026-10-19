@@ -131,17 +131,17 @@ code { font: 0.9em ui-monospace, Menlo, monospace; padding: 1px 6px; border-radi
 /* ---- Theme picker ---- */
 .tp-wrap { position: relative; }
 .tp {
-  position: absolute; right: 0; top: calc(100% + 10px); z-index: 60; width: 272px; padding: 14px;
+  position: absolute; right: 0; top: calc(100% + 10px); z-index: 60; width: 304px; max-width: calc(100vw - 32px); padding: 14px;
   border-radius: 16px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow-lg); color: var(--fg);
 }
 .tp-head { font-weight: 800; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-.tp-sw { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.tp-sw { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 .tp-sw button {
   display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px 8px; border-radius: 12px; cursor: pointer;
   border: 1px solid var(--line); background: var(--card); color: var(--fg); font: inherit; font-size: 12px; font-weight: 600;
 }
 .tp-sw button[aria-checked="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
-.tp-dot { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35); }
+.tp-dot { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35), 0 0 0 1px rgba(15, 23, 42, 0.08); }
 .tp-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 10px; padding: 3px; border-radius: 11px; background: var(--soft); }
 .tp-seg button { padding: 7px 4px; border: 0; border-radius: 9px; background: none; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
 .tp-seg button[aria-checked="true"] { background: var(--card); color: var(--fg); box-shadow: var(--shadow-sm); }
@@ -429,4 +429,26 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; box-s
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .case, .case:hover, .browser { transition: none; transform: none; }
+}
+
+/* ---- Light themes (Sky, Mint, Peach, Lilac, Blush): pastel headers with dark text ---- */
+[data-hero="light"] .hero, [data-hero="light"] .page-hero, [data-hero="light"] .install-band { color: var(--hero-ink); }
+[data-hero="light"] .hero::before, [data-hero="light"] .page-hero::before {
+  background-image: linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+}
+[data-hero="light"] .eyebrow { color: var(--hero-ink); background: rgba(255, 255, 255, 0.65); border-color: color-mix(in srgb, var(--brand-1) 22%, transparent); }
+[data-hero="light"] a.eyebrow:hover { background: #fff; }
+[data-hero="light"] .eyebrow .tag { color: #fff; background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); }
+[data-hero="light"] .hero h1 em { background: linear-gradient(90deg, var(--brand-1), var(--brand-2)); -webkit-background-clip: text; background-clip: text; }
+[data-hero="light"] .lead, [data-hero="light"] .trust, [data-hero="light"] .page-hero p, [data-hero="light"] .install-band p { opacity: 0.82; }
+[data-hero="light"] .mobile-note, [data-hero="light"] .page-hero .updated { background: rgba(255, 255, 255, 0.65); border-color: color-mix(in srgb, var(--brand-1) 18%, transparent); }
+[data-hero="light"] .hero .btn.light, [data-hero="light"] .install-band .btn { color: #fff; background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); box-shadow: 0 10px 24px color-mix(in srgb, var(--brand-1) 30%, transparent); }
+[data-hero="light"] .hero .btn.ghost { color: var(--hero-ink); border-color: color-mix(in srgb, var(--hero-ink) 22%, transparent); background: rgba(255, 255, 255, 0.55); }
+[data-hero="light"] .hero .btn.ghost:hover { background: #fff; }
+[data-hero="light"] .install-band::after { border-color: color-mix(in srgb, var(--brand-1) 18%, transparent); box-shadow: 0 0 0 40px rgba(255, 255, 255, 0.25); }
+[data-hero="light"] .browser { box-shadow: 0 40px 90px color-mix(in srgb, var(--brand-1) 22%, transparent), 0 0 0 1px rgba(15, 23, 42, 0.08); }
+
+/* On phones the theme picker is pinned to the screen, so it can't go off the edge. */
+@media (max-width: 600px) {
+  .tp { position: fixed; left: 16px; right: 16px; top: 64px; width: auto; max-width: none; }
 }

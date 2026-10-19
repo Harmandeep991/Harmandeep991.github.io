@@ -23,6 +23,18 @@ var SLTheme = (() => {
       hero: 'radial-gradient(70% 130% at 100% 0%, rgba(153,246,228,.22), transparent 60%), linear-gradient(135deg, #0b3b38, #0f766e 60%, #0d9488)' },
     mono: { name: 'Mono', light: ['#18181b', '#3f3f46', '#f4f4f5'], dark: ['#e4e4e7', '#a1a1aa', 'rgba(228,228,231,.1)'], brand: ['#18181b', '#3f3f46'],
       hero: 'radial-gradient(70% 130% at 100% 0%, rgba(255,255,255,.14), transparent 60%), linear-gradient(135deg, #09090b, #27272a)' },
+    // Light themes: a pastel header with dark text (`ink`), and a deeper
+    // header in dark mode (`heroDark`). Buttons keep white text on `brand`.
+    sky: { name: 'Sky', ink: '#0c2a43', light: ['#0369a1', '#0284c7', '#e0f2fe'], dark: ['#38bdf8', '#7dd3fc', 'rgba(56,189,248,.12)'], brand: ['#0284c7', '#0ea5e9'],
+      hero: 'radial-gradient(60% 120% at 100% 0%, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #e0f2fe, #bae6fd 55%, #c7d2fe)', heroDark: 'radial-gradient(70% 130% at 100% 0%, rgba(125,211,252,.25), transparent 60%), linear-gradient(135deg, #0c4a6e, #0369a1)' },
+    mint: { name: 'Mint', ink: '#063b2c', light: ['#047857', '#059669', '#d1fae5'], dark: ['#34d399', '#6ee7b7', 'rgba(52,211,153,.12)'], brand: ['#059669', '#10b981'],
+      hero: 'radial-gradient(60% 120% at 100% 0%, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #ecfdf5, #d1fae5 55%, #a7f3d0)', heroDark: 'radial-gradient(70% 130% at 100% 0%, rgba(110,231,183,.22), transparent 60%), linear-gradient(135deg, #064e3b, #047857)' },
+    peach: { name: 'Peach', ink: '#4a1d0a', light: ['#c2410c', '#ea580c', '#ffedd5'], dark: ['#fdba74', '#fed7aa', 'rgba(253,186,116,.12)'], brand: ['#ea580c', '#f59e0b'],
+      hero: 'radial-gradient(60% 120% at 100% 0%, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #fff7ed, #ffedd5 50%, #fed7aa)', heroDark: 'radial-gradient(70% 130% at 100% 0%, rgba(253,186,116,.25), transparent 60%), linear-gradient(135deg, #7c2d12, #c2410c)' },
+    lilac: { name: 'Lilac', ink: '#2e1065', light: ['#6d28d9', '#7c3aed', '#f3e8ff'], dark: ['#c4b5fd', '#d8b4fe', 'rgba(196,181,253,.12)'], brand: ['#7c3aed', '#a855f7'],
+      hero: 'radial-gradient(60% 120% at 100% 0%, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #faf5ff, #f3e8ff 50%, #e9d5ff)', heroDark: 'radial-gradient(70% 130% at 100% 0%, rgba(216,180,254,.22), transparent 60%), linear-gradient(135deg, #3b0764, #6d28d9)' },
+    blush: { name: 'Blush', ink: '#500724', light: ['#be185d', '#db2777', '#fce7f3'], dark: ['#f9a8d4', '#fbcfe8', 'rgba(249,168,212,.12)'], brand: ['#db2777', '#ec4899'],
+      hero: 'radial-gradient(60% 120% at 100% 0%, rgba(255,255,255,.85), transparent 60%), linear-gradient(135deg, #fdf2f8, #fce7f3 50%, #fbcfe8)', heroDark: 'radial-gradient(70% 130% at 100% 0%, rgba(249,168,212,.22), transparent 60%), linear-gradient(135deg, #831843, #be185d)' },
   };
   const APPEARANCES = [['system', 'System'], ['light', 'Light'], ['dark', 'Dark']];
   const KEY = 'sl-site-theme';
@@ -50,16 +62,18 @@ var SLTheme = (() => {
     const root = document.documentElement;
     root.dataset.appearance = dark ? 'dark' : 'light';
     root.dataset.theme = current.theme;
-    const vars = { '--accent': accent, '--accent-2': accent2, '--info': info, '--brand-1': t.brand[0], '--brand-2': t.brand[1], '--hero': t.hero };
+    const lightHero = !!t.ink && !dark;
+    root.dataset.hero = lightHero ? 'light' : 'deep';
+    const vars = { '--accent': accent, '--accent-2': accent2, '--info': info, '--brand-1': t.brand[0], '--brand-2': t.brand[1], '--hero': dark && t.heroDark ? t.heroDark : t.hero, '--hero-ink': t.ink || '#fff' };
     for (const [k, v] of Object.entries(vars)) root.style.setProperty(k, v);
     root.style.colorScheme = dark ? 'dark' : 'light';
     document.querySelectorAll('.tp').forEach(sync);
-    listeners.forEach((fn) => fn(current));
   }
 
   // Saves locally, and to the account if signed in (best effort).
   async function save(patch) {
     apply({ ...current, ...patch });
+    listeners.forEach((fn) => fn(current));
     try {
       localStorage.setItem(KEY, JSON.stringify(current));
     } catch {}
@@ -111,7 +125,7 @@ var SLTheme = (() => {
       b.dataset.t = key;
       b.setAttribute('role', 'radio');
       b.title = t.name;
-      b.innerHTML = `<span class="tp-dot" style="background:linear-gradient(135deg,${t.brand[0]},${t.brand[1]})"></span><span class="tp-name"></span>`;
+      b.innerHTML = `<span class="tp-dot" style="background:${t.ink ? t.hero : `linear-gradient(135deg,${t.brand[0]},${t.brand[1]})`}"></span><span class="tp-name"></span>`;
       b.querySelector('.tp-name').textContent = t.name;
       b.onclick = () => save({ theme: key });
       sw.append(b);

@@ -99,10 +99,13 @@ async function api(path, opts = {}) {
     return await request(path, { ...opts, auth: true });
   } catch (e) {
     if (e.status !== 401 || !session.get()?.refreshToken) throw e;
+    const tokenBefore = session.get().refreshToken;
     try {
       await refreshSession();
-    } catch {
-      session.clear();
+    } catch (err) {
+      // Another tab may have just rotated the token: use its new session.
+      if (err.status === 401 && session.get()?.refreshToken !== tokenBefore) return request(path, { ...opts, auth: true });
+      if (err.status === 401) session.clear();
       throw e;
     }
     return request(path, { ...opts, auth: true });
@@ -329,6 +332,7 @@ function initForgot() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearErrors(form);
+    notice(box, '', '');
     const email = form.email.value.trim();
     if (!checkEmail(form, email)) return form.email.focus();
     const btn = form.querySelector('button[type=submit]');
@@ -555,7 +559,7 @@ function renderUser() {
     ? 'You can sign in with your email and password.'
     : 'No password yet. You sign in with Google; add a password to sign in with email too.';
   $('#change-pw').textContent = u.hasPassword ? 'Change password' : 'Add a password';
-  $('#sec-g-text').textContent = u.google ? `Signed in with Google as ${u.email}.` : 'Not connected. Use "Continue with Google" on the login page to link it.';
+  $('#sec-g-text').textContent = u.google ? `Signed in with Google as ${u.email}.` : ACCOUNT.GOOGLE_CLIENT_ID ? 'Not connected. Use "Continue with Google" on the login page to link it.' : 'Not connected.';
   const g = $('#sec-g-badge');
   g.className = `badge-v ${u.google ? 'ok' : 'off'}`;
   g.textContent = u.google ? 'Connected' : 'Not connected';
@@ -630,6 +634,9 @@ function renderChecklist() {
     connect: acct.ext === 'connected',
     verify: acct.user.emailVerified,
   };
+  const st = acct.plan?.status;
+  $('.checklist [data-step="account"] .st-text > span').textContent =
+    st === 'trial' ? 'Your 30 days of Pro have started.' : st === 'active' ? 'Your Pro plan is active.' : "You're on the free plan: 5 schedules a month.";
   let n = 0;
   for (const [step, ok] of Object.entries(done)) {
     $(`.checklist [data-step="${step}"]`).classList.toggle('done', ok);
@@ -814,6 +821,12 @@ function initAccountUi() {
     pop.hidden = !pop.hidden;
     btn.setAttribute('aria-expanded', String(!pop.hidden));
   };
+  pop.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      pop.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
   document.addEventListener('click', (e) => {
     if (!pop.hidden && !e.target.closest('.user-menu')) {
       pop.hidden = true;
@@ -874,8 +887,7 @@ function initAccountUi() {
     const b = form.querySelector('button[type=submit]');
     setBusy(b, true);
     try {
-      const body = { name };
-      if (phone) body.phone = phone;
+      const body = { name, phone };
       const { user } = await api('/me', { method: 'PATCH', body });
       acct.user = user;
       session.set({ ...session.get(), user });
@@ -932,7 +944,7 @@ async function initAccount() {
   try {
     me = await api('/me');
   } catch (err) {
-    if (err.status === 401) return location.replace('login.html?expired=1&next=account.html');
+    if (err.status === 401) return location.replace(`login.html?expired=1&next=${encodeURIComponent('account.html' + location.search + location.hash)}`);
     notice(box, err.code === 'NOT_CONFIGURED' ? 'info' : 'bad', messageFor(err));
     return;
   }
@@ -949,6 +961,8 @@ async function initAccount() {
       if (acct.ext === 'connected') toExtension({ type: 'theme', ...prefs });
     });
   }
+  // Shown once: a reload shouldn't repeat the message or reopen checkout.
+  if (pay || params.get('buy')) history.replaceState(null, '', location.pathname + location.hash);
   if (PAY_MSG[pay]) {
     notice(box, ...PAY_MSG[pay]);
     if (!location.hash) showView(pay === 'success' ? 'invoices' : 'billing');

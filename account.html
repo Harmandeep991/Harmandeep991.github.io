@@ -168,14 +168,14 @@
       <div class="plan-cards">
         <div class="pcard">
           <div class="pc-top"><b>Pro Monthly</b><span class="muted">For a one-off project</span></div>
-          <div class="pc-price">₹49 <small>/ 30 days</small></div>
+          <div class="pc-price">₹49 <small>a month (30 days)</small></div>
           <ul class="pc-list"><li><svg><use href="#i-check"/></svg>Unlimited scheduled buttons</li><li><svg><use href="#i-check"/></svg>Reopen &amp; press, repeats, WhatsApp</li><li><svg><use href="#i-check"/></svg>Email support</li></ul>
           <button type="button" class="btn alt" data-buy="monthly"><span class="spin" aria-hidden="true"></span><span>Buy Monthly · ₹49</span></button>
         </div>
         <div class="pcard best">
           <span class="pc-tag">Best value · save 32%</span>
           <div class="pc-top"><b>Pro Annual</b><span class="muted">Just ₹33 a month</span></div>
-          <div class="pc-price">₹399 <small>/ 365 days</small></div>
+          <div class="pc-price">₹399 <small>a year (365 days)</small></div>
           <ul class="pc-list"><li><svg><use href="#i-check"/></svg>Unlimited scheduled buttons</li><li><svg><use href="#i-check"/></svg>Reopen &amp; press, repeats, WhatsApp</li><li><svg><use href="#i-check"/></svg>Priority email support</li></ul>
           <button type="button" class="btn btn-block" data-buy="annual"><span class="spin" aria-hidden="true"></span><span>Buy Annual · ₹399</span></button>
         </div>
@@ -268,7 +268,7 @@
             <div class="f-err" role="alert"></div>
           </div>
           <div class="field">
-            <label>Member since</label>
+            <label for="pf-since">Member since</label>
             <div class="input is-readonly"><svg><use href="#i-clock"/></svg><input id="pf-since" readonly></div>
           </div>
           <div class="form-foot">
@@ -324,7 +324,7 @@
     <h2>Your mobile number</h2>
     <p>Our payment partner PayU needs a mobile number for your receipt. We only use it for payments and won't call or message you. <b id="phone-plan"></b></p>
     <div class="field" data-field="phone">
-      <div class="input"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></g></svg><input name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" maxlength="16"></div>
+      <div class="input"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></g></svg><input name="phone" aria-label="Mobile number" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" maxlength="16"></div>
       <div class="f-err" role="alert"></div>
     </div>
     <div class="acts"><button type="button" class="btn line" id="phone-cancel">Cancel</button><button type="submit" class="btn btn-block" style="width:auto"><span class="spin" aria-hidden="true"></span><span>Continue to payment</span></button></div>
@@ -335,7 +335,7 @@
     <h2>Delete your account?</h2>
     <p>This can't be undone. Any time left on your plan is lost, and the extension will be signed out. Type <b>DELETE</b> to confirm.</p>
     <div class="field" data-field="confirm">
-      <div class="input"><input name="confirm" autocomplete="off" placeholder="DELETE" style="padding-left:14px"></div>
+      <div class="input"><input name="confirm" autocomplete="off" placeholder="DELETE" aria-label="Type DELETE to confirm" style="padding-left:14px"></div>
       <div class="f-err" role="alert"></div>
     </div>
     <div class="acts"><button type="button" class="btn line" id="delete-cancel">Cancel</button><button type="submit" class="btn danger"><span class="spin" aria-hidden="true"></span><span>Delete account</span></button></div>

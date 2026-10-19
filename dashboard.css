@@ -47,7 +47,7 @@
 
 /* ---- Layout ---- */
 .dash { flex: 1; width: 100%; max-width: 1240px; margin: 0 auto; padding: 28px 24px 56px; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 36px; align-items: start; }
-.dash-main { display: grid; gap: 16px; min-width: 0; }
+.dash-main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
 .dash-main > .notice { margin: 0; }
 
 .dash-nav { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
@@ -78,7 +78,7 @@
 .nav-plan a:hover { text-decoration: none; filter: brightness(0.97); }
 
 /* ---- Views ---- */
-.view { display: grid; gap: 20px; animation: view-in 0.2s ease-out; }
+.view { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; animation: view-in 0.2s ease-out; }
 @keyframes view-in { from { opacity: 0; transform: translateY(6px); } }
 .view-head h1 { margin: 0; font-size: 28px; line-height: 1.2; letter-spacing: -0.025em; }
 .view-head p { margin: 6px 0 0; color: var(--muted); }
@@ -305,3 +305,7 @@ dialog .acts { justify-content: flex-end; margin-top: 18px; }
 .nav-plan[data-status="free"] { background: radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.18), transparent 60%), linear-gradient(140deg, #334155, #475569); box-shadow: 0 14px 30px rgba(51, 65, 85, 0.25); }
 .plan-now[data-status="free"]::before { background: linear-gradient(90deg, #64748b, #94a3b8); }
 [data-status="free"] .status-chip { color: var(--muted); }
+
+/* Long names and emails wrap instead of widening the page. */
+#vb-email, #p-email-big, #p-name-big, .stat-sub, .um-head small { overflow-wrap: anywhere; }
+.table-wrap { max-width: 100%; }
