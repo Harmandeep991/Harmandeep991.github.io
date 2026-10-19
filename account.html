@@ -4,94 +4,322 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Your account · Submit Later</title>
-<meta name="description" content="Manage your Submit Later plan, payments and extension.">
+<meta name="description" content="Manage your Submit Later plan, invoices, extension and profile.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="icon32.png">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="auth.css">
+<link rel="stylesheet" href="dashboard.css">
 </head>
-<body data-page="account">
-<header class="top">
-  <div class="wrap top-inner">
-    <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-    <nav><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-login" href="login.html">Log in</a><a class="nav-cta" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Add to Chrome</a></nav>
+<body data-page="account" class="dash-body">
+<svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#a855f7"/></linearGradient>
+    <linearGradient id="rg-ok" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#059669"/></linearGradient>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></g></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/></g></symbol>
+    <symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M10 4a2 2 0 1 1 4 0v2h4v4h-2a2 2 0 1 0 0 4h2v4h-4v-2a2 2 0 1 0-4 0v2H6v-4H4a2 2 0 1 1 0-4h2V6h4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></g></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"/></g></symbol>
+    <symbol id="i-google" viewBox="0 0 24 24"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z"/><path fill="#34A853" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z"/><path fill="#FBBC05" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2z"/><path fill="#EA4335" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10C7.2 7.7 9.4 6 12 6z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15"/></g></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<header class="dash-top">
+  <div class="dash-top-in">
+    <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24"><use href="#i-clock"/></svg></span>Submit Later</a>
+    <span class="dash-sep" aria-hidden="true"></span>
+    <span class="dash-crumb">Account</span>
+    <div class="dash-top-r">
+      <a class="dash-link" href="index.html">Website</a>
+      <a class="dash-link" href="contact.html">Help</a>
+      <div class="user-menu">
+        <button id="um-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="um-pop"><span class="av" id="um-av">·</span><span class="um-name" id="um-name">Account</span><svg class="chev"><use href="#i-chev"/></svg></button>
+        <div class="um-pop" id="um-pop" role="menu" hidden>
+          <div class="um-head"><b id="um-full"></b><small id="um-email"></small></div>
+          <a href="#profile" role="menuitem"><svg><use href="#i-user"/></svg>Profile</a>
+          <a href="#billing" role="menuitem"><svg><use href="#i-card"/></svg>Plan &amp; billing</a>
+          <a href="#security" role="menuitem"><svg><use href="#i-shield"/></svg>Security</a>
+          <button type="button" role="menuitem" data-logout><svg><use href="#i-out"/></svg>Log out</button>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
-<section class="acct-hero"><div class="wrap"><h1 id="hello">Your account</h1><p>Your plan, payments and the extension, all in one place.</p></div></section>
-<main class="wrap">
-<div class="acct-wrap">
-  <div id="page-notice" class="notice info">Loading your account…</div>
-  <div id="account-main" class="acct" hidden>
-    <div class="col">
-      <section class="panel-card" id="plan-card" data-status="trial">
-        <span class="status-chip" id="plan-status">Free trial</span>
-        <h2 id="plan-title" style="font-size:28px">&nbsp;</h2>
-        <p class="muted" id="plan-sub"></p>
-        <div class="bar" id="plan-bar"><i style="width:0"></i></div>
-        <div class="buy">
-          <h3 id="buy-title">Choose a plan</h3>
-          <div id="buy-notice" class="notice" hidden></div>
-          <div class="buy-grid">
-            <div class="buy-opt">
-              <b>Monthly</b>
-              <span class="amt">₹49 <small>/ 30 days</small></span>
-              <span class="per">Good for a one-off project</span>
-              <button class="btn alt" data-buy="monthly"><span class="spin" aria-hidden="true"></span><span>Buy Monthly</span></button>
-            </div>
-            <div class="buy-opt best">
-              <span class="tag">Save 32%</span>
-              <b>Annual</b>
-              <span class="amt">₹399 <small>/ 365 days</small></span>
-              <span class="per">Just ₹33 a month</span>
-              <button class="btn btn-block" data-buy="annual"><span class="spin" aria-hidden="true"></span><span>Buy Annual</span></button>
-            </div>
-          </div>
-          <p class="secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Secure checkout by PayU: UPI, cards, net banking and wallets. Plans never renew automatically. Buying early adds the time on top.</p>
-        </div>
-      </section>
-      <section class="panel-card">
-        <h2>Payments and receipts</h2>
-        <p class="muted">Every payment is also emailed to you.</p>
-        <p class="empty-row" id="payments-empty">No payments yet.</p>
-        <div class="table-wrap"><table id="payments" hidden><thead><tr><th>Date</th><th>Plan</th><th>Amount</th><th>Status</th><th>Transaction</th></tr></thead><tbody></tbody></table></div>
-      </section>
+
+<div class="dash">
+  <aside class="dash-nav">
+    <nav aria-label="Account sections">
+      <a href="#overview" data-view="overview"><svg><use href="#i-home"/></svg>Overview</a>
+      <a href="#billing" data-view="billing"><svg><use href="#i-card"/></svg>Plan &amp; billing</a>
+      <a href="#invoices" data-view="invoices"><svg><use href="#i-receipt"/></svg>Invoices</a>
+      <a href="#extension" data-view="extension"><svg><use href="#i-puzzle"/></svg>Extension<span class="nav-dot" id="nav-ext-dot" hidden></span></a>
+      <div class="nav-label">Account</div>
+      <a href="#profile" data-view="profile"><svg><use href="#i-user"/></svg>Profile</a>
+      <a href="#security" data-view="security"><svg><use href="#i-shield"/></svg>Security</a>
+    </nav>
+    <div class="nav-plan" id="nav-plan" hidden>
+      <small id="np-label">Free trial</small>
+      <b id="np-title"></b>
+      <div class="mini-bar"><i id="np-bar"></i></div>
+      <p id="np-sub"></p>
+      <a href="#billing" id="np-cta">See plans</a>
     </div>
-    <div class="col">
-      <section class="panel-card verify-banner" id="verify-banner" hidden>
-        <div><h2>Verify your email</h2><p class="muted">We sent you a link when you signed up. Verify to keep your receipts and password resets safe.</p></div>
-        <button class="btn line" id="resend">Resend link</button>
-      </section>
-      <section class="panel-card">
-        <h2>Chrome extension</h2>
-        <div id="ext-state" data-state="checking" style="margin-top:14px">
-          <span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M10 4a2 2 0 1 1 4 0v2h4v4h-2a2 2 0 1 0 0 4h2v4h-4v-2a2 2 0 1 0-4 0v2H6v-4H4a2 2 0 1 1 0-4h2V6h4z"/></svg></span>
-          <div>
-            <p id="ext-text">Looking for the extension…</p>
-            <button class="btn btn-block" id="ext-connect" hidden style="width:auto"><span class="spin" aria-hidden="true"></span><span>Connect extension</span></button>
-            <a class="btn btn-block" id="ext-install" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link hidden style="width:auto">Add to Chrome</a>
+  </aside>
+
+  <main class="dash-main">
+    <div id="page-notice" class="notice info">Loading your account…</div>
+    <div id="verify-banner" class="alert-bar" hidden>
+      <svg><use href="#i-mail"/></svg>
+      <span><b>Please verify your email.</b> We sent a link to <span id="vb-email"></span> when you signed up.</span>
+      <button type="button" class="btn sm soft" id="resend">Resend link</button>
+    </div>
+
+    <!-- Overview -->
+    <section class="view" data-view="overview" hidden>
+      <div class="view-head">
+        <h1 id="hello">Welcome</h1>
+        <p>Here's everything about your Submit Later account at a glance.</p>
+      </div>
+
+      <div class="grid-3">
+        <a class="card stat" href="#billing">
+          <div class="stat-top"><span class="stat-label">Your plan</span><span class="stat-ic" id="s-plan-ic"><svg><use href="#i-card"/></svg></span></div>
+          <div><div class="stat-value" id="s-plan-value">–</div><div class="stat-sub" id="s-plan-sub"></div></div>
+          <div class="bar" id="s-plan-bar"><i style="width:0"></i></div>
+          <span class="stat-link" id="s-plan-link">Plan &amp; billing <svg><use href="#i-arrow"/></svg></span>
+        </a>
+        <a class="card stat" href="#extension">
+          <div class="stat-top"><span class="stat-label">Chrome extension</span><span class="stat-ic" id="s-ext-ic"><svg><use href="#i-puzzle"/></svg></span></div>
+          <div><div class="stat-value" id="s-ext-value">Checking…</div><div class="stat-sub" id="s-ext-sub"></div></div>
+          <span class="stat-link">Manage extension <svg><use href="#i-arrow"/></svg></span>
+        </a>
+        <a class="card stat" href="#profile">
+          <div class="stat-top"><span class="stat-label">Account</span><span class="stat-ic" id="s-acc-ic"><svg><use href="#i-user"/></svg></span></div>
+          <div><div class="stat-value" id="s-acc-value">–</div><div class="stat-sub" id="s-acc-sub"></div></div>
+          <span class="stat-link">Profile <svg><use href="#i-arrow"/></svg></span>
+        </a>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Get set up</h2><p>A few steps and you're ready to schedule.</p></div>
+            <span class="pill-count" id="cl-count">0 of 4</span>
+          </div>
+          <div class="bar" id="cl-bar" style="margin-bottom:10px"><i style="width:0"></i></div>
+          <ul class="checklist">
+            <li data-step="account"><span class="tick"><svg><use href="#i-check"/></svg></span><span class="st-text"><b>Create your account</b><span>Your 30-day free trial has started.</span></span></li>
+            <li data-step="install"><span class="tick"><svg><use href="#i-check"/></svg></span><span class="st-text"><b>Install the Chrome extension</b><span>Free from the Chrome Web Store.</span></span><a class="btn sm soft" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=account" target="_blank" rel="noopener">Install</a></li>
+            <li data-step="connect"><span class="tick"><svg><use href="#i-check"/></svg></span><span class="st-text"><b>Connect it to this account</b><span>So it knows about your trial or plan.</span></span><button type="button" class="btn sm soft" data-connect><span class="spin" aria-hidden="true"></span><span>Connect</span></button></li>
+            <li data-step="verify"><span class="tick"><svg><use href="#i-check"/></svg></span><span class="st-text"><b>Verify your email</b><span>For receipts and password resets.</span></span><button type="button" class="btn sm soft" data-resend>Resend link</button></li>
+          </ul>
+        </div>
+        <div class="card how">
+          <h2>Schedule your first button</h2>
+          <ol class="how-steps">
+            <li><span>1</span><div><b>Fill it in</b><p>Write the email or complete the form as usual.</p></div></li>
+            <li><span>2</span><div><b>Pick the button</b><p>Click the Submit Later icon, then click the button. It's only selected.</p></div></li>
+            <li><span>3</span><div><b>Choose a time</b><p>Keep the tab open. It's pressed right on the second.</p></div></li>
+          </ol>
+          <a class="btn sm soft" href="index.html#demo"><svg style="width:14px;height:14px"><use href="#i-play"/></svg> Watch the 20-second demo</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Plan & billing -->
+    <section class="view" data-view="billing" hidden>
+      <div class="view-head"><h1>Plan &amp; billing</h1><p>Your current plan, and simple prepaid plans that never renew by themselves.</p></div>
+
+      <div class="card plan-now" id="plan-now" data-status="trial">
+        <div class="ring">
+          <svg viewBox="0 0 120 120"><circle class="trk" cx="60" cy="60" r="52" fill="none" stroke-width="10"/><circle class="val" id="ring-val" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+          <div class="ring-label"><b id="ring-num">–</b><span id="ring-unit">days left</span></div>
+        </div>
+        <div class="plan-now-body">
+          <span class="status-chip" id="pn-chip">Free trial</span>
+          <h2 id="pn-title"></h2>
+          <p class="muted" id="pn-sub"></p>
+          <dl class="meta">
+            <div><dt>Plan</dt><dd id="pn-plan"></dd></div>
+            <div><dt id="pn-end-label">Ends on</dt><dd id="pn-end"></dd></div>
+            <div><dt>Renewal</dt><dd>Manual, never automatic</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="section-title"><h2 id="buy-title">Choose a plan</h2><p id="buy-sub">Every feature is included in every plan. Time you buy is added after your trial or current plan.</p></div>
+      <div id="buy-notice" class="notice" hidden></div>
+      <div class="plan-cards">
+        <div class="pcard">
+          <div class="pc-top"><b>Monthly</b><span class="muted">For a one-off project</span></div>
+          <div class="pc-price">₹49 <small>/ 30 days</small></div>
+          <ul class="pc-list"><li><svg><use href="#i-check"/></svg>Unlimited scheduled buttons</li><li><svg><use href="#i-check"/></svg>Real clicks for Gmail, Meet and web apps</li><li><svg><use href="#i-check"/></svg>Email support</li></ul>
+          <button type="button" class="btn alt" data-buy="monthly"><span class="spin" aria-hidden="true"></span><span>Buy Monthly · ₹49</span></button>
+        </div>
+        <div class="pcard best">
+          <span class="pc-tag">Best value · save 32%</span>
+          <div class="pc-top"><b>Annual</b><span class="muted">Just ₹33 a month</span></div>
+          <div class="pc-price">₹399 <small>/ 365 days</small></div>
+          <ul class="pc-list"><li><svg><use href="#i-check"/></svg>Unlimited scheduled buttons</li><li><svg><use href="#i-check"/></svg>Real clicks for Gmail, Meet and web apps</li><li><svg><use href="#i-check"/></svg>Priority email support</li></ul>
+          <button type="button" class="btn btn-block" data-buy="annual"><span class="spin" aria-hidden="true"></span><span>Buy Annual · ₹399</span></button>
+        </div>
+      </div>
+      <div class="pay-note">
+        <svg><use href="#i-shield"/></svg>
+        <span>Secure checkout by <b>PayU</b>. Prices in INR, including all taxes.</span>
+        <span class="pay-chips"><span>UPI</span><span>Cards</span><span>Net banking</span><span>Wallets</span></span>
+      </div>
+
+      <div class="card faq-mini">
+        <h2>Billing questions</h2>
+        <details><summary>Will I be charged automatically?</summary><p>Never. Plans are prepaid. We email you 3 days before your plan ends, and you decide whether to buy again.</p></details>
+        <details><summary>What happens when my trial or plan ends?</summary><p>Anything already scheduled is still pressed. You need a plan only to schedule new buttons.</p></details>
+        <details><summary>Can I get a refund?</summary><p>Yes, a full refund within 7 days of your first payment. See the <a href="refund.html">refund policy</a>.</p></details>
+      </div>
+    </section>
+
+    <!-- Invoices -->
+    <section class="view" data-view="invoices" hidden>
+      <div class="view-head"><h1>Invoices</h1><p>Every payment is also emailed to you as a receipt.</p></div>
+      <div class="card">
+        <div class="empty" id="payments-empty">
+          <span class="empty-ic"><svg><use href="#i-receipt"/></svg></span>
+          <b>No invoices yet</b>
+          <p>Receipts for your payments will appear here.</p>
+          <a class="btn sm soft" href="#billing">See plans</a>
+        </div>
+        <div class="table-wrap"><table id="payments" hidden><thead><tr><th>Date</th><th>Plan</th><th>Amount</th><th>Status</th><th>Transaction ID</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- Extension -->
+    <section class="view" data-view="extension" hidden>
+      <div class="view-head"><h1>Chrome extension</h1><p>Connect the extension so it knows about your trial or plan.</p></div>
+      <div class="card ext-hero" id="ext-hero" data-state="checking">
+        <span class="ext-ic"><svg><use href="#i-puzzle"/></svg></span>
+        <div class="ext-body">
+          <span class="status-chip" id="ext-chip">Checking</span>
+          <h2 id="ext-title">Looking for the extension…</h2>
+          <p class="muted" id="ext-text"></p>
+          <div class="acts">
+            <button type="button" class="btn btn-block" data-connect id="ext-connect" hidden style="width:auto"><span class="spin" aria-hidden="true"></span><span>Connect extension</span></button>
+            <a class="btn btn-block" id="ext-install" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=account" target="_blank" rel="noopener" hidden style="width:auto">Add to Chrome</a>
+            <button type="button" class="btn line" id="ext-recheck">Check again</button>
           </div>
         </div>
-      </section>
-      <section class="panel-card">
-        <h2>Profile</h2>
-        <dl class="kv"><dt>Name</dt><dd id="p-name"></dd><dt>Email</dt><dd id="p-email"></dd><dt>Member since</dt><dd id="p-since"></dd></dl>
-        <div class="acts"><button class="btn line" id="change-pw">Change password</button><button class="btn line" id="logout">Log out</button></div>
-      </section>
-      <section class="panel-card">
+      </div>
+      <div class="card">
+        <h2>How connecting works</h2>
+        <ol class="how-steps" style="margin-top:14px">
+          <li><span>1</span><div><b>Install</b><p>Add Submit Later from the Chrome Web Store and pin it to your toolbar.</p></div></li>
+          <li><span>2</span><div><b>Connect</b><p>Click <b>Connect extension</b> above, or click the extension icon and sign in.</p></div></li>
+          <li><span>3</span><div><b>Schedule</b><p>Your trial or plan applies straight away, on every Chrome browser you sign in to.</p></div></li>
+        </ol>
+      </div>
+      <div class="card faq-mini">
+        <h2>Troubleshooting</h2>
+        <details><summary>It says the extension isn't installed, but it is</summary><p>Make sure it's turned on in <code>chrome://extensions</code>, then click <b>Check again</b>. This page only detects the extension in Google Chrome on a computer.</p></details>
+        <details><summary>It's signed in to a different account</summary><p>Click <b>Connect extension</b> here to switch it to this account.</p></details>
+        <details><summary>I paid but the extension still says my trial ended</summary><p>Open the extension's popup and click <b>Already paid? Check again</b>. It refreshes your plan from our server.</p></details>
+      </div>
+    </section>
+
+    <!-- Profile -->
+    <section class="view" data-view="profile" hidden>
+      <div class="view-head"><h1>Profile</h1><p>Your details, used on receipts and emails.</p></div>
+      <div class="card">
+        <div class="profile-head">
+          <span class="av lg" id="p-av">·</span>
+          <div><b id="p-name-big"></b><span class="muted" id="p-email-big"></span></div>
+          <span class="badge-v" id="p-verified"></span>
+        </div>
+        <form id="profile-form" class="form form-grid" novalidate>
+          <div class="field" data-field="name">
+            <label for="pf-name">Full name</label>
+            <div class="input"><svg><use href="#i-user"/></svg><input id="pf-name" name="name" autocomplete="name" maxlength="60"></div>
+            <div class="f-err" role="alert"></div>
+          </div>
+          <div class="field" data-field="email">
+            <label for="pf-email">Email</label>
+            <div class="input is-readonly"><svg><use href="#i-mail"/></svg><input id="pf-email" name="email" readonly></div>
+            <div class="f-help">Your email can't be changed yet. Contact us if you need to.</div>
+            <div class="f-err" role="alert"></div>
+          </div>
+          <div class="field" data-field="phone">
+            <label for="pf-phone">Mobile number <span class="muted">(optional)</span></label>
+            <div class="input"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></g></svg><input id="pf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" maxlength="16"></div>
+            <div class="f-help">Our payment partner PayU needs it for receipts.</div>
+            <div class="f-err" role="alert"></div>
+          </div>
+          <div class="field">
+            <label>Member since</label>
+            <div class="input is-readonly"><svg><use href="#i-clock"/></svg><input id="pf-since" readonly></div>
+          </div>
+          <div class="form-foot">
+            <span class="saved" id="pf-saved" hidden><svg><use href="#i-check"/></svg> Saved</span>
+            <button type="submit" class="btn btn-block" style="width:auto"><span class="spin" aria-hidden="true"></span><span>Save changes</span></button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="view" data-view="security" hidden>
+      <div class="view-head"><h1>Security</h1><p>How you sign in, and what happens to your data.</p></div>
+      <div class="card">
+        <h2>Sign-in methods</h2>
+        <div class="set-row">
+          <span class="set-ic"><svg><use href="#i-key"/></svg></span>
+          <div class="set-text"><b>Password</b><span id="sec-pw-text"></span></div>
+          <button type="button" class="btn line sm" id="change-pw"></button>
+        </div>
+        <div class="set-row">
+          <span class="set-ic"><svg><use href="#i-google"/></svg></span>
+          <div class="set-text"><b>Google</b><span id="sec-g-text"></span></div>
+          <span class="badge-v" id="sec-g-badge"></span>
+        </div>
+        <div class="set-row">
+          <span class="set-ic"><svg><use href="#i-out"/></svg></span>
+          <div class="set-text"><b>This browser</b><span>Sign out of the website here. The extension stays signed in.</span></div>
+          <button type="button" class="btn line sm" data-logout>Log out</button>
+        </div>
+      </div>
+      <div class="card danger">
         <h2>Delete account</h2>
-        <p class="muted" style="margin-bottom:14px">Permanently removes your account and plan. Payment records are kept only as long as the law requires.</p>
-        <button class="btn danger" id="delete-open">Delete my account</button>
-      </section>
-    </div>
-  </div>
+        <div class="set-row">
+          <span class="set-ic bad"><svg><use href="#i-trash"/></svg></span>
+          <div class="set-text"><b>Delete your account permanently</b><span>Removes your account and plan and signs out the extension. Payment records are kept only as long as tax law requires.</span></div>
+          <button type="button" class="btn danger sm" id="delete-open">Delete account</button>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
-</main>
+
+<footer class="dash-foot">
+  <span>© 2026 Submit Later</span>
+  <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="refund.html">Refunds</a><a href="contact.html">Contact</a>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
 <dialog id="phone-dialog">
   <form id="phone-form" novalidate>
     <h2>Your mobile number</h2>
     <p>Our payment partner PayU needs a mobile number for your receipt. We only use it for payments and won't call or message you. <b id="phone-plan"></b></p>
     <div class="field" data-field="phone">
-      <div class="input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg><input name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" maxlength="16"></div>
+      <div class="input"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></g></svg><input name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" maxlength="16"></div>
       <div class="f-err" role="alert"></div>
     </div>
     <div class="acts"><button type="button" class="btn line" id="phone-cancel">Cancel</button><button type="submit" class="btn btn-block" style="width:auto"><span class="spin" aria-hidden="true"></span><span>Continue to payment</span></button></div>
@@ -108,28 +336,7 @@
     <div class="acts"><button type="button" class="btn line" id="delete-cancel">Cancel</button><button type="submit" class="btn danger"><span class="spin" aria-hidden="true"></span><span>Delete account</span></button></div>
   </form>
 </dialog>
-<footer class="foot">
-  <div class="wrap foot-grid">
-    <div>
-      <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-      <p>A Chrome extension that presses any button at the time you choose.</p>
-    </div>
-    <div>
-      <h4>Product</h4>
-      <a href="pricing.html">Pricing</a><a href="signup.html">Start free trial</a><a href="login.html">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
-    </div>
-    <div>
-      <h4>Legal</h4>
-      <a href="privacy.html">Privacy policy</a><a href="terms.html">Terms & conditions</a><a href="refund.html">Refund & cancellation</a><a href="shipping.html">Delivery policy</a>
-    </div>
-    <div>
-      <h4>Contact</h4>
-      <p>Harmandeep Singh<br><a href="mailto:singh.harmandeep09@gmail.com">singh.harmandeep09@gmail.com</a><br><a href="tel:+918054334017">+91 80543 34017</a><br>B-34/6378, Street No. 3, Jagat Nagar<br>Jassian Road, Haibowal Kalan<br>Ludhiana (East), Ludhiana<br>Punjab 141001, India</p>
-    </div>
-  </div>
-  <div class="wrap copy">© 2026 Harmandeep Singh. All rights reserved.</div>
-</footer>
-<script src="site.js"></script>
+
 <script src="app.js"></script>
 </body>
 </html>

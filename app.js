@@ -391,40 +391,252 @@ async function initVerify() {
   }
 }
 
-// ---- Account page ----------------------------------------------------------
+// ---- Account dashboard -----------------------------------------------------
+// account.html: a sidebar of views (Overview, Plan & billing, Invoices,
+// Extension, Profile, Security), switched by the URL hash.
 
 const fmtDate = (ms) => new Date(ms).toLocaleDateString([], { day: 'numeric', month: 'short', year: 'numeric' });
 const daysLeft = (ms) => Math.max(0, Math.ceil((ms - Date.now()) / 86_400_000));
+const PLAN_DAYS = { monthly: 30, annual: 365 };
+const RING = 2 * Math.PI * 52;
 
-function renderPlan(plan) {
-  const card = $('#plan-card');
-  card.dataset.status = plan.status;
-  const status = $('#plan-status');
-  const title = $('#plan-title');
-  const sub = $('#plan-sub');
-  const bar = $('#plan-bar');
+const acct = { user: null, plan: null, ext: 'checking', extEmail: null };
+
+const VIEWS = ['overview', 'billing', 'invoices', 'extension', 'profile', 'security'];
+
+function showView(name) {
+  if (!VIEWS.includes(name)) name = 'overview';
+  document.querySelectorAll('.view').forEach((v) => (v.hidden = v.dataset.view !== name));
+  document.querySelectorAll('.dash-nav [data-view]').forEach((a) => {
+    const on = a.dataset.view === name;
+    a.classList.toggle('on', on);
+    if (on) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  });
+  $('#um-pop').hidden = true;
+  $('#um-btn').setAttribute('aria-expanded', 'false');
+  window.scrollTo({ top: 0 });
+}
+
+let toastTimer;
+function toast(text) {
+  const t = $('#toast');
+  t.textContent = text;
+  t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => (t.hidden = true), 2600);
+}
+
+// Everything the views say about the plan, worked out once.
+function planInfo(plan) {
   if (plan.status === 'trial') {
     const left = daysLeft(plan.trialEndsAt);
-    status.textContent = 'Free trial';
-    title.textContent = `${left} ${left === 1 ? 'day' : 'days'} left`;
-    sub.textContent = `Your trial ends on ${fmtDate(plan.trialEndsAt)}. Every feature is included until then.`;
-    bar.hidden = false;
-    bar.firstElementChild.style.width = `${Math.min(100, ((30 - left) / 30) * 100)}%`;
-    $('#buy-title').textContent = 'Keep it going after your trial';
-  } else if (plan.status === 'active') {
-    const left = daysLeft(plan.paidUntil);
-    status.textContent = `${PLANS[plan.plan]?.name || 'Pro'} plan`;
-    title.textContent = `Active until ${fmtDate(plan.paidUntil)}`;
-    sub.textContent = `${left} ${left === 1 ? 'day' : 'days'} left. Plans don't renew automatically; we'll email you before it ends.`;
-    bar.hidden = true;
-    $('#buy-title').textContent = 'Add more time';
-  } else {
-    status.textContent = plan.paidUntil ? 'Plan ended' : 'Trial ended';
-    title.textContent = 'Choose a plan to keep scheduling';
-    sub.textContent = 'Your scheduled history is safe. Pick a plan below and you can schedule again straight away.';
-    bar.hidden = true;
-    $('#buy-title').textContent = 'Choose a plan';
+    return {
+      status: 'trial',
+      label: 'Free trial',
+      value: `${left} ${left === 1 ? 'day' : 'days'} left`,
+      sub: `Trial ends on ${fmtDate(plan.trialEndsAt)}`,
+      left,
+      pct: Math.min(1, left / 30),
+      planName: 'Free trial (all features)',
+      endLabel: 'Trial ends',
+      end: fmtDate(plan.trialEndsAt),
+    };
   }
+  if (plan.status === 'active') {
+    const left = daysLeft(plan.paidUntil);
+    const name = PLANS[plan.plan]?.name || 'Pro';
+    return {
+      status: 'active',
+      label: `${name} plan`,
+      value: `${left} ${left === 1 ? 'day' : 'days'} left`,
+      sub: `Active until ${fmtDate(plan.paidUntil)}`,
+      left,
+      pct: Math.min(1, left / (PLAN_DAYS[plan.plan] || 365)),
+      planName: `${name} · ₹${PLANS[plan.plan]?.price ?? ''}`,
+      endLabel: 'Active until',
+      end: fmtDate(plan.paidUntil),
+    };
+  }
+  return {
+    status: 'expired',
+    label: plan.paidUntil ? 'Plan ended' : 'Trial ended',
+    value: 'No active plan',
+    sub: 'Choose a plan to schedule new buttons',
+    left: 0,
+    pct: 0,
+    planName: 'None',
+    endLabel: 'Ended on',
+    end: fmtDate(plan.paidUntil || plan.trialEndsAt),
+  };
+}
+
+function renderPlan() {
+  const p = planInfo(acct.plan);
+
+  // Sidebar card
+  const np = $('#nav-plan');
+  np.hidden = false;
+  np.dataset.status = p.status;
+  $('#np-label').textContent = p.label;
+  $('#np-title').textContent = p.value;
+  $('#np-bar').style.width = `${p.pct * 100}%`;
+  $('#np-sub').textContent =
+    p.status === 'trial' ? 'Then ₹49 a month or ₹399 a year.' : p.status === 'active' ? "Doesn't renew automatically." : 'Anything already scheduled still runs.';
+  $('#np-cta').textContent = p.status === 'active' ? 'Add more time' : p.status === 'trial' ? 'See plans' : 'Choose a plan';
+
+  // Overview card
+  $('#s-plan-value').textContent = p.value;
+  $('#s-plan-sub').textContent = `${p.label} · ${p.sub}`;
+  $('#s-plan-bar').classList.toggle('ok', p.status === 'active');
+  $('#s-plan-bar').firstElementChild.style.width = `${p.pct * 100}%`;
+  $('#s-plan-ic').className = `stat-ic${p.status === 'active' ? ' ok' : p.status === 'expired' ? ' warn' : ''}`;
+  $('#s-plan-link').firstChild.textContent = p.status === 'expired' ? 'Choose a plan ' : 'Plan & billing ';
+
+  // Billing
+  const box = $('#plan-now');
+  box.dataset.status = p.status;
+  $('#ring-num').textContent = p.left;
+  $('#ring-unit').textContent = p.left === 1 ? 'day left' : 'days left';
+  requestAnimationFrame(() => ($('#ring-val').style.strokeDashoffset = String(RING * (1 - p.pct))));
+  $('#pn-chip').textContent = p.label;
+  $('#pn-title').textContent =
+    p.status === 'trial' ? "You're on the free trial" : p.status === 'active' ? `Your ${p.label} is active` : `Your ${p.label.toLowerCase().replace(' ended', '')} has ended`;
+  $('#pn-sub').textContent =
+    p.status === 'trial'
+      ? 'Every feature is included. Pick a plan any time; it starts when your trial ends, so you lose nothing.'
+      : p.status === 'active'
+        ? "Your plan doesn't renew automatically. We'll email you 3 days before it ends."
+        : "Anything you'd already scheduled is still pressed. Choose a plan below to schedule new buttons.";
+  $('#pn-plan').textContent = p.planName;
+  $('#pn-end-label').textContent = p.endLabel;
+  $('#pn-end').textContent = p.end;
+  $('#buy-title').textContent = p.status === 'active' ? 'Add more time' : 'Choose a plan';
+  $('#buy-sub').textContent =
+    p.status === 'expired'
+      ? 'Every feature is included in every plan. Your plan starts as soon as you pay.'
+      : 'Every feature is included in every plan. Time you buy is added after your current trial or plan, so nothing is wasted.';
+}
+
+function renderUser() {
+  const u = acct.user;
+  const first = u.name.split(' ')[0];
+  const initial = (u.name.trim()[0] || u.email[0]).toUpperCase();
+  const h = new Date().getHours();
+  $('#hello').textContent = `${h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'}, ${first}`;
+  for (const id of ['#um-av', '#p-av']) $(id).textContent = initial;
+  $('#um-name').textContent = first;
+  $('#um-full').textContent = u.name;
+  $('#um-email').textContent = u.email;
+  $('#vb-email').textContent = u.email;
+  $('#verify-banner').hidden = u.emailVerified;
+
+  $('#s-acc-value').textContent = u.emailVerified ? 'Verified' : 'Verify email';
+  $('#s-acc-sub').textContent = `${u.email} · since ${fmtDate(u.createdAt)}`;
+  $('#s-acc-ic').className = `stat-ic${u.emailVerified ? ' ok' : ' warn'}`;
+
+  $('#p-name-big').textContent = u.name;
+  $('#p-email-big').textContent = u.email;
+  const v = $('#p-verified');
+  v.className = `badge-v ${u.emailVerified ? 'ok' : 'warn'}`;
+  v.textContent = u.emailVerified ? 'Email verified' : 'Email not verified';
+  const f = $('#profile-form');
+  f.name.value = u.name;
+  f.email.value = u.email;
+  f.phone.value = u.phone || '';
+  $('#pf-since').value = fmtDate(u.createdAt);
+
+  $('#sec-pw-text').textContent = u.hasPassword
+    ? 'You can sign in with your email and password.'
+    : 'No password yet. You sign in with Google; add a password to sign in with email too.';
+  $('#change-pw').textContent = u.hasPassword ? 'Change password' : 'Add a password';
+  $('#sec-g-text').textContent = u.google ? `Signed in with Google as ${u.email}.` : 'Not connected. Use "Continue with Google" on the login page to link it.';
+  const g = $('#sec-g-badge');
+  g.className = `badge-v ${u.google ? 'ok' : 'off'}`;
+  g.textContent = u.google ? 'Connected' : 'Not connected';
+  renderChecklist();
+}
+
+const EXT_TEXT = {
+  checking: { chip: 'Checking', title: 'Looking for the extension…', text: '', value: 'Checking…', sub: '' },
+  missing: {
+    chip: 'Not installed',
+    title: "The extension isn't installed in this browser",
+    text: 'Add Submit Later from the Chrome Web Store, then come back here to connect it. (This page can only detect it in Google Chrome on a computer.)',
+    value: 'Not installed',
+    sub: 'Install it from the Chrome Web Store',
+  },
+  ready: {
+    chip: 'Installed',
+    title: 'Connect the extension to this account',
+    text: "It's installed but not signed in yet. Connect it so it can use your trial or plan.",
+    value: 'Not connected',
+    sub: 'Installed · one click to connect',
+  },
+  other: {
+    chip: 'Other account',
+    title: 'The extension is signed in to another account',
+    text: '',
+    value: 'Other account',
+    sub: '',
+  },
+  connected: {
+    chip: 'Connected',
+    title: 'The extension is connected',
+    text: '',
+    value: 'Connected',
+    sub: '',
+  },
+};
+
+function renderExt() {
+  const s = acct.ext;
+  const t = { ...EXT_TEXT[s] };
+  if (s === 'connected') {
+    t.text = `It's signed in as ${acct.user.email} and uses this account's trial or plan. You can schedule straight away.`;
+    t.sub = `Signed in as ${acct.user.email}`;
+  }
+  if (s === 'other') {
+    t.text = `It's signed in as ${acct.extEmail}. Connect it to switch to ${acct.user.email}.`;
+    t.sub = `Signed in as ${acct.extEmail}`;
+  }
+  const hero = $('#ext-hero');
+  hero.dataset.state = s;
+  $('#ext-chip').textContent = t.chip;
+  $('#ext-title').textContent = t.title;
+  $('#ext-text').textContent = t.text;
+  $('#ext-connect').hidden = !(s === 'ready' || s === 'other');
+  $('#ext-connect').lastElementChild.textContent = s === 'other' ? 'Switch to this account' : 'Connect extension';
+  $('#ext-install').hidden = s !== 'missing';
+  $('#ext-recheck').hidden = s === 'connected' || s === 'checking';
+
+  $('#s-ext-value').textContent = t.value;
+  $('#s-ext-sub').textContent = t.sub;
+  $('#s-ext-ic').className = `stat-ic${s === 'connected' ? ' ok' : s === 'missing' || s === 'other' ? ' warn' : ''}`;
+  $('#nav-ext-dot').hidden = s === 'connected' || s === 'checking';
+  renderChecklist();
+}
+
+function renderChecklist() {
+  if (!acct.user) return;
+  const done = {
+    account: true,
+    install: acct.ext === 'ready' || acct.ext === 'other' || acct.ext === 'connected',
+    connect: acct.ext === 'connected',
+    verify: acct.user.emailVerified,
+  };
+  let n = 0;
+  for (const [step, ok] of Object.entries(done)) {
+    $(`.checklist [data-step="${step}"]`).classList.toggle('done', ok);
+    if (ok) n++;
+  }
+  // "Connect" only makes sense once it's installed.
+  $('.checklist [data-step="connect"] .btn').hidden = !done.install;
+  const total = Object.keys(done).length;
+  $('#cl-count').textContent = n === total ? 'All done' : `${n} of ${total}`;
+  $('#cl-count').classList.toggle('done', n === total);
+  $('#cl-bar').classList.toggle('ok', n === total);
+  $('#cl-bar').firstElementChild.style.width = `${(n / total) * 100}%`;
 }
 
 function renderPayments(list) {
@@ -548,112 +760,131 @@ async function toExtension(msg) {
   return null;
 }
 
-async function connectExtension(user) {
-  const state = $('#ext-state');
-  const btn = $('#ext-connect');
-  setBusy(btn, true);
+async function checkExtension() {
+  acct.ext = 'checking';
+  renderExt();
+  const ping = await toExtension({ type: 'ping' });
+  if (!ping) acct.ext = 'missing';
+  else if (ping.email === acct.user.email) acct.ext = 'connected';
+  else if (ping.email) {
+    acct.ext = 'other';
+    acct.extEmail = ping.email;
+  } else acct.ext = 'ready';
+  renderExt();
+}
+
+async function connectExtension(btn) {
+  if (btn) setBusy(btn, true);
   try {
     const { refreshToken } = await api('/auth/extension-session', { method: 'POST' });
-    const res = await toExtension({ type: 'signin', refreshToken, user });
+    const res = await toExtension({ type: 'signin', refreshToken, user: acct.user });
     if (!res?.ok) throw new Error();
-    state.dataset.state = 'connected';
-    $('#ext-text').textContent = `Signed in as ${user.email}. You can close this tab and use the extension.`;
-    btn.hidden = true;
+    acct.ext = 'connected';
+    renderExt();
+    toast('Extension connected. You can close this tab.');
   } catch (err) {
-    $('#ext-text').textContent =
-      err instanceof ApiError ? messageFor(err) : "Couldn't reach the extension. Make sure Submit Later is installed and enabled, then try again.";
+    toast(err instanceof ApiError ? messageFor(err) : "Couldn't reach the extension. Make sure it's installed and turned on.");
   } finally {
-    setBusy(btn, false);
+    if (btn) setBusy(btn, false);
   }
 }
 
-async function initExtensionCard(user) {
-  const state = $('#ext-state');
-  const ping = await toExtension({ type: 'ping' });
-  if (!ping) {
-    state.dataset.state = 'missing';
-    $('#ext-text').textContent = 'Install Submit Later from the Chrome Web Store, then come back here to connect it.';
-    $('#ext-install').hidden = false;
-    return;
-  }
-  if (ping.email === user.email) {
-    state.dataset.state = 'connected';
-    $('#ext-text').textContent = `Connected. The extension is signed in as ${user.email}.`;
-    return;
-  }
-  state.dataset.state = 'ready';
-  $('#ext-text').textContent = 'The extension is installed. Connect it to this account to start scheduling.';
-  const btn = $('#ext-connect');
-  btn.hidden = false;
-  btn.onclick = () => connectExtension(user);
-  if (params.get('connect') === '1') connectExtension(user);
+async function logout() {
+  const s = session.get();
+  await request('/auth/logout', { method: 'POST', body: { refreshToken: s?.refreshToken } }).catch(() => {});
+  session.clear();
+  location.href = 'login.html';
 }
 
-async function initAccount() {
-  if (!session.get()) {
-    location.replace(`login.html?next=${encodeURIComponent('account.html' + location.search)}`);
-    return;
-  }
-  const box = $('#page-notice');
-  const pay = params.get('payment');
-  if (pay === 'success') notice(box, 'ok', 'Payment received, thank you! Your plan is active and a receipt is on its way to your inbox.');
-  if (pay === 'failed') notice(box, 'bad', "The payment didn't go through and you haven't been charged. You can try again below.");
-  if (pay === 'cancelled') notice(box, 'info', 'Payment cancelled. You can pick a plan whenever you are ready.');
-  if (pay === 'pending') notice(box, 'info', "Your bank is still confirming the payment. Your plan switches on by itself as soon as it does, and we'll email you.");
+function initAccountUi() {
+  // Views
+  addEventListener('hashchange', () => showView(location.hash.slice(1)));
+  showView(location.hash.slice(1));
 
-  let me;
-  try {
-    me = await api('/me');
-  } catch (err) {
-    if (err.status === 401) return location.replace('login.html?expired=1&next=account.html');
-    notice(box, err.code === 'NOT_CONFIGURED' ? 'info' : 'bad', messageFor(err));
-    $('#account-main').hidden = true;
-    return;
-  }
-  const { user, plan } = me;
-  session.set({ ...session.get(), user });
-  if (!pay) notice(box, '', '');
-  $('#account-main').hidden = false;
-  $('#hello').textContent = `Hi, ${user.name.split(' ')[0]}`;
-  $('#p-name').textContent = user.name;
-  $('#p-email').textContent = user.email;
-  $('#p-since').textContent = fmtDate(user.createdAt);
-  $('#verify-banner').hidden = user.emailVerified;
-  $('#resend').onclick = async () => {
+  // User menu
+  const btn = $('#um-btn');
+  const pop = $('#um-pop');
+  btn.onclick = (e) => {
+    e.stopPropagation();
+    pop.hidden = !pop.hidden;
+    btn.setAttribute('aria-expanded', String(!pop.hidden));
+  };
+  document.addEventListener('click', (e) => {
+    if (!pop.hidden && !e.target.closest('.user-menu')) {
+      pop.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !pop.hidden) {
+      pop.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      btn.focus();
+    }
+  });
+
+  document.querySelectorAll('[data-logout]').forEach((b) => (b.onclick = logout));
+  document.querySelectorAll('[data-buy]').forEach((b) => (b.onclick = () => buy(b.dataset.buy, b)));
+  document.querySelectorAll('[data-connect]').forEach((b) => (b.onclick = () => connectExtension(b)));
+  $('#ext-recheck').onclick = checkExtension;
+
+  const resend = async (b) => {
     try {
       await api('/auth/resend-verification', { method: 'POST' });
-      $('#resend').textContent = 'Sent! Check your inbox';
-      $('#resend').disabled = true;
+      b.textContent = 'Sent!';
+      b.disabled = true;
+      toast(`Verification link sent to ${acct.user.email}`);
     } catch (err) {
-      notice(box, 'bad', messageFor(err));
+      toast(messageFor(err));
     }
   };
-  renderPlan(plan);
+  $('#resend').onclick = () => resend($('#resend'));
+  document.querySelectorAll('[data-resend]').forEach((b) => (b.onclick = () => resend(b)));
 
-  document.querySelectorAll('[data-buy]').forEach((b) => (b.onclick = () => buy(b.dataset.buy, b)));
-  if (PLANS[params.get('buy')] && pay !== 'success') $(`[data-buy="${params.get('buy')}"]`)?.click();
-
-  api('/payments')
-    .then(({ payments }) => renderPayments(payments))
-    .catch(() => renderPayments([]));
-  initExtensionCard(user);
-
-  $('#logout').onclick = async () => {
-    const s = session.get();
-    await request('/auth/logout', { method: 'POST', body: { refreshToken: s?.refreshToken } }).catch(() => {});
-    session.clear();
-    location.href = 'login.html';
-  };
   $('#change-pw').onclick = async () => {
+    const b = $('#change-pw');
     try {
-      await request('/auth/forgot', { method: 'POST', body: { email: user.email } });
-      $('#change-pw').textContent = 'Reset link sent to your email';
-      $('#change-pw').disabled = true;
+      await request('/auth/forgot', { method: 'POST', body: { email: acct.user.email } });
+      b.textContent = 'Link sent';
+      b.disabled = true;
+      toast(`We emailed a link to ${acct.user.email} to set your password.`);
     } catch (err) {
-      notice(box, 'bad', messageFor(err));
+      toast(messageFor(err));
     }
   };
 
+  // Profile
+  $('#profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    clearErrors(form);
+    $('#pf-saved').hidden = true;
+    const name = form.name.value.trim();
+    const phone = form.phone.value.trim();
+    const ok = [
+      fieldError(form, 'name', name ? '' : 'Enter your name.'),
+      fieldError(form, 'phone', !phone || /^(?:\+?91|0)?[6-9]\d{9}$/.test(phone.replace(/[\s-]/g, '')) ? '' : 'Enter a valid 10-digit mobile number.'),
+    ].every(Boolean);
+    if (!ok) return form.querySelector('.invalid input')?.focus();
+    const b = form.querySelector('button[type=submit]');
+    setBusy(b, true);
+    try {
+      const body = { name };
+      if (phone) body.phone = phone;
+      const { user } = await api('/me', { method: 'PATCH', body });
+      acct.user = user;
+      session.set({ ...session.get(), user });
+      renderUser();
+      $('#pf-saved').hidden = false;
+      toast('Profile saved');
+    } catch (err) {
+      if (!(err.field && fieldError(form, err.field, err.message) === false)) toast(messageFor(err));
+    } finally {
+      setBusy(b, false);
+    }
+  });
+
+  // Delete account
   const dialog = $('#delete-dialog');
   $('#delete-open').onclick = () => dialog.showModal();
   $('#delete-cancel').onclick = () => dialog.close();
@@ -664,17 +895,69 @@ async function initAccount() {
       fieldError(form, 'confirm', 'Type DELETE to confirm.');
       return;
     }
-    const btn = form.querySelector('button[type=submit]');
-    setBusy(btn, true);
+    const b = form.querySelector('button[type=submit]');
+    setBusy(b, true);
     try {
       await api('/me', { method: 'DELETE' });
       session.clear();
       location.href = 'index.html';
     } catch (err) {
       fieldError(form, 'confirm', messageFor(err));
-      setBusy(btn, false);
+      setBusy(b, false);
     }
   });
+}
+
+async function initAccount() {
+  if (!session.get()) {
+    location.replace(`login.html?next=${encodeURIComponent('account.html' + location.search + location.hash)}`);
+    return;
+  }
+  initAccountUi();
+  const box = $('#page-notice');
+  const pay = params.get('payment');
+  const PAY_MSG = {
+    success: ['ok', 'Payment received, thank you! Your plan is active and a receipt is on its way to your inbox.'],
+    failed: ['bad', "The payment didn't go through and you haven't been charged. You can try again below."],
+    cancelled: ['info', 'Payment cancelled. You can pick a plan whenever you are ready.'],
+    pending: ['info', "Your bank is still confirming the payment. Your plan switches on by itself as soon as it does, and we'll email you."],
+  };
+
+  let me;
+  try {
+    me = await api('/me');
+  } catch (err) {
+    if (err.status === 401) return location.replace('login.html?expired=1&next=account.html');
+    notice(box, err.code === 'NOT_CONFIGURED' ? 'info' : 'bad', messageFor(err));
+    return;
+  }
+  acct.user = me.user;
+  acct.plan = me.plan;
+  session.set({ ...session.get(), user: me.user });
+  if (PAY_MSG[pay]) {
+    notice(box, ...PAY_MSG[pay]);
+    if (!location.hash) showView(pay === 'success' ? 'invoices' : 'billing');
+  } else {
+    notice(box, '', '');
+  }
+  renderUser();
+  renderPlan();
+  renderExt();
+
+  if (PLANS[params.get('buy')] && pay !== 'success') {
+    location.hash = 'billing';
+    $(`[data-buy="${params.get('buy')}"]`)?.click();
+  }
+
+  api('/payments')
+    .then(({ payments }) => renderPayments(payments))
+    .catch(() => renderPayments([]));
+
+  await checkExtension();
+  if (params.get('connect') === '1' && (acct.ext === 'ready' || acct.ext === 'other')) {
+    showView('extension');
+    connectExtension($('#ext-connect'));
+  }
 }
 
 // ---- Start -----------------------------------------------------------------
