@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy policy · Submit Later</title>
-<meta name="description" content="How the Submit Later Chrome extension and website handle your information.">
-<link rel="canonical" href="https://harmandeep991.github.io/privacy.html">
+<meta name="description" content="How Submit Later handles your data: scheduled jobs stay on your computer; your account stores only your name, email, plan and payment records.">
+<link rel="canonical" href="https://submitlater.co.in/privacy.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Submit Later">
 <meta property="og:title" content="Privacy policy · Submit Later">
-<meta property="og:description" content="How the Submit Later Chrome extension and website handle your information.">
-<meta property="og:url" content="https://harmandeep991.github.io/privacy.html">
-<meta property="og:image" content="https://harmandeep991.github.io/og-image.png">
+<meta property="og:description" content="How Submit Later handles your data: scheduled jobs stay on your computer; your account stores only your name, email, plan and payment records.">
+<meta property="og:url" content="https://submitlater.co.in/privacy.html">
+<meta property="og:image" content="https://submitlater.co.in/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="icon32.png">
 <link rel="stylesheet" href="style.css">
@@ -20,20 +20,35 @@
 <header class="top">
   <div class="wrap top-inner">
     <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-    <nav><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-cta" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Add to Chrome</a></nav>
+    <nav><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-login" href="login.html">Log in</a><a class="nav-cta" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Add to Chrome</a></nav>
   </div>
 </header>
-<section class="page-hero"><div class="wrap"><h1>Privacy policy</h1><p>Last updated 16 October 2026</p></div></section>
+<section class="page-hero"><div class="wrap"><h1>Privacy policy</h1><p>Last updated 19 October 2026</p></div></section>
 <main class="wrap">
 
 <section class="prose">
-  <p>This policy explains how the Submit Later Chrome extension ("the extension") and this website handle your information. Submit Later is operated by Harmandeep Singh, B-34/6378, Street No. 3, Jagat Nagar, Jassian Road, Haibowal Kalan, Ludhiana (East), Ludhiana, Punjab 141001, India ("we", "us").</p>
+  <p>This policy explains how Submit Later (the Chrome extension, your account and this website) handles your information. Submit Later is operated by Harmandeep Singh, B-34/6378, Street No. 3, Jagat Nagar, Jassian Road, Haibowal Kalan, Ludhiana (East), Ludhiana, Punjab 141001, India ("we", "us").</p>
 
   <h2>The short version</h2>
-  <p>The extension doesn't collect, sell or share your personal data. Everything it stores stays in Chrome on your own computer. This website doesn't use cookies, analytics or trackers. The home page loads approved reviews from our Google Apps Script; Google may log that request like any web request.</p>
+  <ul>
+    <li>What you schedule (pages, buttons and times) stays in Chrome on your own computer. It's never sent to us.</li>
+    <li>For your account we store your name, email, a securely hashed password (or your Google account ID), your plan and your payment records.</li>
+    <li>We don't sell or share your data for advertising, and this website has no ads or tracking.</li>
+  </ul>
 
-  <h2>What the extension stores, on your device only</h2>
-  <p>For each button you schedule: the page's address and title, the visible text of the button, a technical locator for it, the scheduled time and the result. The last 50 results are kept so you can see them. Your settings (including your colour theme) are stored with Chrome's sync storage, so if you use Chrome sync they follow your Google account like any other Chrome setting. You can clear history in the extension, and everything is deleted when you uninstall it.</p>
+  <h2>What we store on our servers</h2>
+  <ul>
+    <li><b>Account:</b> name, email address, whether it's verified, a hashed password (we can never see the password itself), or your Google account ID and email if you sign in with Google, and when you signed up.</li>
+    <li><b>Plan:</b> your trial end date, plan type and the date your plan runs until.</li>
+    <li><b>Payments:</b> amount, plan, date, status, your mobile number (PayU requires one for receipts), and the transaction ID and payment method type that PayU reports to us. We never receive your card number, UPI PIN or bank login.</li>
+    <li><b>Security:</b> sign-in sessions, and the IP address and time of sign-in attempts, kept for up to 30 days to prevent abuse and fraud.</li>
+  </ul>
+
+  <h2>What the extension sends us</h2>
+  <p>When you schedule a button, and about once a day, the extension checks your plan with our server. That request contains only your sign-in token and the extension version. It doesn't include the page, the button, the time or anything you typed.</p>
+
+  <h2>What the extension stores on your device</h2>
+  <p>For each button you schedule: the page's address and title, the button's visible text, a technical locator for it, the scheduled time and the result. The last 50 results are kept so you can see them. It also keeps your sign-in token and plan status so it works offline for a while. Settings, including your colour theme, use Chrome's sync storage, so they follow your Google account if you use Chrome sync. Uninstalling the extension deletes everything it stores.</p>
 
   <h2>What the extension reads on web pages</h2>
   <p>It runs only on a tab where you start the button picker yourself. It reads just enough of that page to let you pick a button, check that required fields are filled, and press the button at the time you chose. It doesn't read or store what you type into forms.</p>
@@ -41,34 +56,49 @@
   <h2>Reliable clicking</h2>
   <p>When "Reliable clicking" is on (the default), the extension uses Chrome's debugger permission only to send a single mouse click to the button you picked, at the time you scheduled, and then detaches immediately. It isn't used to read page content or network traffic.</p>
 
-  <h2>Problem reports</h2>
-  <p>A problem report is sent only when you press "Submit problem". It goes to a Google Apps Script operated by us, which emails it to our inbox. Before sending you can see everything it contains: your description, any screenshot links and email address you choose to add, and optional technical details (extension version, browser, language, time zone, extension settings and the site's name; never the full page address or form contents). We use reports only to provide support and fix problems, and delete them when no longer needed.</p>
+  <h2>Emails</h2>
+  <p>We send emails about your account: verification, password resets, payment receipts and reminders before your trial or plan ends. We don't send marketing emails unless you've agreed to them.</p>
 
-  <h2>Reviews</h2>
-  <p>If you share your experience from the extension, your star rating, comment and name (or "Anonymous") are stored in a Google Sheet operated by us, along with whether you allowed it to be shown publicly. Only reviews you allowed and we approved are shown in the extension and on this website, with the rating, comment, name or "Anonymous" and month. To have a review removed, email us.</p>
+  <h2>Who processes your data for us</h2>
+  <ul>
+    <li><b>PayU</b> processes payments under its own privacy policy.</li>
+    <li><b>MongoDB Atlas</b> hosts our database, and a cloud hosting provider runs our server.</li>
+    <li>An email delivery service sends our account emails.</li>
+    <li><b>Google</b> handles "Continue with Google" if you use it.</li>
+  </ul>
+  <p>These providers may process data outside India, under contracts that require them to protect it.</p>
 
-  <h2>Contributions and the supporters wall</h2>
-  <p>Contributions are processed by PayU, Razorpay or your UPI app under their own privacy policies. We never see your card or bank details; we receive only the payment confirmation (amount, date, reference) from the provider. If you choose to add yourself to the supporters wall, the name (or "Anonymous"), amount, currency, method, message and optional transaction reference you enter are stored in a Google Sheet operated by us. Only approved entries are shown, and only the name or "Anonymous", the amount if you allowed it, the message and the date. Transaction references are never published.</p>
+  <h2>This website</h2>
+  <p>When you log in, the website keeps your sign-in session in your browser's local storage. It doesn't use advertising or analytics cookies. The sign-up and login pages load Google's sign-in script from Google.</p>
+
+  <h2>Problem reports and reviews</h2>
+  <p>A problem report is sent only when you press "Submit problem" in the extension, and you can see everything in it first: your description, any links and email you add, and optional technical details (extension version, browser, language, time zone, settings and the site's name, never the full page address or form contents). If you share a review, your rating, comment and name (or "Anonymous") are stored, and shown publicly only if you allowed it and we approved it. Reports and reviews are stored in Google Workspace tools we operate.</p>
+
+  <h2>How long we keep it</h2>
+  <p>Account data is kept while your account exists. When you delete your account, we delete your personal data within 30 days. Payment records are kept as long as Indian tax and accounting laws require. To allow one free trial per person, we keep a one-way fingerprint of your email address (it can't be turned back into the address) and the date your trial ended.</p>
 
   <h2>Your rights</h2>
-  <p>You can ask us to access, correct or delete any information you've sent us (problem reports or supporters-wall entries) by emailing <a href="mailto:singh.harmandeep09@gmail.com">singh.harmandeep09@gmail.com</a>. We respond within 30 days.</p>
+  <p>Under India's Digital Personal Data Protection Act, 2023, you can ask to access, correct or delete your personal data, and withdraw consent. You can delete your account yourself from the <a href="account.html">account page</a>, or email us. We respond within 30 days. Grievance officer: Harmandeep Singh, <a href="mailto:singh.harmandeep09@gmail.com">singh.harmandeep09@gmail.com</a>.</p>
 
   <h2>Children</h2>
-  <p>Submit Later isn't directed at children under 13, and we don't knowingly collect their information.</p>
+  <p>Accounts are for people aged 18 or over, or with the consent of a parent or guardian.</p>
 
   <h2>Changes</h2>
-  <p>If this policy changes, we'll update the date above and, for significant changes, mention it in the extension's release notes.</p>
+  <p>If this policy changes, we'll update the date above and email account holders about significant changes.</p>
 
   <h2>Contact</h2>
   <p>Harmandeep Singh · <a href="mailto:singh.harmandeep09@gmail.com">singh.harmandeep09@gmail.com</a> · +91 80543 34017<br>B-34/6378, Street No. 3, Jagat Nagar<br>Jassian Road, Haibowal Kalan<br>Ludhiana (East), Ludhiana<br>Punjab 141001, India</p>
 </section>
-
 </main>
 <footer class="foot">
   <div class="wrap foot-grid">
     <div>
       <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-      <p>A Chrome extension that submits forms at the time you choose.</p>
+      <p>A Chrome extension that presses any button at the time you choose.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="pricing.html">Pricing</a><a href="signup.html">Start free trial</a><a href="login.html">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
     </div>
     <div>
       <h4>Legal</h4>

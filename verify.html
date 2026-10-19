@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verify your email · Submit Later</title>
+<meta name="description" content="Verify your Submit Later email address.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon32.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body data-page="verify">
+<div class="auth">
+<aside class="auth-side">
+  <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
+  <div class="side-body">
+    <h2>One last step.</h2>
+    <p>Confirming your email keeps your account and receipts safe.</p>
+    <ul class="perks"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>30 days free with every feature. No card needed.</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Gmail, Google Forms, Meet, shops and almost any website.</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Then just ₹49 a month or ₹399 a year. No auto-renewal.</span></li></ul>
+    <div class="side-pill" aria-hidden="true"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>"Send"</b><small>9:00:00 AM · in 14h 2m</small></span><span class="live"></span></div>
+  </div>
+  <div class="side-foot">© 2026 Submit Later · <a href="privacy.html" style="color:inherit">Privacy</a> · <a href="terms.html" style="color:inherit">Terms</a></div>
+</aside>
+<main class="auth-main">
+  <div class="auth-top"><a href="index.html" class="muted" style="display:inline-flex;gap:6px;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M19 12H5M11 18l-6-6 6-6"/></svg> Back to site</a><a href="contact.html" class="muted">Need help?</a></div>
+  <div class="auth-card">
+    <div id="verify-wait" class="verify-state">
+      <div class="state-icon wait"><span class="spin" style="display:block;width:26px;height:26px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin .7s linear infinite"></span></div>
+      <h1>Verifying your email…</h1>
+      <p class="lead-sm">This only takes a moment.</p>
+    </div>
+    <div id="verify-ok" class="verify-state" hidden>
+      <div class="state-icon ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h1>Email verified</h1>
+      <p class="lead-sm">Thanks! Your account is all set.</p>
+      <a class="btn btn-block" href="account.html"><span>Go to your account</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div id="verify-bad" class="verify-state" hidden>
+      <div class="state-icon bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      <h1>This link didn't work</h1>
+      <p class="lead-sm" id="verify-bad-msg">The link is incomplete or has expired.</p>
+      <a class="btn btn-block" href="account.html"><span>Send a new link from your account</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

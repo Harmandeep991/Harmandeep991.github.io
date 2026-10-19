@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your account · Submit Later</title>
+<meta name="description" content="Manage your Submit Later plan, payments and extension.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon32.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body data-page="account">
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
+    <nav><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-login" href="login.html">Log in</a><a class="nav-cta" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Add to Chrome</a></nav>
+  </div>
+</header>
+<section class="acct-hero"><div class="wrap"><h1 id="hello">Your account</h1><p>Your plan, payments and the extension, all in one place.</p></div></section>
+<main class="wrap">
+<div class="acct-wrap">
+  <div id="page-notice" class="notice info">Loading your account…</div>
+  <div id="account-main" class="acct" hidden>
+    <div class="col">
+      <section class="panel-card" id="plan-card" data-status="trial">
+        <span class="status-chip" id="plan-status">Free trial</span>
+        <h2 id="plan-title" style="font-size:28px">&nbsp;</h2>
+        <p class="muted" id="plan-sub"></p>
+        <div class="bar" id="plan-bar"><i style="width:0"></i></div>
+        <div class="buy">
+          <h3 id="buy-title">Choose a plan</h3>
+          <div id="buy-notice" class="notice" hidden></div>
+          <div class="buy-grid">
+            <div class="buy-opt">
+              <b>Monthly</b>
+              <span class="amt">₹49 <small>/ 30 days</small></span>
+              <span class="per">Good for a one-off project</span>
+              <button class="btn alt" data-buy="monthly"><span class="spin" aria-hidden="true"></span><span>Buy Monthly</span></button>
+            </div>
+            <div class="buy-opt best">
+              <span class="tag">Save 32%</span>
+              <b>Annual</b>
+              <span class="amt">₹399 <small>/ 365 days</small></span>
+              <span class="per">Just ₹33 a month</span>
+              <button class="btn btn-block" data-buy="annual"><span class="spin" aria-hidden="true"></span><span>Buy Annual</span></button>
+            </div>
+          </div>
+          <p class="secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg> Secure checkout by PayU: UPI, cards, net banking and wallets. Plans never renew automatically. Buying early adds the time on top.</p>
+        </div>
+      </section>
+      <section class="panel-card">
+        <h2>Payments and receipts</h2>
+        <p class="muted">Every payment is also emailed to you.</p>
+        <p class="empty-row" id="payments-empty">No payments yet.</p>
+        <div class="table-wrap"><table id="payments" hidden><thead><tr><th>Date</th><th>Plan</th><th>Amount</th><th>Status</th><th>Transaction</th></tr></thead><tbody></tbody></table></div>
+      </section>
+    </div>
+    <div class="col">
+      <section class="panel-card verify-banner" id="verify-banner" hidden>
+        <div><h2>Verify your email</h2><p class="muted">We sent you a link when you signed up. Verify to keep your receipts and password resets safe.</p></div>
+        <button class="btn line" id="resend">Resend link</button>
+      </section>
+      <section class="panel-card">
+        <h2>Chrome extension</h2>
+        <div id="ext-state" data-state="checking" style="margin-top:14px">
+          <span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M10 4a2 2 0 1 1 4 0v2h4v4h-2a2 2 0 1 0 0 4h2v4h-4v-2a2 2 0 1 0-4 0v2H6v-4H4a2 2 0 1 1 0-4h2V6h4z"/></svg></span>
+          <div>
+            <p id="ext-text">Looking for the extension…</p>
+            <button class="btn btn-block" id="ext-connect" hidden style="width:auto"><span class="spin" aria-hidden="true"></span><span>Connect extension</span></button>
+            <a class="btn btn-block" id="ext-install" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link hidden style="width:auto">Add to Chrome</a>
+          </div>
+        </div>
+      </section>
+      <section class="panel-card">
+        <h2>Profile</h2>
+        <dl class="kv"><dt>Name</dt><dd id="p-name"></dd><dt>Email</dt><dd id="p-email"></dd><dt>Member since</dt><dd id="p-since"></dd></dl>
+        <div class="acts"><button class="btn line" id="change-pw">Change password</button><button class="btn line" id="logout">Log out</button></div>
+      </section>
+      <section class="panel-card">
+        <h2>Delete account</h2>
+        <p class="muted" style="margin-bottom:14px">Permanently removes your account and plan. Payment records are kept only as long as the law requires.</p>
+        <button class="btn danger" id="delete-open">Delete my account</button>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<dialog id="phone-dialog">
+  <form id="phone-form" novalidate>
+    <h2>Your mobile number</h2>
+    <p>Our payment partner PayU needs a mobile number for your receipt. We only use it for payments and won't call or message you. <b id="phone-plan"></b></p>
+    <div class="field" data-field="phone">
+      <div class="input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg><input name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" maxlength="16"></div>
+      <div class="f-err" role="alert"></div>
+    </div>
+    <div class="acts"><button type="button" class="btn line" id="phone-cancel">Cancel</button><button type="submit" class="btn btn-block" style="width:auto"><span class="spin" aria-hidden="true"></span><span>Continue to payment</span></button></div>
+  </form>
+</dialog>
+<dialog id="delete-dialog">
+  <form id="delete-form" method="dialog" novalidate>
+    <h2>Delete your account?</h2>
+    <p>This can't be undone. Any time left on your plan is lost, and the extension will be signed out. Type <b>DELETE</b> to confirm.</p>
+    <div class="field" data-field="confirm">
+      <div class="input"><input name="confirm" autocomplete="off" placeholder="DELETE" style="padding-left:14px"></div>
+      <div class="f-err" role="alert"></div>
+    </div>
+    <div class="acts"><button type="button" class="btn line" id="delete-cancel">Cancel</button><button type="submit" class="btn danger"><span class="spin" aria-hidden="true"></span><span>Delete account</span></button></div>
+  </form>
+</dialog>
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
+      <p>A Chrome extension that presses any button at the time you choose.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="pricing.html">Pricing</a><a href="signup.html">Start free trial</a><a href="login.html">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <a href="privacy.html">Privacy policy</a><a href="terms.html">Terms & conditions</a><a href="refund.html">Refund & cancellation</a><a href="shipping.html">Delivery policy</a>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p>Harmandeep Singh<br><a href="mailto:singh.harmandeep09@gmail.com">singh.harmandeep09@gmail.com</a><br><a href="tel:+918054334017">+91 80543 34017</a><br>B-34/6378, Street No. 3, Jagat Nagar<br>Jassian Road, Haibowal Kalan<br>Ludhiana (East), Ludhiana<br>Punjab 141001, India</p>
+    </div>
+  </div>
+  <div class="wrap copy">© 2026 Harmandeep Singh. All rights reserved.</div>
+</footer>
+<script src="site.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

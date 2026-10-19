@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://harmandeep991.github.io/sitemap.xml
+Sitemap: https://submitlater.co.in/sitemap.xml

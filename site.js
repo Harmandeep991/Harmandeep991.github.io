@@ -15,6 +15,23 @@ if (STORE_URL) {
   });
 }
 
+// Signed in (see app.js)? Show "Account" instead of "Log in", and send the
+// pricing buttons straight to checkout instead of sign-up.
+let hasSession = false;
+try {
+  hasSession = !!JSON.parse(localStorage.getItem('sl-session'))?.refreshToken;
+} catch {}
+if (hasSession) {
+  document.querySelectorAll('.nav-login').forEach((a) => {
+    a.href = 'account.html';
+    a.textContent = 'Account';
+  });
+  document.querySelectorAll('[data-plan-link]').forEach((a) => {
+    const plan = new URL(a.href).searchParams.get('plan');
+    a.href = plan ? `account.html?buy=${plan}` : 'account.html';
+  });
+}
+
 // Use-case filter on the home page. Without JS every card simply shows.
 const filters = document.querySelector('.filters');
 if (filters) {

@@ -164,7 +164,7 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; }
 
 /* Footer */
 .foot { border-top: 1px solid var(--line); background: var(--card); padding: 44px 0 24px; font-size: 14.5px; }
-.foot-grid { display: grid; grid-template-columns: 1.3fr 1fr 1.3fr; gap: 32px; }
+.foot-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.3fr; gap: 32px; }
 .foot h4 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 .foot-grid > div > a:not(.brand) { display: block; color: var(--fg); margin-bottom: 6px; }
 .foot p { color: var(--muted); margin: 10px 0 0; }
@@ -265,3 +265,8 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; }
 }
 @media (max-width: 520px) { .cases { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .case, .case:hover { transition: none; transform: none; } }
+
+/* "Log in" in the header */
+.top nav { align-items: center; }
+.top nav a.nav-login { color: var(--fg); }
+@media (max-width: 480px) { .top nav { flex-wrap: wrap; justify-content: center; } }
