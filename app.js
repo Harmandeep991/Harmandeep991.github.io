@@ -7,12 +7,13 @@
 const ACCOUNT = {
   // The backend's address, e.g. 'https://api.example.com'. While empty, the
   // forms explain that accounts are opening soon instead of failing.
-  API_URL: '',
+  API_URL: 'https://api.submitlater.co.in',
   // Google Identity Services web client ID. While empty, the Google button
   // is hidden and email sign-up still works.
   GOOGLE_CLIENT_ID: '',
-  // Chrome Web Store ID of the extension, for handing the sign-in over to it.
-  EXTENSION_ID: 'ofhnlgiipkjicedfmkeppphhjodjbohc',
+  // Extension IDs that may receive the sign-in: the Chrome Web Store one,
+  // and the unpacked copy loaded from ~/submit-later for testing.
+  EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba'],
 };
 
 // Display only; the server decides the real prices.
@@ -517,13 +518,12 @@ function askPhone(planId) {
 }
 
 // The extension accepts messages from this site (externally_connectable).
-function toExtension(msg) {
+function sendTo(id, msg) {
   return new Promise((resolve) => {
-    const send = globalThis.chrome?.runtime?.sendMessage;
-    if (!send) return resolve(null);
+    if (!globalThis.chrome?.runtime?.sendMessage) return resolve(null);
     const timer = setTimeout(() => resolve(null), 1500);
     try {
-      chrome.runtime.sendMessage(ACCOUNT.EXTENSION_ID, msg, (res) => {
+      chrome.runtime.sendMessage(id, msg, (res) => {
         clearTimeout(timer);
         resolve(chrome.runtime.lastError ? null : res || null);
       });
@@ -532,6 +532,20 @@ function toExtension(msg) {
       resolve(null);
     }
   });
+}
+
+// The first installed copy that answers (store or testing) gets the messages.
+let extensionId = null;
+async function toExtension(msg) {
+  if (extensionId) return sendTo(extensionId, msg);
+  for (const id of ACCOUNT.EXTENSION_IDS) {
+    const res = await sendTo(id, msg);
+    if (res) {
+      extensionId = id;
+      return res;
+    }
+  }
+  return null;
 }
 
 async function connectExtension(user) {
