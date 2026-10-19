@@ -1,7 +1,7 @@
-// Chrome Web Store page for Submit Later, e.g.
-// 'https://chromewebstore.google.com/detail/submit-later/<extension-id>'.
-// While empty, the "Add to Chrome" buttons stay hidden.
-const STORE_URL = '';
+// Chrome Web Store page for Submit Later, used by every "Add to Chrome"
+// button ([data-store-link]). The pages also have the link written in, so
+// the buttons work before this script runs. Keep the two in sync.
+const STORE_URL = 'https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website';
 
 // Submit Later backend (server/report-mailer.gs): the same Web app URL as
 // REPORT_URL in the extension's config.js. Loads approved reviews onto the
@@ -12,6 +12,23 @@ if (STORE_URL) {
   document.querySelectorAll('[data-store-link]').forEach((a) => {
     a.href = STORE_URL;
     a.hidden = false;
+  });
+}
+
+// Use-case filter on the home page. Without JS every card simply shows.
+const filters = document.querySelector('.filters');
+if (filters) {
+  filters.hidden = false;
+  filters.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-filter]');
+    if (!b) return;
+    filters.querySelectorAll('[data-filter]').forEach((x) => {
+      x.classList.toggle('on', x === b);
+      x.setAttribute('aria-pressed', x === b);
+    });
+    document.querySelectorAll('.case').forEach((c) => {
+      c.hidden = b.dataset.filter !== 'all' && c.dataset.cat !== b.dataset.filter;
+    });
   });
 }
 

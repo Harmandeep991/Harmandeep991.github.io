@@ -3,24 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Submit Later: schedule email send & auto submit forms (Chrome extension)</title>
-<meta name="description" content="Submit Later is a free Chrome extension to schedule email send and auto submit forms at an exact time. Works with Gmail, Google Forms, Outlook and any website.">
+<title>Submit Later: schedule any click in Chrome. Send emails, submit forms, join meetings on time</title>
+<meta name="description" content="Submit Later is a free Chrome extension that presses any button at the exact time you choose: schedule email send, auto submit forms, join Google Meet or Zoom on time, punch in, or add to cart the second a flash sale starts.">
 <link rel="canonical" href="https://harmandeep991.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Submit Later">
-<meta property="og:title" content="Submit Later: schedule email send &amp; auto submit forms (Chrome extension)">
-<meta property="og:description" content="Submit Later is a free Chrome extension to schedule email send and auto submit forms at an exact time. Works with Gmail, Google Forms, Outlook and any website.">
+<meta property="og:title" content="Submit Later: schedule any click in Chrome. Send emails, submit forms, join meetings on time">
+<meta property="og:description" content="Submit Later is a free Chrome extension that presses any button at the exact time you choose: schedule email send, auto submit forms, join Google Meet or Zoom on time, punch in, or add to cart the second a flash sale starts.">
 <meta property="og:url" content="https://harmandeep991.github.io/">
 <meta property="og:image" content="https://harmandeep991.github.io/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="icon32.png">
 <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later","applicationCategory":"BrowserApplication","operatingSystem":"Google Chrome","description":"Submit Later is a free Chrome extension that presses any button at the exact time you choose: schedule email send, auto submit forms, join Google Meet or Zoom on time, punch in, or add to cart the second a flash sale starts.","url":"https://harmandeep991.github.io/","downloadUrl":"https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
 </head>
 <body>
 <header class="top">
   <div class="wrap top-inner">
     <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-    <nav><a href="index.html" class=on>Home</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-cta" data-store-link hidden>Add to Chrome</a></nav>
+    <nav><a href="index.html" class=on>Home</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-cta" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Add to Chrome</a></nav>
   </div>
 </header>
 <section class="hero">
@@ -28,11 +31,13 @@
     <div>
       <span class="eyebrow">Free Chrome extension</span>
       <h1>Fill it in now.<br>Send it later.</h1>
-      <p class="lead">Submit Later presses any button for you at exactly the time you choose: a form's Submit, an email's Send, a booking's Confirm.</p>
+      <p class="lead">Submit Later clicks any button for you at exactly the time you choose. Send an email, submit a form, join a meeting, punch in or grab a flash sale, right on the second.</p>
       <div class="cta-row">
-        <a class="btn primary" data-store-link hidden>Add to Chrome, it's free</a>
-        <a class="btn ghost" href="#how">See how it works</a>
+        <a class="btn primary install" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Add to Chrome, it's free</a>
+        <a class="btn ghost" href="#demo">Watch the demo</a>
       </div>
+      <p class="trust">Free · No sign-up · Works in Chrome, Edge and Brave</p>
+      <p class="mobile-note">Submit Later is a desktop Chrome extension. Open this page on your computer to install it.</p>
     </div>
     <div class="mock" aria-hidden="true">
       <div class="mock-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Submit later</div>
@@ -47,6 +52,14 @@
 </section>
 <main class="wrap">
 
+<section id="demo" class="block">
+  <h2 class="center">See it in action</h2>
+  <p class="center sub">Write it, pick the button, choose a time. Submit Later does the rest, even overnight.</p>
+  <figure class="demo">
+    <img src="how-it-works.gif" width="960" height="600" loading="lazy" alt="Animated demo: an email is written, the Send button is picked with Submit Later, Tomorrow 9 AM is chosen, and the next morning the button is pressed on time and a notification confirms it.">
+  </figure>
+</section>
+
 <section id="how" class="block">
   <h2 class="center">How it works</h2>
   <div class="steps">
@@ -55,6 +68,38 @@
     <div class="step"><span class="ic g3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><b>Choose a time</b><p>Quick picks or an exact date and time, to the second.</p></div>
     <div class="step"><span class="ic g4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><b>Done</b><p>It's pressed on time and you get a notification.</p></div>
   </div>
+</section>
+
+<section id="uses" class="block">
+  <h2 class="center">One extension, endless things to schedule</h2>
+  <p class="center sub">If it's a button on a web page, Submit Later can press it for you later. Here are a few ideas.</p>
+  <div class="filters" role="group" aria-label="Filter use cases" hidden>
+    <button type="button" class="on" data-filter="all" aria-pressed="true">All</button>
+    <button type="button" data-filter="work" aria-pressed="false">💼 Work</button>
+    <button type="button" data-filter="meet" aria-pressed="false">🎥 Meetings &amp; calls</button>
+    <button type="button" data-filter="shop" aria-pressed="false">🛒 Shopping &amp; tickets</button>
+    <button type="button" data-filter="msg" aria-pressed="false">💬 Messages &amp; posts</button>
+    <button type="button" data-filter="forms" aria-pressed="false">📝 Forms &amp; sign-ups</button>
+  </div>
+  <div class="cases">
+    <article class="case" data-cat="work"><span class="case-ic" aria-hidden="true">🕘</span><h3>Punch in on time</h3><p>Have <b>Punch in</b> pressed on your HR or attendance portal the minute your shift starts.</p><div class="case-btn"><span>Presses</span><b>Punch in</b></div></article>
+    <article class="case" data-cat="meet"><span class="case-ic" aria-hidden="true">🎥</span><h3>Join meetings on time</h3><p>Open the Google Meet, Zoom or Teams page early and it presses <b>Join now</b> at the start time.</p><div class="case-btn"><span>Presses</span><b>Join now</b></div></article>
+    <article class="case" data-cat="shop"><span class="case-ic" aria-hidden="true">⚡</span><h3>Flash sales</h3><p><b>Add to cart</b> or <b>Buy now</b> pressed the second the sale goes live, when the button is already on the page.</p><div class="case-btn"><span>Presses</span><b>Add to cart</b></div></article>
+    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true">✉️</span><h3>Schedule email send</h3><p>Write it tonight, send it at 9 AM from Gmail, Outlook or any webmail.</p><div class="case-btn"><span>Presses</span><b>Send</b></div></article>
+    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true">📝</span><h3>Submit forms at the deadline</h3><p>Google Forms, quizzes, surveys and sign-up forms, submitted at the exact time.</p><div class="case-btn"><span>Presses</span><b>Submit</b></div></article>
+    <article class="case" data-cat="meet"><span class="case-ic" aria-hidden="true">📞</span><h3>Start or join a call</h3><p>Press <b>Call</b> or <b>Join</b> in WhatsApp Web, Slack, Discord or Teams at the agreed time.</p><div class="case-btn"><span>Presses</span><b>Join call</b></div></article>
+    <article class="case" data-cat="shop"><span class="case-ic" aria-hidden="true">🎟️</span><h3>Tickets and bookings</h3><p>Concerts, sports, movies, appointments and slots, the moment they open.</p><div class="case-btn"><span>Presses</span><b>Book now</b></div></article>
+    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true">🎂</span><h3>Midnight birthday wishes</h3><p>Type the message now and it goes out at 12:00:00 sharp on WhatsApp Web or Telegram.</p><div class="case-btn"><span>Presses</span><b>Send</b></div></article>
+    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true">🎓</span><h3>Registrations that open at a set time</h3><p>Course enrolment, exam forms, hackathons and event sign-ups, before the seats run out.</p><div class="case-btn"><span>Presses</span><b>Register</b></div></article>
+    <article class="case" data-cat="work"><span class="case-ic" aria-hidden="true">📊</span><h3>Timesheets and reports</h3><p>Submit your weekly timesheet or report at 5 PM on Friday, even if you've already left.</p><div class="case-btn"><span>Presses</span><b>Submit</b></div></article>
+    <article class="case" data-cat="shop"><span class="case-ic" aria-hidden="true">🔨</span><h3>Last-second bids</h3><p>Place your bid in the final seconds of an online auction.</p><div class="case-btn"><span>Presses</span><b>Place bid</b></div></article>
+    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true">📣</span><h3>Post at peak time</h3><p>Publish on LinkedIn, X, Facebook, Reddit or your blog when your audience is online.</p><div class="case-btn"><span>Presses</span><b>Post</b></div></article>
+    <article class="case" data-cat="meet"><span class="case-ic" aria-hidden="true">🧑‍🏫</span><h3>Live classes and webinars</h3><p>Join a class, webinar or livestream right as it starts.</p><div class="case-btn"><span>Presses</span><b>Join</b></div></article>
+    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true">💼</span><h3>Job applications</h3><p>Apply the moment a posting opens, or send your application at a good hour.</p><div class="case-btn"><span>Presses</span><b>Apply</b></div></article>
+    <article class="case" data-cat="work"><span class="case-ic" aria-hidden="true">🚀</span><h3>Run a job from any dashboard</h3><p>Start an export, publish a release or trigger a build at a quiet hour.</p><div class="case-btn"><span>Presses</span><b>Run</b></div></article>
+    <article class="case" data-cat="shop"><span class="case-ic" aria-hidden="true">🎁</span><h3>Daily rewards and claims</h3><p>Claim a daily reward, coupon or offer at the time it unlocks.</p><div class="case-btn"><span>Presses</span><b>Claim</b></div></article>
+  </div>
+  <p class="good-to-know"><b>Good to know:</b> open the page and fill everything in first, so the button is already there when you pick it. Keep the tab open and your computer awake. Submit Later can't solve CAPTCHAs or sign in for you, and reloading the page cancels the schedule.</p>
 </section>
 
 <section class="block">
@@ -72,6 +117,14 @@
   <div class="testimonials" id="testimonials"></div>
 </section>
 
+<section class="block install-band">
+  <div>
+    <h2>Stop watching the clock</h2>
+    <p>Set it once and get on with your day. Submit Later presses the button on time and tells you how it went.</p>
+  </div>
+  <a class="btn install" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Add to Chrome, it's free</a>
+</section>
+
 <section class="block support-band">
   <span class="ic heart"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.5-9.3C1.2 8.4 3.4 5 6.8 5c2 0 3.4 1.1 4.2 2.4h2C13.8 6.1 15.2 5 17.2 5c3.4 0 5.6 3.4 4.3 6.7C19.5 16.4 12 21 12 21z"/></svg></span>
   <div>
@@ -86,7 +139,7 @@
   <div class="wrap foot-grid">
     <div>
       <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-      <p>A Chrome extension that submits forms at the time you choose.</p>
+      <p>A Chrome extension that presses any button at the time you choose.</p>
     </div>
     <div>
       <h4>Legal</h4>
