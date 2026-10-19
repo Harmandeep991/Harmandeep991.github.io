@@ -433,12 +433,12 @@ function planInfo(plan) {
     const left = daysLeft(plan.trialEndsAt);
     return {
       status: 'trial',
-      label: 'Free trial',
+      label: 'Pro trial',
       value: `${left} ${left === 1 ? 'day' : 'days'} left`,
       sub: `Trial ends on ${fmtDate(plan.trialEndsAt)}`,
       left,
       pct: Math.min(1, left / 30),
-      planName: 'Free trial (all features)',
+      planName: 'Pro trial (every feature)',
       endLabel: 'Trial ends',
       end: fmtDate(plan.trialEndsAt),
     };
@@ -458,16 +458,19 @@ function planInfo(plan) {
       end: fmtDate(plan.paidUntil),
     };
   }
+  // Free plan: a monthly allowance of new schedules.
+  const left = Math.max(0, (plan.freeLimit ?? 5) - (plan.freeUsed ?? 0));
   return {
-    status: 'expired',
-    label: plan.paidUntil ? 'Plan ended' : 'Trial ended',
-    value: 'No active plan',
-    sub: 'Choose a plan to schedule new buttons',
-    left: 0,
-    pct: 0,
-    planName: 'None',
-    endLabel: 'Ended on',
-    end: fmtDate(plan.paidUntil || plan.trialEndsAt),
+    status: 'free',
+    label: 'Free plan',
+    value: `${left} of ${plan.freeLimit ?? 5} left`,
+    sub: `Schedules this month · resets ${fmtDate(plan.freeResetsAt)}`,
+    left,
+    pct: left / (plan.freeLimit || 5),
+    planName: `Free · ${plan.freeLimit ?? 5} schedules a month`,
+    endLabel: 'Resets on',
+    end: fmtDate(plan.freeResetsAt),
+    unit: left === 1 ? 'schedule left' : 'schedules left',
   };
 }
 
@@ -482,40 +485,40 @@ function renderPlan() {
   $('#np-title').textContent = p.value;
   $('#np-bar').style.width = `${p.pct * 100}%`;
   $('#np-sub').textContent =
-    p.status === 'trial' ? 'Then ₹49 a month or ₹399 a year.' : p.status === 'active' ? "Doesn't renew automatically." : 'Anything already scheduled still runs.';
-  $('#np-cta').textContent = p.status === 'active' ? 'Add more time' : p.status === 'trial' ? 'See plans' : 'Choose a plan';
+    p.status === 'trial' ? 'Then the free plan, or Pro from ₹49 a month.' : p.status === 'active' ? "Doesn't renew automatically." : 'Go Pro for unlimited, repeats and WhatsApp.';
+  $('#np-cta').textContent = p.status === 'active' ? 'Add more time' : p.status === 'trial' ? 'See Pro plans' : 'Go Pro';
 
   // Overview card
   $('#s-plan-value').textContent = p.value;
   $('#s-plan-sub').textContent = `${p.label} · ${p.sub}`;
   $('#s-plan-bar').classList.toggle('ok', p.status === 'active');
   $('#s-plan-bar').firstElementChild.style.width = `${p.pct * 100}%`;
-  $('#s-plan-ic').className = `stat-ic${p.status === 'active' ? ' ok' : p.status === 'expired' ? ' warn' : ''}`;
-  $('#s-plan-link').firstChild.textContent = p.status === 'expired' ? 'Choose a plan ' : 'Plan & billing ';
+  $('#s-plan-ic').className = `stat-ic${p.status === 'active' ? ' ok' : p.status === 'free' && !p.left ? ' warn' : ''}`;
+  $('#s-plan-link').firstChild.textContent = p.status === 'free' ? 'Go Pro ' : 'Plan & billing ';
 
   // Billing
   const box = $('#plan-now');
   box.dataset.status = p.status;
   $('#ring-num').textContent = p.left;
-  $('#ring-unit').textContent = p.left === 1 ? 'day left' : 'days left';
+  $('#ring-unit').textContent = p.unit || (p.left === 1 ? 'day left' : 'days left');
   requestAnimationFrame(() => ($('#ring-val').style.strokeDashoffset = String(RING * (1 - p.pct))));
   $('#pn-chip').textContent = p.label;
   $('#pn-title').textContent =
-    p.status === 'trial' ? "You're on the free trial" : p.status === 'active' ? `Your ${p.label} is active` : `Your ${p.label.toLowerCase().replace(' ended', '')} has ended`;
+    p.status === 'trial' ? "You're on the Pro trial" : p.status === 'active' ? `Your ${p.label} is active` : "You're on the free plan";
   $('#pn-sub').textContent =
     p.status === 'trial'
-      ? 'Every feature is included. Pick a plan any time; it starts when your trial ends, so you lose nothing.'
+      ? 'Every Pro feature is included. After the trial you move to the free plan, or buy Pro any time; it starts when your trial ends, so you lose nothing.'
       : p.status === 'active'
         ? "Your plan doesn't renew automatically. We'll email you 3 days before it ends."
-        : "Anything you'd already scheduled is still pressed. Choose a plan below to schedule new buttons.";
+        : 'Schedule up to 5 buttons a month for free. Pro adds unlimited schedules, reopen-and-press, repeats, WhatsApp messages and waiting for buttons to be ready.';
   $('#pn-plan').textContent = p.planName;
   $('#pn-end-label').textContent = p.endLabel;
   $('#pn-end').textContent = p.end;
-  $('#buy-title').textContent = p.status === 'active' ? 'Add more time' : 'Choose a plan';
+  $('#buy-title').textContent = p.status === 'active' ? 'Add more Pro time' : 'Go Pro';
   $('#buy-sub').textContent =
-    p.status === 'expired'
-      ? 'Every feature is included in every plan. Your plan starts as soon as you pay.'
-      : 'Every feature is included in every plan. Time you buy is added after your current trial or plan, so nothing is wasted.';
+    p.status === 'free'
+      ? 'Unlimited schedules, reopen-and-press, repeats and WhatsApp messages. Pro starts as soon as you pay.'
+      : 'Time you buy is added after your current trial or plan, so nothing is wasted.';
 }
 
 function renderUser() {

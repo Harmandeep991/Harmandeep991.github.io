@@ -300,3 +300,8 @@ dialog .acts { justify-content: flex-end; margin-top: 18px; }
   .alert-bar { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) { .view { animation: none; } .ring .val, .bar > i { transition: none; } }
+
+/* Free plan */
+.nav-plan[data-status="free"] { background: radial-gradient(90% 120% at 100% 0%, rgba(255, 255, 255, 0.18), transparent 60%), linear-gradient(140deg, #334155, #475569); box-shadow: 0 14px 30px rgba(51, 65, 85, 0.25); }
+.plan-now[data-status="free"]::before { background: linear-gradient(90deg, #64748b, #94a3b8); }
+[data-status="free"] .status-chip { color: var(--muted); }
