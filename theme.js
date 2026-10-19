@@ -11,6 +11,8 @@ var SLTheme = (() => {
   const THEMES = {
     indigo: { name: 'Indigo', light: ['#4f46e5', '#7c3aed', '#eef2ff'], dark: ['#818cf8', '#a78bfa', 'rgba(129,140,248,.12)'], brand: ['#4f46e5', '#7c3aed'],
       hero: 'radial-gradient(120% 140% at 100% 0%, rgba(255,255,255,.18), transparent 55%), linear-gradient(135deg, #4f46e5, #7c3aed)' },
+    sunset: { name: 'Sunset', light: ['#e11d48', '#f97316', '#fff1f2'], dark: ['#fb7185', '#fdba74', 'rgba(251,113,133,.12)'], brand: ['#e11d48', '#f97316'],
+      hero: 'radial-gradient(70% 130% at 100% 0%, rgba(253,224,71,.35), transparent 60%), linear-gradient(135deg, #e11d48, #f97316 60%, #f59e0b)' },
     graphite: { name: 'Graphite', light: ['#ea580c', '#f97316', '#fff1e6'], dark: ['#fb923c', '#fdba74', 'rgba(251,146,60,.12)'], brand: ['#ea580c', '#f97316'],
       hero: 'radial-gradient(70% 130% at 100% 0%, rgba(249,115,22,.35), transparent 60%), linear-gradient(135deg, #111111, #262626)' },
     plum: { name: 'Plum', light: ['#be185d', '#db2777', '#fdf2f8'], dark: ['#f472b6', '#f9a8d4', 'rgba(244,114,182,.12)'], brand: ['#86198f', '#db2777'],
