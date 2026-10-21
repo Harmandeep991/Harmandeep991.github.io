@@ -402,7 +402,8 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; box-s
   .browser { transform: none; }
   .float-a { left: 10px; bottom: -18px; }
   .float-b { display: none; }
-  .spot, .spot.rev { grid-template-columns: 1fr; gap: 32px; }
+  .spot, .spot.rev { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .spot-visual, .mock-ui { min-width: 0; }
   .spot.rev .spot-text { order: 0; }
   .steps, .steps.four, .features, .mini-tiers, .contact-grid, .testimonials { grid-template-columns: 1fr; }
   .foot-grid { grid-template-columns: 1fr 1fr; }
@@ -452,3 +453,28 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; box-s
 @media (max-width: 600px) {
   .tp { position: fixed; left: 16px; right: 16px; top: 64px; width: auto; max-width: none; }
 }
+
+/* Popup list mockup (home "Repeat" spot): same layout as the extension popup */
+.mui-sec { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin: 0 2px 8px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.mui-sec:not(:first-child) { margin-top: 16px; }
+.mui-count { margin-right: auto; min-width: 18px; padding: 0 6px; border-radius: 999px; text-align: center; line-height: 18px; font-size: 10.5px; letter-spacing: 0; color: #fff; background: var(--accent); }
+.mui-link { font-size: 12.5px; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--accent); }
+.mui-list { border-radius: 14px; background: var(--card); border: 1px solid var(--line); overflow: hidden; }
+.mui-li { display: flex; align-items: flex-start; gap: 10px; padding: 11px 13px; }
+.mui-li + .mui-li { border-top: 1px solid var(--line); }
+.mui-li .mui-av { width: 28px; height: 28px; border-radius: 8px; font-size: 12.5px; }
+.mui-top, .mui-sub { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.mui-top b { flex: 1; min-width: 0; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mui-sub { margin-top: 2px; }
+.mui-sub small { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mui-cd { font-weight: 800; font-size: 13px; font-variant-numeric: tabular-nums; color: var(--accent); white-space: nowrap; }
+.mui-x { display: grid; place-items: center; color: var(--muted); }
+.mui-x svg { width: 13px; height: 13px; }
+
+/* How it works: the two demos side by side */
+.demo-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 34px; }
+.demo-pair figure { margin: 0; }
+.demo-pair figcaption { margin-top: 12px; color: var(--muted); font-size: 15px; }
+.demo-pair figcaption b { color: var(--fg); margin-right: 4px; }
+.demo-pair .pro-badge { padding: 1px 8px; font-size: 11px; vertical-align: 2px; margin-right: 4px; }
+@media (max-width: 760px) { .demo-pair { grid-template-columns: 1fr; } }
