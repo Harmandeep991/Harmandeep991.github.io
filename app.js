@@ -126,7 +126,7 @@ function messageFor(err) {
 // Only our own pages, so a crafted link can't send people elsewhere after login.
 function safeNext(fallback = 'account.html') {
   const next = params.get('next') || '';
-  return /^[a-z-]+\.html(\?[\w=&%-]*)?(#[\w-]*)?$/.test(next) ? next : fallback;
+  return /^[a-z-]+\.html(\?[\w=&%-]*)?(#[\w/-]*)?$/.test(next) ? next : fallback;
 }
 
 // Links between sign-up and login keep where the user is headed.

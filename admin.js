@@ -143,7 +143,7 @@
     async payments() {
       const params = new URLSearchParams({ status: q('#p-status').value, from: q('#p-from').value, to: q('#p-to').value });
       const r = await api(`/admin/payments?${params}`);
-      q('#p-total').textContent = `${r.count} paid · ${inr(r.total)}`;
+      q('#p-total').textContent = `${r.count} paid · ${inr(r.total)}${r.matching > r.shown ? ` · showing the latest ${r.shown} of ${r.matching} (export has all)` : ''}`;
       table(
         q('#p-table'),
         ['Transaction', 'Customer', 'Plan', 'Amount', 'Status', 'Mode', 'Created', ''],
@@ -281,10 +281,12 @@
     q('#p-csv').onclick = async () => {
       // Fetch with the session, then save as a file.
       const params = new URLSearchParams({ status: q('#p-status').value, from: q('#p-from').value, to: q('#p-to').value });
+      await api('/admin/me').catch(() => {}); // renews the sign-in if it has expired
       const res = await fetch(`${ACCOUNT.API_URL}/admin/payments.csv?${params}`, { headers: { Authorization: `Bearer ${session.get()?.accessToken}` } });
       if (!res.ok) return toast('Export failed. Reload the page and try again.');
       const a = h('a', { href: URL.createObjectURL(await res.blob()), download: `submit-later-payments-${new Date().toISOString().slice(0, 10)}.csv` });
       a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     };
     q('#r-status').onchange = load.requests;
     q('#e-days').onchange = load.errors;
@@ -310,7 +312,11 @@
           return act(b, () => api(`/admin/users/${id}`, { method: 'DELETE', body: { confirm } }), 'Account deleted', () => (location.hash = 'users'));
         }
         if (a === 'signout' && !window.confirm(`Sign ${state.user.email} out of the website and the extension?`)) return;
-        const text = { 'reset-usage': 'Free usage reset', 'resend-verification': 'Verification email sent', signout: 'Signed out everywhere' }[a];
+        const text = {
+          'reset-usage': 'Free usage reset',
+          'resend-verification': (o) => (o.already ? 'Already verified' : o.ok ? 'Verification email sent' : 'The email failed (see Emails)'),
+          signout: 'Signed out everywhere',
+        }[a];
         act(b, () => api(`/admin/users/${id}/${a}`, { method: 'POST' }), text, () => load.user(id));
       })
     );
