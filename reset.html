@@ -1,6 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q9BV7VECQZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Only the page path is sent, never the query string: reset and verify
+  // links carry one-time tokens that must not leave the site.
+  gtag('config', 'G-Q9BV7VECQZ', { page_location: location.origin + location.pathname });
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Choose a new password · Submit Later</title>
