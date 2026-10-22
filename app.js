@@ -459,7 +459,7 @@ function planInfo(plan) {
       sub: `Active until ${fmtDate(plan.paidUntil)}`,
       left,
       pct: Math.min(1, left / (PLAN_DAYS[plan.plan] || 365)),
-      planName: `${name} · ₹${PLANS[plan.plan]?.price ?? ''}`,
+      planName: PLANS[plan.plan] ? `${name} · ₹${PLANS[plan.plan].price}` : 'Pro (complimentary)',
       endLabel: 'Active until',
       end: fmtDate(plan.paidUntil),
     };
@@ -981,12 +981,68 @@ async function initAccount() {
   api('/payments')
     .then(({ payments }) => renderPayments(payments))
     .catch(() => renderPayments([]));
+  initHelp();
 
   await checkExtension();
   if (params.get('connect') === '1' && (acct.ext === 'ready' || acct.ext === 'other')) {
     showView('extension');
     connectExtension($('#ext-connect'));
   }
+}
+
+// ---- Need help? (support requests) -----------------------------------------
+
+const HELP_KINDS = { extend: 'Extend my plan', refund: 'Refund', problem: "Something isn't working", other: 'Other' };
+
+async function renderHelp() {
+  const list = $('#help-list');
+  if (!list) return;
+  const { requests } = await api('/requests').catch(() => ({ requests: [] }));
+  list.replaceChildren(
+    ...requests.map((r) => {
+      const li = document.createElement('li');
+      const top = document.createElement('div');
+      const b = document.createElement('b');
+      b.textContent = HELP_KINDS[r.kind] || r.kind;
+      top.append(b, ` · ${r.status === 'open' ? 'Open' : 'Answered'} · ${fmtDate(r.createdAt)}`);
+      const msg = document.createElement('div');
+      msg.className = 'muted';
+      msg.textContent = r.message;
+      li.append(top, msg);
+      if (r.reply) {
+        const rep = document.createElement('div');
+        rep.className = 'reply';
+        rep.textContent = r.reply;
+        li.append(rep);
+      }
+      return li;
+    })
+  );
+}
+
+function initHelp() {
+  const form = $('#help-form');
+  if (!form) return;
+  renderHelp();
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearErrors(form);
+    const message = form.message.value.trim();
+    if (message.length < 5) return fieldError(form, 'message', 'Tell us a little more.');
+    const btn = form.querySelector('button[type=submit]');
+    setBusy(btn, true);
+    try {
+      await api('/requests', { method: 'POST', body: { kind: form.kind.value, message } });
+      form.reset();
+      toast("Request sent. We'll reply here and by email.");
+      renderHelp();
+    } catch (err) {
+      if (err.field) fieldError(form, err.field, err.message);
+      else toast(err.message);
+    } finally {
+      setBusy(btn, false);
+    }
+  });
 }
 
 // ---- Start -----------------------------------------------------------------

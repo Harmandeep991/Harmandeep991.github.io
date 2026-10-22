@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Only the page path is sent, never the query string: reset and verify
+  // links carry one-time tokens that must not leave the site.
+  gtag('config', 'G-Q9BV7VECQZ', { page_location: location.origin + location.pathname });
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin · Submit Later</title>
+<meta name="description" content="Submit Later admin.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<script src="theme.js"></script>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css">
+<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body data-page="admin" class="dash-body">
+<svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--brand-1)"/><stop offset="1" style="stop-color:var(--brand-2)"/></linearGradient>
+    <linearGradient id="rg-ok" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#059669"/></linearGradient>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></g></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/></g></symbol>
+    <symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M10 4a2 2 0 1 1 4 0v2h4v4h-2a2 2 0 1 0 0 4h2v4h-4v-2a2 2 0 1 0-4 0v2H6v-4H4a2 2 0 1 1 0-4h2V6h4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></g></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"/></g></symbol>
+    <symbol id="i-google" viewBox="0 0 24 24"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z"/><path fill="#34A853" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z"/><path fill="#FBBC05" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2z"/><path fill="#EA4335" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10C7.2 7.7 9.4 6 12 6z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15"/></g></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+
+<header class="dash-top">
+  <div class="dash-top-in">
+    <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24"><use href="#i-clock"/></svg></span>Submit Later</a>
+    <span class="dash-sep" aria-hidden="true"></span>
+    <span class="dash-crumb">Admin</span>
+    <div class="dash-top-r">
+      <a class="dash-link" href="account.html">My account</a>
+      <a class="dash-link" href="https://analytics.google.com/" target="_blank" rel="noopener">Google Analytics ↗</a>
+      <button type="button" class="theme-btn" data-theme-btn aria-label="Choose a theme" title="Theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.9 0-.5-.2-.9-.5-1.3-.3-.3-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="10" cy="7.5" r="1.2"/><circle cx="14.5" cy="7.5" r="1.2"/></svg></button>
+      <span class="adm-who" id="adm-who"></span>
+    </div>
+  </div>
+</header>
+
+<div class="dash">
+  <aside class="dash-nav">
+    <nav aria-label="Admin sections">
+      <a href="#overview" data-view="overview"><svg><use href="#i-home"/></svg>Overview</a>
+      <a href="#users" data-view="users"><svg><use href="#i-user"/></svg>Users</a>
+      <a href="#payments" data-view="payments"><svg><use href="#i-receipt"/></svg>Payments</a>
+      <a href="#requests" data-view="requests"><svg><use href="#i-mail"/></svg>Requests<span class="adm-badge" id="req-badge" hidden></span></a>
+      <div class="nav-label">Extension</div>
+      <a href="#installs" data-view="installs"><svg><use href="#i-puzzle"/></svg>Installs</a>
+      <a href="#errors" data-view="errors"><svg><use href="#i-shield"/></svg>Error logs</a>
+      <div class="nav-label">System</div>
+      <a href="#emails" data-view="emails"><svg><use href="#i-mail"/></svg>Emails</a>
+      <a href="#audit" data-view="audit"><svg><use href="#i-clock"/></svg>Audit log</a>
+      <a href="#settings" data-view="settings"><svg><use href="#i-key"/></svg>Settings</a>
+    </nav>
+  </aside>
+
+  <main class="dash-main">
+    <div id="page-notice" class="notice info">Loading…</div>
+
+    <section class="view" data-view="overview" hidden>
+      <div class="view-head"><h1>Overview</h1><p>Sign-ups, plans, revenue and extension health.</p></div>
+      <div class="adm-stats" id="ov-stats"></div>
+      <div class="adm-grid2">
+        <div class="card"><div class="card-head"><div><h2>Sign-ups</h2><p>Last 30 days</p></div></div><div class="adm-chart" id="ov-signups"></div></div>
+        <div class="card"><div class="card-head"><div><h2>Revenue (₹)</h2><p>Last 30 days</p></div></div><div class="adm-chart" id="ov-revenue"></div></div>
+      </div>
+      <div class="card"><div class="card-head"><div><h2>Ending soon</h2><p>Plans in the next 7 days, trials in the next 3</p></div></div><div class="table-wrap"><table id="ov-expiring"></table></div></div>
+    </section>
+
+    <section class="view" data-view="users" hidden>
+      <div class="view-head"><h1>Users</h1><p>Search, open a user to extend their plan or trial, reset usage or sign them out.</p></div>
+      <div class="adm-bar">
+        <input id="u-q" type="search" placeholder="Search name or email" aria-label="Search users">
+        <select id="u-status" aria-label="Plan"><option value="">All</option><option value="paying">Paying</option><option value="trial">On trial</option><option value="free">Free</option></select>
+        <span class="muted" id="u-count"></span>
+      </div>
+      <div class="card"><div class="table-wrap"><table id="u-table"></table></div><div class="adm-pager"><button type="button" class="btn sm soft" id="u-prev">← Previous</button><button type="button" class="btn sm soft" id="u-next">Next →</button></div></div>
+    </section>
+
+    <section class="view" data-view="user" hidden>
+      <div class="view-head"><a href="#users" class="adm-back">← Users</a><h1 id="ud-name"></h1><p id="ud-sub"></p></div>
+      <div class="adm-stats" id="ud-stats"></div>
+      <div class="adm-grid2">
+        <div class="card">
+          <div class="card-head"><div><h2>Give more time</h2><p>Adds days after whatever time is left. Recorded in the audit log.</p></div></div>
+          <form id="ud-extend" class="adm-form">
+            <label>Days <input name="days" type="number" min="1" max="730" value="30" required></label>
+            <label>To <select name="target"><option value="plan">Pro plan (complimentary)</option><option value="trial">Trial</option></select></label>
+            <label class="wide">Note <input name="note" maxlength="300" placeholder="Why (e.g. request #12, outage)"></label>
+            <button class="btn sm primary" type="submit">Extend</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>Actions</h2></div></div>
+          <div class="adm-actions">
+            <button type="button" class="btn sm soft" data-act="reset-usage">Reset this month's free usage</button>
+            <button type="button" class="btn sm soft" data-act="resend-verification">Resend verification email</button>
+            <button type="button" class="btn sm soft" data-act="signout">Sign out everywhere</button>
+            <button type="button" class="btn sm danger" data-act="delete">Delete account…</button>
+          </div>
+        </div>
+      </div>
+      <div class="card"><div class="card-head"><div><h2>Payments</h2></div></div><div class="table-wrap"><table id="ud-pay"></table></div></div>
+      <div class="adm-grid2">
+        <div class="card"><div class="card-head"><div><h2>Requests</h2></div></div><div id="ud-req"></div></div>
+        <div class="card"><div class="card-head"><div><h2>Emails</h2></div></div><div class="table-wrap"><table id="ud-mail"></table></div></div>
+      </div>
+      <div class="card"><div class="card-head"><div><h2>Sign-ins</h2></div></div><div class="table-wrap"><table id="ud-sess"></table></div></div>
+    </section>
+
+    <section class="view" data-view="payments" hidden>
+      <div class="view-head"><h1>Payments</h1><p>Every PayU checkout. Re-check a pending one if a customer says they paid.</p></div>
+      <div class="adm-bar">
+        <select id="p-status" aria-label="Status"><option value="">All</option><option value="success">Paid</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="cancelled">Cancelled</option><option value="abandoned">Abandoned</option></select>
+        <label>From <input id="p-from" type="date"></label><label>To <input id="p-to" type="date"></label>
+        <button type="button" class="btn sm soft" id="p-csv">Export CSV</button>
+        <span class="muted" id="p-total"></span>
+      </div>
+      <div class="card"><div class="table-wrap"><table id="p-table"></table></div></div>
+    </section>
+
+    <section class="view" data-view="requests" hidden>
+      <div class="view-head"><h1>Requests</h1><p>Plan extensions, refunds and help requests from the account page.</p></div>
+      <div class="adm-bar"><select id="r-status" aria-label="Status"><option value="open">Open</option><option value="done">Done</option><option value="all">All</option></select></div>
+      <div id="r-list" class="adm-reqs"></div>
+    </section>
+
+    <section class="view" data-view="installs" hidden>
+      <div class="view-head"><h1>Installs</h1><p>Anonymous check-ins from the extension (from 0.7.0; users can turn them off).</p></div>
+      <div class="adm-stats" id="i-stats"></div>
+      <div class="adm-grid2">
+        <div class="card"><div class="card-head"><div><h2>Installs and uninstalls</h2><p>Last 30 days</p></div></div><div class="adm-chart" id="i-chart"></div></div>
+        <div class="card"><div class="card-head"><div><h2>Versions in use</h2><p>Active in the last 30 days</p></div></div><div id="i-versions"></div></div>
+      </div>
+    </section>
+
+    <section class="view" data-view="errors" hidden>
+      <div class="view-head"><h1>Error logs</h1><p>Failed presses and sends reported by the extension, grouped. Only the error, the version and the site's domain are stored, for 90 days.</p></div>
+      <div class="adm-bar"><select id="e-days" aria-label="Period"><option value="1">Last 24 hours</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select></div>
+      <div class="card"><div class="table-wrap"><table id="e-table"></table></div></div>
+    </section>
+
+    <section class="view" data-view="emails" hidden>
+      <div class="view-head"><h1>Emails</h1><p>What the server sent, and whether Brevo accepted it (kept 90 days).</p></div>
+      <div class="adm-bar"><input id="m-q" type="search" placeholder="Search by recipient" aria-label="Search emails"><label class="adm-check"><input type="checkbox" id="m-failed"> Failed only</label></div>
+      <div class="card"><div class="table-wrap"><table id="m-table"></table></div></div>
+    </section>
+
+    <section class="view" data-view="audit" hidden>
+      <div class="view-head"><h1>Audit log</h1><p>Every change made from this panel.</p></div>
+      <div class="card"><div class="table-wrap"><table id="a-table"></table></div></div>
+    </section>
+
+    <section class="view" data-view="settings" hidden>
+      <div class="view-head"><h1>Settings</h1><p>How the server is set up (read-only; secrets are never shown). Change these in Render → Environment.</p></div>
+      <div class="card"><div id="s-list" class="adm-kv"></div></div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="app.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

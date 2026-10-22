@@ -203,6 +203,24 @@
         <details><summary>What happens when my trial or Pro ends?</summary><p>You move to the free plan (5 schedules a month). Anything already scheduled is still pressed; repeating schedules pause until you're Pro again.</p></details>
         <details><summary>Can I get a refund?</summary><p>Yes, a full refund within 7 days of your first payment. See the <a href="refund.html">refund policy</a>.</p></details>
       </div>
+
+      <div class="card" id="help">
+        <div class="card-head"><div><h2>Need help?</h2><p>Ask for more time, a refund, or help with a problem. We reply here and by email.</p></div></div>
+        <form id="help-form" class="help-form" novalidate>
+          <div class="field" data-field="kind">
+            <label for="help-kind">What do you need?</label>
+            <select id="help-kind" name="kind"><option value="extend">Extend my plan</option><option value="refund">Refund</option><option value="problem">Something isn't working</option><option value="other">Other</option></select>
+            <div class="f-err" role="alert"></div>
+          </div>
+          <div class="field" data-field="message">
+            <label for="help-msg">Message</label>
+            <textarea id="help-msg" name="message" rows="3" maxlength="2000" placeholder="Tell us what happened, and the transaction ID if it's about a payment."></textarea>
+            <div class="f-err" role="alert"></div>
+          </div>
+          <button type="submit" class="btn sm"><span class="spin" aria-hidden="true"></span><span>Send request</span></button>
+        </form>
+        <ul class="help-list" id="help-list"></ul>
+      </div>
     </section>
 
     <!-- Invoices -->
