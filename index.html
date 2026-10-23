@@ -1,6 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q9BV7VECQZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Only the page path is sent, never the query string: reset and verify
+  // links carry one-time tokens that must not leave the site.
+  gtag('config', 'G-Q9BV7VECQZ', { page_location: location.origin + location.pathname });
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Submit Later: schedule any click in Chrome. WhatsApp messages, forms, meetings, on time</title>
@@ -86,8 +97,12 @@
   </div>
   <div class="steps">
     <div class="step"><span class="ic g1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/></svg></span><b>Fill it in</b><p>Write the email, the WhatsApp message or the form exactly as you normally would.</p></div>
-    <div class="step"><span class="ic g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span><b>Pick the button</b><p>Click the Submit Later icon, then click Send, Submit or Join. It's only selected, not pressed.</p></div>
+    <div class="step"><span class="ic g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span><b>Pick the button</b><p>Click the Submit Later icon → <b>Pick a button to schedule</b>, then click Send, Submit or Join. It's only selected, not pressed.</p></div>
     <div class="step"><span class="ic g4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><b>Choose the time</b><p>A quick pick or any date and time, to the second. It's pressed on time and you're notified.</p></div>
+  </div>
+  <div class="demo-pair">
+    <figure><div class="shot"><img src="how-it-works.gif" width="960" height="600" loading="lazy" alt="Animated demo: an email is written, the Send button is picked with Submit Later, Tomorrow 9 AM is chosen, and the next morning it's pressed on time and a notification confirms it."></div><figcaption><b>Any button</b> Pick it, choose the time, and it's pressed for you.</figcaption></figure>
+    <figure><div class="shot"><img src="whatsapp-demo.gif" width="960" height="600" loading="lazy" alt="Animated demo: two contacts are picked in Submit Later, a birthday message with a photo is scheduled for midnight, and at 12:00 AM WhatsApp Web sends it to each person one by one."></div><figcaption><b>WhatsApp messages</b> <span class="pro-badge">PRO</span> Pick people, write it, add a photo, and it's sent one by one.</figcaption></figure>
   </div>
 </section>
 
@@ -111,7 +126,7 @@
       </ul>
       <a class="btn primary" href="whatsapp-scheduler.html">Learn about WhatsApp scheduling <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </div>
-    <div class="spot-visual"><div class="shot"><img src="whatsapp-demo.gif" width="960" height="600" loading="lazy" alt="Animated demo: a WhatsApp message is written in Submit Later, scheduled for midnight, and sent from WhatsApp Web at 12:00 AM."></div></div>
+    <div class="spot-visual"><div class="shot"><img src="whatsapp-demo.gif" width="960" height="600" loading="lazy" alt="Animated demo: two contacts are picked in Submit Later, a birthday message with a photo is scheduled for midnight, and at 12:00 AM WhatsApp Web sends it to each person one by one."></div></div>
   </div>
 
   <div class="spot rev">
@@ -154,11 +169,17 @@
       </ul>
     </div>
     <div class="spot-visual">
-      <div class="mock-ui">
-        <div class="mui-row"><span class="mui-av g2">M</span><span class="mui-txt"><b>Team stand-up</b><small>"Join now" · Mon 10:00 AM</small></span><span class="mui-tag">↻ Weekdays</span></div>
-        <div class="mui-row"><span class="mui-av g-wa">W</span><span class="mui-txt"><b>WhatsApp to +91 98765 43210</b><small>"Good morning! Daily update…" · 9:00 AM</small></span><span class="mui-tag">↻ Every day</span></div>
-        <div class="mui-row"><span class="mui-av g5">R</span><span class="mui-txt"><b>Weekly report</b><small>"Submit" · Fri 5:00 PM</small></span><span class="mui-tag">↻ Weekly</span></div>
-        <div class="mui-row"><span class="mui-av g4">✓</span><span class="mui-txt"><b>Daily check-in</b><small>Pressed "Check in" and the page responded</small></span><span class="mui-tag ok">Sent</span></div>
+      <div class="mock-ui" role="img" aria-label="The Submit Later popup: three repeating schedules under Upcoming, and the last result.">
+        <div class="mui-sec">Upcoming <span class="mui-count">3</span></div>
+        <div class="mui-list">
+          <div class="mui-li"><span class="mui-av g-wa">W</span><span class="mui-txt"><span class="mui-top"><b>WhatsApp message to Riya Sharma</b><span class="mui-cd">13h 2m</span></span><span class="mui-sub"><small>"Good morning! Daily update…" · 9:00 AM</small><span class="mui-tag">↻ Every day</span><span class="mui-x" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></span></span></div>
+          <div class="mui-li"><span class="mui-av g2">M</span><span class="mui-txt"><span class="mui-top"><b>Team stand-up</b><span class="mui-cd">14h 2m</span></span><span class="mui-sub"><small>"Join now" · Mon 10:00 AM</small><span class="mui-tag">↻ Weekdays</span><span class="mui-x" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></span></span></div>
+          <div class="mui-li"><span class="mui-av g5">R</span><span class="mui-txt"><span class="mui-top"><b>Weekly report</b><span class="mui-cd">3d 21h</span></span><span class="mui-sub"><small>"Submit" · Fri 5:00 PM</small><span class="mui-tag">↻ Weekly</span><span class="mui-x" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></span></span></div>
+        </div>
+        <div class="mui-sec">Last result <span class="mui-link">See all</span></div>
+        <div class="mui-list">
+          <div class="mui-li"><span class="mui-av g4">D</span><span class="mui-txt"><span class="mui-top"><b>Daily check-in</b><span class="mui-tag ok">Sent</span></span><span class="mui-sub"><small>Pressed "Check in" and the page responded.</small></span></span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -182,6 +203,32 @@
             <div class="mui-row"><span class="mui-txt"><b>10:00:00</b><small>"Register" is still disabled, waiting…</small></span><span class="mui-tag warn">Waiting</span></div>
             <div class="mui-row"><span class="mui-txt"><b>10:00:05</b><small>Reloaded the page</small></span><span class="mui-tag">Reload</span></div>
             <div class="mui-row"><span class="mui-txt"><b>10:00:06</b><small>Pressed "Register" the moment it unlocked</small></span><span class="mui-tag ok">Done</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spot">
+    <div class="spot-text">
+      <span class="pro-badge">PRO</span>
+      <h3>Action Flows: a few steps, done for you</h3>
+      <p>Some tasks take more than one button. Do it once while Submit Later records the steps, or build them step by step, then let it run at the time you pick: once, every day, or every so often between two times.</p>
+      <ul class="ticks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Click, type, choose from a list, tick a box</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Simple logic: "Only if…", "Repeat for each option until one works", "Ask me first"</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><span>Test runs never press the final button. Passwords and codes are never stored</span></li>
+      </ul>
+    </div>
+    <div class="spot-visual">
+      <div class="mock-ui" role="img" aria-label="An Action Flow in Submit Later: open the page, type today's notes, choose a team, then ask before pressing Submit, every weekday at 6 PM.">
+        <div class="mui-card">
+          <div class="mui-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H14a4 4 0 0 1 0 8h-4a4 4 0 0 0 0 8"/></svg> Daily progress report</div>
+          <div class="mui-body">
+            <div class="mui-row"><span class="mui-txt"><b>1. Open</b><small>intranet.example.com/report</small></span></div>
+            <div class="mui-row"><span class="mui-txt"><b>2. Type</b><small>"Finished the home page…" in "Notes"</small></span></div>
+            <div class="mui-row"><span class="mui-txt"><b>3. Choose</b><small>"Design" in "Team"</small></span></div>
+            <div class="mui-row"><span class="mui-txt"><b>4. Click "Submit"</b><small>Asks you first</small></span><span class="mui-tag warn">Ask me</span></div>
+            <div class="mui-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Weekdays at <b>6:00 PM</b></span></div>
           </div>
         </div>
       </div>
@@ -233,6 +280,7 @@
     <div class="feature"><span class="ic g2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg></span><div><b>Real clicks</b><p>A genuine mouse click, so Gmail, WhatsApp Web and modern web apps respond just like when you click.</p></div></div>
     <div class="feature"><span class="ic g3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span><div><b>Keeps your computer awake</b><p>While something is scheduled, your computer won't fall asleep and miss it. Free and Pro.</p></div></div>
     <div class="feature"><span class="ic g5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg></span><div><b>A heads-up 10 minutes early</b><p>Signed out? Field empty? Page reloaded? You're warned while there's still time to fix it.</p></div></div>
+    <div class="feature"><span class="ic g4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M5 3L2 6M22 6l-3-3"/></svg></span><div><b>Or just remind me</b><p>For buttons behind a CAPTCHA, OTP or payment: at the time you get a chime, a notification and the button highlighted, and you press it. Free and unlimited.</p></div></div>
     <div class="feature"><span class="ic g4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><div><b>Private by design</b><p>What you schedule stays on your computer. It only works on the sites you choose. No tracking, no ads.</p></div></div>
   </div>
 </section>
@@ -249,8 +297,8 @@
     <p>Every new account gets 30 days of Pro free. No card, and nothing renews by itself.</p>
   </div>
   <div class="mini-tiers">
-    <div class="mt"><h3>Free</h3><div class="amt">₹0 <small>forever</small></div><p>5 scheduled buttons every month, in an open tab.</p><a class="btn alt" href="signup.html" data-plan-link>Create free account</a></div>
-    <div class="mt best"><span class="rib">Best value</span><h3>Pro Annual</h3><div class="amt">₹399 <small>/ year</small></div><p>Just ₹33 a month. Unlimited, plus WhatsApp, repeats and reopen &amp; press.</p><a class="btn primary" href="signup.html?plan=annual" data-plan-link>Choose Pro Annual</a></div>
+    <div class="mt"><h3>Free</h3><div class="amt">₹0 <small>forever</small></div><p>5 scheduled buttons every month, in an open tab, plus unlimited reminders.</p><a class="btn alt" href="signup.html" data-plan-link>Create free account</a></div>
+    <div class="mt best"><span class="rib">Best value</span><h3>Pro Annual</h3><div class="amt">₹399 <small>/ year</small></div><p>Just ₹33 a month. Unlimited, plus WhatsApp, repeats, reopen &amp; press and Action Flows.</p><a class="btn primary" href="signup.html?plan=annual" data-plan-link>Choose Pro Annual</a></div>
     <div class="mt"><h3>Pro Monthly</h3><div class="amt">₹49 <small>/ month</small></div><p>Every Pro feature for 30 days. Good for a one-off project.</p><a class="btn alt" href="signup.html?plan=monthly" data-plan-link>Choose Pro Monthly</a></div>
   </div>
   <p class="price-foot">Prices in INR, including all taxes. <a href="pricing.html">Compare plans in detail →</a></p>
@@ -263,6 +311,8 @@
     <details><summary>What if my computer goes to sleep?</summary><p>While something is scheduled, Submit Later keeps your computer awake (the screen can still turn off). Closing a laptop lid still puts it to sleep, so leave it open or plugged in with the lid up.</p></details>
     <details><summary>Does it work with WhatsApp?</summary><p>Yes. With Pro you can schedule WhatsApp Web messages to any number or imported contact, once or on repeat: to up to 20 people at a time, several messages each, with photos and videos up to 16 MB. Stay signed in to WhatsApp Web on that computer. <a href="whatsapp-scheduler.html">Read more</a>.</p></details>
     <details><summary>Is my data safe?</summary><p>What you schedule (pages, buttons, messages) stays on your computer. Your account only stores your name, email and plan. See the <a href="privacy.html">privacy policy</a>.</p></details>
+    <details><summary>Can it remind me instead of pressing?</summary><p>Yes. Choose <b>Remind me, I'll press it</b> in the scheduling box. At the time Submit Later plays a chime, shows a notification and highlights the button, and you press it yourself. It's made for buttons behind a CAPTCHA, OTP or payment. One-time reminders are free and unlimited; repeating ones are Pro.</p></details>
+    <details><summary>Can it do a few steps, not just one button?</summary><p>Yes, with Pro's <b>Action Flows</b>. Open the extension, choose <b>Automate steps on a site</b>, and do the task once while it records (or add the steps yourself). You can add "Only if…", "Repeat for each…" and "Ask me" steps, test it safely (a test run never presses the final button), and run it once, daily or every so often between two times. It works only on the sites you allow, never stores passwords or codes, and never solves CAPTCHAs.</p></details>
     <details><summary>What can't it do?</summary><p>It can't solve CAPTCHAs, sign in for you, or bypass a site's rules, and it won't send bulk messages. It presses buttons you could press yourself.</p></details>
   </div>
 </section>
