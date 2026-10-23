@@ -32,7 +32,7 @@
 /* A miniature of the extension's reminder, for flavour */
 .side-pill {
   display: flex; align-items: center; gap: 12px; width: min(340px, 100%); padding: 10px 12px; border-radius: 16px;
-  background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(28, 25, 23, 0.55); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.3);
 }
 .side-pill .ico { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); }

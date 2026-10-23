@@ -309,3 +309,13 @@ dialog .acts { justify-content: flex-end; margin-top: 18px; }
 /* Long names and emails wrap instead of widening the page. */
 #vb-email, #p-email-big, #p-name-big, .stat-sub, .um-head small { overflow-wrap: anywhere; }
 .table-wrap { max-width: 100%; }
+
+/* Account → Plan & billing → Need help? */
+.help-form { display: grid; gap: 12px; }
+.help-form select, .help-form textarea { width: 100%; font: inherit; font-size: 14.5px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--fg); }
+.help-form label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+.help-form .btn { justify-self: start; }
+.help-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+.help-list:empty { display: none; }
+.help-list li { padding: 12px 14px; border-radius: 12px; background: var(--soft); font-size: 14px; }
+.help-list .reply { margin-top: 8px; padding-left: 10px; border-left: 3px solid var(--accent); }
