@@ -10,7 +10,7 @@ const ACCOUNT = {
   API_URL: 'https://api.submitlater.co.in',
   // Google Identity Services web client ID. While empty, the Google button
   // is hidden and email sign-up still works.
-  GOOGLE_CLIENT_ID: '',
+  GOOGLE_CLIENT_ID: '405030855535-69f2jifupvrf3hfostssc590brk7ji2l.apps.googleusercontent.com',
   // Extension IDs that may receive the sign-in: the Chrome Web Store one,
   // and the unpacked copy loaded from ~/submit-later for testing.
   EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba'],
