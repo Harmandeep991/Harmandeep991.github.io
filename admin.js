@@ -33,6 +33,7 @@
   const badge = (text, kind = '') => h('span', { class: `badge-v ${kind}` }, text);
   const planBadge = (p) =>
     p.status === 'active' ? badge(`Pro · until ${d(p.paidUntil)}`, 'ok') : p.status === 'trial' ? badge(`Trial · until ${d(p.trialEndsAt)}`, 'warn') : badge(`Free · ${p.freeUsed}/${p.freeLimit} used`, 'off');
+  const planName = (p) => (p.plan === 'custom' ? `Custom · ${p.days} days` : p.plan === 'comp' ? 'Complimentary' : p.plan);
   const STATUS = { success: ['Paid', 'ok'], pending: ['Pending', 'warn'], failed: ['Failed', 'bad'], cancelled: ['Cancelled', 'off'], abandoned: ['Abandoned', 'off'] };
 
   function stats(el, items) {
@@ -134,7 +135,25 @@
         ['This month', `${u.plan.freeUsed} of ${u.plan.freeLimit}`, 'free schedules used'],
         ['Extension', u.extension ? 'Connected' : 'Not connected', `${r.sessions.length} active sign-ins`],
       ]);
-      table(q('#ud-pay'), ['Transaction', 'Plan', 'Amount', 'Status', 'Date'], r.payments.map((p) => h('tr', {}, h('td', {}, p.txnId), h('td', {}, p.plan), h('td', {}, inr(p.amount)), h('td', {}, badge(...(STATUS[p.status] || [p.status]))), h('td', {}, dt(p.createdAt)))), 'No payments.');
+      table(q('#ud-pay'), ['Transaction', 'Plan', 'Amount', 'Status', 'Date'], r.payments.map((p) => h('tr', {}, h('td', {}, p.txnId), h('td', {}, planName(p)), h('td', {}, inr(p.amount)), h('td', {}, badge(...(STATUS[p.status] || [p.status]))), h('td', {}, dt(p.createdAt)))), 'No payments.');
+      const OFFER = { open: ['Waiting for payment', 'warn'], paid: ['Paid', 'ok'], cancelled: ['Cancelled', 'off'] };
+      table(
+        q('#ud-offers'),
+        ['Offer', 'Price', 'Status', 'Made', ''],
+        (r.offers || []).map((o) => {
+          const expired = o.status === 'open' && o.expiresAt < Date.now();
+          const cancel = o.status === 'open' && !expired
+            ? h('button', { type: 'button', class: 'btn sm soft', onclick: (e) => window.confirm('Cancel this offer? The customer can no longer pay it.') && act(e.target, () => api(`/admin/offers/${o.id}`, { method: 'DELETE' }), 'Offer cancelled', () => load.user(state.user.id)) }, 'Cancel')
+            : null;
+          return h('tr', {},
+            h('td', {}, `${o.days} days`, o.note ? h('br') : null, o.note ? h('small', { class: 'muted' }, o.note) : null),
+            h('td', {}, inr(o.amount)),
+            h('td', {}, expired ? badge('Expired', 'off') : badge(...(OFFER[o.status] || [o.status]))),
+            h('td', {}, d(o.createdAt)),
+            h('td', {}, cancel));
+        }),
+        'No custom offers yet.'
+      );
       q('#ud-req').replaceChildren(...(r.requests.length ? r.requests.map((x) => h('p', {}, h('b', {}, x.kind), ` · ${x.status} · ${d(x.createdAt)}`, h('br'), h('small', { class: 'muted' }, x.message))) : [h('p', { class: 'muted' }, 'No requests.')]));
       table(q('#ud-mail'), ['Email', 'Sent', ''], r.emails.map((m) => h('tr', {}, h('td', {}, m.subject), h('td', {}, dt(m.at)), h('td', {}, m.ok ? badge('Sent', 'ok') : badge('Failed', 'bad')))), 'No emails logged yet.');
       table(q('#ud-sess'), ['Where', 'Signed in', 'Last used'], r.sessions.map((s) => h('tr', {}, h('td', {}, s.kind === 'extension' ? 'Extension' : 'Website', h('br'), h('small', { class: 'muted' }, (s.userAgent || '').slice(0, 70))), h('td', {}, dt(s.createdAt)), h('td', {}, ago(s.lastUsedAt)))), 'Not signed in anywhere.');
@@ -149,12 +168,12 @@
         ['Transaction', 'Customer', 'Plan', 'Amount', 'Status', 'Mode', 'Created', ''],
         r.payments.map((p) => {
           const recheck = p.status === 'pending' || p.status === 'abandoned' || p.status === 'failed'
-            ? h('button', { type: 'button', class: 'btn sm soft', onclick: (e) => act(e.target, () => api(`/admin/payments/${p.txnId}/recheck`, { method: 'POST' }), (o) => `PayU says: ${o.status}${o.changed ? ' (updated)' : ''}`, load.payments) }, 'Re-check')
+            ? h('button', { type: 'button', class: 'btn sm soft', onclick: (e) => act(e.target, () => api(`/admin/payments/${p.txnId}/recheck`, { method: 'POST' }), (o) => `${p.provider === 'cashfree' ? 'Cashfree' : 'PayU'} says: ${o.status}${o.changed ? ' (updated)' : ''}`, load.payments) }, 'Re-check')
             : null;
           return h('tr', {},
             h('td', {}, p.txnId, p.reason ? h('br') : null, p.reason ? h('small', { class: 'muted' }, p.reason) : null),
             h('td', {}, p.userId ? h('a', { href: `#user/${p.userId}` }, p.email) : p.email),
-            h('td', {}, p.plan), h('td', {}, inr(p.amount)), h('td', {}, badge(...(STATUS[p.status] || [p.status]))), h('td', {}, p.mode || '–'), h('td', {}, dt(p.createdAt)), h('td', {}, recheck));
+            h('td', {}, planName(p), h('br'), h('small', { class: 'muted' }, p.provider === 'cashfree' ? 'Cashfree' : 'PayU')), h('td', {}, inr(p.amount)), h('td', {}, badge(...(STATUS[p.status] || [p.status]))), h('td', {}, p.mode || '–'), h('td', {}, dt(p.createdAt)), h('td', {}, recheck));
         }),
         'No payments yet.'
       );
@@ -222,6 +241,8 @@
       const rows = [
         ['API', c.apiUrl], ['Website', c.webUrl],
         ['Email provider', c.mail.provider], ['Email from', c.mail.from], ['Replies to', c.mail.replyTo], ['Email API key', yes(c.mail.keySet)],
+        ['Payments go through', c.payments === 'cashfree' ? 'Cashfree' : 'PayU'],
+        ...(c.cashfree ? [['Cashfree mode', badge(c.cashfree.mode === 'live' ? 'Live' : 'Test', c.cashfree.mode === 'live' ? 'ok' : 'warn')], ['Cashfree App ID', yes(c.cashfree.appIdSet)], ['Cashfree secret', yes(c.cashfree.secretSet)]] : []),
         ['PayU mode', badge(c.payu.mode === 'live' ? 'Live' : 'Test', c.payu.mode === 'live' ? 'ok' : 'warn')], ['PayU key', yes(c.payu.keySet)], ['PayU salt', yes(c.payu.saltSet)],
         ['Google sign-in', yes(c.google, 'On')], ['Keep awake (free Render)', yes(c.keepAwake, 'On')], ['Background jobs', yes(c.runJobs, 'On')],
         ['Plans', c.plans.map((p) => `${p.id}: ₹${p.amount} for ${p.days} days`).join(' · ')], ['Free plan', `${c.freeMonthlyLimit} schedules a month`],
@@ -295,6 +316,16 @@
       t = setTimeout(load.emails, 300);
     });
     q('#m-failed').onchange = load.emails;
+    q('#ud-offer').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = e.target;
+      const body = { amount: Number(f.amount.value), days: Number(f.days.value), note: f.note.value };
+      if (!window.confirm(`Email ${state.user.email} an offer of ₹${body.amount} for ${body.days} days?`)) return;
+      act(f.querySelector('button'), () => api(`/admin/users/${state.user.id}/offers`, { method: 'POST', body }), 'Offer sent', () => {
+        f.reset();
+        load.user(state.user.id);
+      });
+    });
     q('#ud-extend').addEventListener('submit', (e) => {
       e.preventDefault();
       const f = e.target;

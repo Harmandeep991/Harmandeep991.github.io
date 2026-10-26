@@ -10,10 +10,11 @@ const ACCOUNT = {
   API_URL: 'https://api.submitlater.co.in',
   // Google Identity Services web client ID. While empty, the Google button
   // is hidden and email sign-up still works.
-  GOOGLE_CLIENT_ID: '',
+  GOOGLE_CLIENT_ID: '405030855535-69f2jifupvrf3hfostssc590brk7ji2l.apps.googleusercontent.com',
   // Extension IDs that may receive the sign-in: the Chrome Web Store one,
   // and the unpacked copy loaded from ~/submit-later for testing.
-  EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba'],
+  // Store copy, a local unpacked copy of this repo, and the test build (tools/build-test.sh).
+  EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba', 'bhgeefkodfophbongdghjgmjkceoaimi'],
 };
 
 // Display only; the server decides the real prices.
@@ -21,6 +22,8 @@ const PLANS = {
   monthly: { name: 'Monthly', price: 49, period: '30 days' },
   annual: { name: 'Annual', price: 399, period: '365 days' },
 };
+// A custom plan an admin offered one person (amount and days vary).
+const CUSTOM = { name: 'Custom' };
 
 // ---- Session ---------------------------------------------------------------
 
@@ -451,15 +454,15 @@ function planInfo(plan) {
   }
   if (plan.status === 'active') {
     const left = daysLeft(plan.paidUntil);
-    const name = PLANS[plan.plan]?.name || 'Pro';
+    const name = PLANS[plan.plan]?.name || (plan.plan === 'custom' ? CUSTOM.name : 'Pro');
     return {
       status: 'active',
       label: `${name} plan`,
       value: `${left} ${left === 1 ? 'day' : 'days'} left`,
       sub: `Active until ${fmtDate(plan.paidUntil)}`,
       left,
-      pct: Math.min(1, left / (PLAN_DAYS[plan.plan] || 365)),
-      planName: PLANS[plan.plan] ? `${name} · ₹${PLANS[plan.plan].price}` : 'Pro (complimentary)',
+      pct: Math.min(1, left / (plan.periodDays || PLAN_DAYS[plan.plan] || 365)),
+      planName: PLANS[plan.plan] ? `${name} · ₹${PLANS[plan.plan].price}` : plan.plan === 'custom' ? 'Pro (custom plan)' : 'Pro (complimentary)',
       endLabel: 'Active until',
       end: fmtDate(plan.paidUntil),
     };
@@ -660,7 +663,7 @@ function renderPayments(list) {
       const tr = document.createElement('tr');
       const cells = [
         fmtDate(p.createdAt),
-        `${PLANS[p.plan]?.name || p.plan} · ${PLANS[p.plan]?.period || ''}`,
+        p.plan === 'custom' ? `${CUSTOM.name} · ${p.days} days` : `${PLANS[p.plan]?.name || p.plan} · ${PLANS[p.plan]?.period || ''}`,
         `₹${p.amount}`,
         p.status === 'success' ? 'Paid' : p.status === 'pending' ? 'Pending' : 'Failed',
         p.txnId || '-',
@@ -698,27 +701,63 @@ function postToPayu({ action, fields }) {
   form.submit();
 }
 
-const startCheckout = (plan, phone) => api('/checkout', { method: 'POST', body: phone ? { plan, phone } : { plan } });
+// Cashfree's hosted checkout opens from its own script (JS SDK v3) with the
+// payment session our server created. Afterwards Cashfree sends the browser
+// to our server, which checks the order and comes back here with ?payment=.
+let cashfreeSdk;
+function loadCashfree() {
+  cashfreeSdk ||= new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
+    s.onload = () => (globalThis.Cashfree ? resolve(globalThis.Cashfree) : reject(new Error('Cashfree did not load')));
+    s.onerror = () => {
+      cashfreeSdk = null;
+      reject(Object.assign(new Error("The payment page couldn't load. Check your connection and try again."), { code: 'SDK' }));
+    };
+    document.head.append(s);
+  });
+  return cashfreeSdk;
+}
 
-async function buy(planId, btn) {
+async function goToCheckout(res) {
+  if (res.provider === 'cashfree') {
+    const Cashfree = await loadCashfree();
+    const cf = Cashfree({ mode: res.mode === 'production' ? 'production' : 'sandbox' });
+    const out = await cf.checkout({ paymentSessionId: res.paymentSessionId, redirectTarget: '_self' });
+    if (out?.error) throw Object.assign(new Error(out.error.message || "The payment page couldn't open."), { code: 'SDK' });
+    return;
+  }
+  postToPayu(res);
+}
+
+// What to buy: a plan id ('monthly', 'annual') or { offer: id } for a custom plan.
+const startCheckout = (what, phone) => {
+  const body = typeof what === 'string' ? { plan: what } : { offer: what.offer };
+  if (phone) body.phone = phone;
+  return api('/checkout', { method: 'POST', body });
+};
+const whatLabel = (what) => (typeof what === 'string' ? `${PLANS[what].name} plan · ₹${PLANS[what].price}` : `Custom plan · ₹${what.amount} for ${what.days} days`);
+
+async function buy(what, btn) {
   const box = $('#buy-notice');
   notice(box, '', '');
   setBusy(btn, true);
   try {
-    postToPayu(await startCheckout(planId));
+    await goToCheckout(await startCheckout(what));
   } catch (err) {
     setBusy(btn, false);
-    if (err.code === 'PHONE_REQUIRED') return askPhone(planId);
+    if (err.code === 'PHONE_REQUIRED') return askPhone(what);
     notice(box, err.code === 'PAYMENTS_OFF' ? 'info' : 'bad', messageFor(err));
+    if (err.code === 'OFFER_GONE' || err.code === 'OFFER_PAYING') loadOffers();
   }
 }
 
-// PayU needs a mobile number for the receipt; asked once, then remembered.
-function askPhone(planId) {
+// The payment partner needs a mobile number for the receipt; asked once, then remembered.
+function askPhone(what) {
   const dialog = $('#phone-dialog');
   const form = $('#phone-form');
   clearErrors(form);
-  $('#phone-plan').textContent = `${PLANS[planId].name} plan · ₹${PLANS[planId].price}`;
+  $('#phone-plan').textContent = whatLabel(what);
   form.onsubmit = async (e) => {
     e.preventDefault();
     clearErrors(form);
@@ -730,15 +769,76 @@ function askPhone(planId) {
     const btn = form.querySelector('button[type=submit]');
     setBusy(btn, true);
     try {
-      postToPayu(await startCheckout(planId, phone));
+      await goToCheckout(await startCheckout(what, phone));
     } catch (err) {
-      fieldError(form, 'phone', messageFor(err));
       setBusy(btn, false);
+      if (err.field === 'phone') return fieldError(form, 'phone', messageFor(err));
+      // Anything else isn't about the number: show it on the page.
+      dialog.close();
+      notice($('#buy-notice'), err.code === 'PAYMENTS_OFF' ? 'info' : 'bad', messageFor(err));
+      if (err.code === 'OFFER_GONE' || err.code === 'OFFER_PAYING') loadOffers();
     }
   };
   $('#phone-cancel').onclick = () => dialog.close();
   dialog.showModal();
   form.phone.focus();
+}
+
+// ---- Custom plans ------------------------------------------------------------
+
+// Open custom plans an admin made for this person, each with a Pay button.
+async function loadOffers() {
+  const box = $('#offers');
+  if (!box) return;
+  const { offers } = await api('/offers').catch(() => ({ offers: [] }));
+  box.hidden = !offers.length;
+  box.replaceChildren(
+    ...offers.map((o) => {
+      const card = document.createElement('div');
+      card.className = 'offer';
+      const main = document.createElement('div');
+      main.className = 'o-main';
+      const title = document.createElement('b');
+      title.textContent = `Your custom plan: Pro for ${o.days} days`;
+      const sub = document.createElement('div');
+      sub.className = 'muted';
+      sub.textContent = `₹${o.amount} · prepaid, never renews · pay by ${fmtDate(o.expiresAt)}`;
+      main.append(title, sub);
+      if (o.note) {
+        const note = document.createElement('p');
+        note.className = 'o-note muted';
+        note.textContent = o.note;
+        main.append(note);
+      }
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn btn-block';
+      btn.style.width = 'auto';
+      btn.innerHTML = '<span class="spin" aria-hidden="true"></span><span></span>';
+      btn.lastChild.textContent = `Pay ₹${o.amount}`;
+      btn.onclick = () => buy({ offer: o.id, amount: o.amount, days: o.days }, btn);
+      if (o.paying) {
+        // A payment for it is still being confirmed: don't invite a second one.
+        btn.disabled = true;
+        btn.lastChild.textContent = 'Payment being confirmed…';
+      }
+      card.append(main, btn);
+      return card;
+    })
+  );
+  return offers;
+}
+
+// "Request a custom plan": the help form, set to Custom plan, ready to type.
+function askCustom() {
+  const form = $('#help-form');
+  if (!form) return;
+  showView('billing');
+  form.kind.value = 'custom';
+  if (!form.message.value.trim()) form.message.value = 'How many people, and for how long? ';
+  $('#help').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  form.message.focus();
+  form.message.setSelectionRange(form.message.value.length, form.message.value.length);
 }
 
 // The extension accepts messages from this site (externally_connectable).
@@ -843,6 +943,7 @@ function initAccountUi() {
 
   document.querySelectorAll('[data-logout]').forEach((b) => (b.onclick = logout));
   document.querySelectorAll('[data-buy]').forEach((b) => (b.onclick = () => buy(b.dataset.buy, b)));
+  $('#ask-custom')?.addEventListener('click', askCustom);
   document.querySelectorAll('[data-connect]').forEach((b) => (b.onclick = () => connectExtension(b)));
   $('#ext-recheck').onclick = checkExtension;
 
@@ -962,7 +1063,7 @@ async function initAccount() {
     });
   }
   // Shown once: a reload shouldn't repeat the message or reopen checkout.
-  if (pay || params.get('buy')) history.replaceState(null, '', location.pathname + location.hash);
+  if (pay || params.get('buy') || params.get('custom')) history.replaceState(null, '', location.pathname + location.hash);
   if (PAY_MSG[pay]) {
     notice(box, ...PAY_MSG[pay]);
     if (!location.hash) showView(pay === 'success' ? 'invoices' : 'billing');
@@ -982,6 +1083,8 @@ async function initAccount() {
     .then(({ payments }) => renderPayments(payments))
     .catch(() => renderPayments([]));
   initHelp();
+  loadOffers();
+  if (params.get('custom') === '1') askCustom();
 
   await checkExtension();
   if (params.get('connect') === '1' && (acct.ext === 'ready' || acct.ext === 'other')) {
@@ -992,7 +1095,7 @@ async function initAccount() {
 
 // ---- Need help? (support requests) -----------------------------------------
 
-const HELP_KINDS = { extend: 'Extend my plan', refund: 'Refund', problem: "Something isn't working", other: 'Other' };
+const HELP_KINDS = { extend: 'Extend my plan', refund: 'Refund', problem: "Something isn't working", custom: 'Custom plan', other: 'Other' };
 
 async function renderHelp() {
   const list = $('#help-list');
