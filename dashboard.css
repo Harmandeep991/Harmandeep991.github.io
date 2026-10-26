@@ -185,6 +185,14 @@ a.stat:hover .stat-link svg { transform: translateX(3px); }
 .pc-list li { display: flex; gap: 10px; }
 .pc-list svg { width: 16px; height: 16px; margin-top: 3px; color: var(--ok); }
 .pcard .btn { margin-top: auto; justify-content: center; }
+.pcard.custom { grid-column: 1 / -1; gap: 8px; }
+.pcard.custom p { margin: 0; }
+.pcard.custom .btn { align-self: flex-start; margin-top: 6px; }
+.offers { display: grid; gap: 12px; margin-bottom: 22px; }
+.offer { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 18px 20px; border-radius: 18px; background: var(--card); border: 2px solid var(--accent); }
+.offer .o-main { flex: 1; min-width: 200px; }
+.offer .o-main b { font-size: 17px; }
+.offer .o-note { margin: 4px 0 0; white-space: pre-wrap; }
 
 .pay-note { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 4px 4px; color: var(--muted); font-size: 14px; }
 .pay-note > svg { color: var(--ok); }
