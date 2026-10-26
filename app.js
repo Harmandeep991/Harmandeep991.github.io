@@ -13,7 +13,8 @@ const ACCOUNT = {
   GOOGLE_CLIENT_ID: '405030855535-69f2jifupvrf3hfostssc590brk7ji2l.apps.googleusercontent.com',
   // Extension IDs that may receive the sign-in: the Chrome Web Store one,
   // and the unpacked copy loaded from ~/submit-later for testing.
-  EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba'],
+  // Store copy, a local unpacked copy of this repo, and the test build (tools/build-test.sh).
+  EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba', 'bhgeefkodfophbongdghjgmjkceoaimi'],
 };
 
 // Display only; the server decides the real prices.
