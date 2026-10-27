@@ -478,3 +478,11 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; box-s
 .demo-pair figcaption b { color: var(--fg); margin-right: 4px; }
 .demo-pair .pro-badge { padding: 1px 8px; font-size: 11px; vertical-align: 2px; margin-right: 4px; }
 @media (max-width: 760px) { .demo-pair { grid-template-columns: 1fr; } }
+
+/* "What Submit Later can and can't see" */
+.see-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 980px; margin: 0 auto; }
+.see-card { padding: 22px 24px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
+.see-card h3 { margin: 0 0 14px; font-size: 17px; }
+.see-card .ticks { margin: 0; }
+.see-card .ticks.no svg { color: #ef4444; }
+@media (max-width: 760px) { .see-grid { grid-template-columns: 1fr; } }
