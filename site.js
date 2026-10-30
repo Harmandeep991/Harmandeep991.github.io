@@ -100,3 +100,20 @@ if (filters) {
     // Leave the section hidden if the backend can't be reached.
   }
 })();
+
+// Theme-aware GIFs: swap src when the appearance changes between light and dark.
+// Each <img> carries data-gif-light and data-gif-dark attributes.
+// Dark variants (e.g. how-it-works-dark.gif) are placed alongside the light
+// ones; until a dark version exists, both attributes can point to the same file.
+function swapGifs() {
+  const dark = document.documentElement.dataset.appearance === 'dark';
+  document.querySelectorAll('img[data-gif-light]').forEach((img) => {
+    const want = dark ? img.dataset.gifDark : img.dataset.gifLight;
+    if (want) img.src = want;
+  });
+}
+swapGifs();
+new MutationObserver(swapGifs).observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ['data-appearance'],
+});
