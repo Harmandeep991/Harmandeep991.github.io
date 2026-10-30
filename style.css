@@ -588,3 +588,20 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; box-s
 .see-card .ticks { margin: 0; }
 .see-card .ticks.no svg { color: #ef4444; }
 @media (max-width: 760px) { .see-grid { grid-template-columns: 1fr; } }
+
+/* Suite section — three product cards */
+.suite-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+.suite-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 16px; transition: transform 0.22s, box-shadow 0.22s; }
+.suite-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.sc-ext { border-top: 3px solid var(--accent); }
+.sc-forms { border-top: 3px solid #0ea5e9; }
+.sc-sched { border-top: 3px solid #22c55e; }
+.sc-tag { display: inline-block; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: -4px; }
+.sc-tag-new { color: #0ea5e9; }
+.sc-icon { font-size: 32px; line-height: 1; }
+.suite-card h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+.suite-card > p { color: var(--muted); font-size: 15px; line-height: 1.55; margin: 0; }
+.suite-card code { font-size: 12px; background: var(--soft); padding: 1px 5px; border-radius: 4px; font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+.suite-card .ticks { margin: 0; flex: 1; }
+.suite-card .btn { margin-top: auto; align-self: flex-start; }
+@media (max-width: 900px) { .suite-cards { grid-template-columns: 1fr; } }

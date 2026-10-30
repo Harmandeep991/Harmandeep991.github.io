@@ -47,6 +47,7 @@
     <symbol id="i-google" viewBox="0 0 24 24"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z"/><path fill="#34A853" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z"/><path fill="#FBBC05" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2z"/><path fill="#EA4335" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10C7.2 7.7 9.4 6 12 6z"/></symbol>
     <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15"/></g></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></g></symbol>
   </defs>
 </svg>
 
@@ -76,6 +77,7 @@
 <div class="dash">
   <aside class="dash-nav">
     <nav aria-label="Account sections">
+      <a href="#hub" data-view="hub"><svg><use href="#i-grid"/></svg>My Products</a>
       <a href="#overview" data-view="overview"><svg><use href="#i-home"/></svg>Overview</a>
       <a href="#billing" data-view="billing"><svg><use href="#i-card"/></svg>Plan &amp; billing</a>
       <a href="#invoices" data-view="invoices"><svg><use href="#i-receipt"/></svg>Invoices</a>
@@ -100,6 +102,61 @@
       <span><b>Please verify your email.</b> We sent a link to <span id="vb-email"></span> when you signed up.</span>
       <button type="button" class="btn sm soft" id="resend">Resend link</button>
     </div>
+
+    <!-- Products hub — default landing after login -->
+    <section class="view" data-view="hub" hidden>
+      <div class="view-head">
+        <h1 id="hub-hello">Welcome back</h1>
+        <p>Choose a tool to open, or manage your account below.</p>
+      </div>
+
+      <div class="hub-cards">
+
+        <a class="hub-card" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=account" target="_blank" rel="noopener">
+          <div class="hc-icon hc-ext">⏰</div>
+          <div class="hc-body">
+            <div class="hc-tag">Chrome Extension</div>
+            <h2>Button Scheduler</h2>
+            <p>Press any button on any website at the exact time you choose — emails, forms, meetings, WhatsApp.</p>
+            <div class="hc-links">
+              <span class="btn sm soft" onclick="event.preventDefault(); document.querySelector('[data-view=extension]').closest('.dash-main') && (location.hash='#extension')">Manage extension ↗</span>
+            </div>
+          </div>
+          <svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+
+        <a class="hub-card" href="forms/app/" onclick="passTokenToProduct(event, 'forms/app/')">
+          <div class="hc-icon hc-forms">📋</div>
+          <div class="hc-body">
+            <div class="hc-tag hc-tag-new">New · Server-side</div>
+            <h2>Forms Deadline Enforcer</h2>
+            <p>Wrap any Google Form with a server-enforced open/close window. Clock spoofing impossible.</p>
+          </div>
+          <svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+
+        <a class="hub-card" href="scheduler/app/" onclick="passTokenToProduct(event, 'scheduler/app/')">
+          <div class="hc-icon hc-sched">🔁</div>
+          <div class="hc-body">
+            <div class="hc-tag hc-tag-new">New · Server-side</div>
+            <h2>Webhook Scheduler</h2>
+            <p>Schedule any HTTP request to fire from our servers. Logs, retries, failure alerts. No cron needed.</p>
+          </div>
+          <svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+
+      </div>
+
+      <div class="hub-manage">
+        <div class="hub-manage-label">Your account</div>
+        <div class="hub-manage-links">
+          <a href="#billing" class="hml-item"><svg><use href="#i-card"/></svg> Plan &amp; billing</a>
+          <a href="#extension" class="hml-item"><svg><use href="#i-puzzle"/></svg> Extension</a>
+          <a href="#profile" class="hml-item"><svg><use href="#i-user"/></svg> Profile</a>
+          <a href="#security" class="hml-item"><svg><use href="#i-shield"/></svg> Security</a>
+        </div>
+      </div>
+    </section>
 
     <!-- Overview -->
     <section class="view" data-view="overview" hidden>
@@ -378,6 +435,29 @@
   </form>
 </dialog>
 
+<script>
+  // Default to the products hub when no specific view is requested
+  if (!location.hash || location.hash === '#') location.hash = '#hub';
+
+  // Pass the current session token to the forms/scheduler sub-apps via localStorage
+  // so users don't have to log in again. The sub-apps read 'sl-session' on init.
+  function passTokenToProduct(e, href) {
+    try {
+      const s = JSON.parse(localStorage.getItem('sl-session'));
+      if (s?.refreshToken) {
+        // The sub-apps check 'sl-session' before showing their own login screen
+        // Nothing extra to do — token is already in localStorage under 'sl-session'
+      }
+    } catch {}
+    // Allow normal navigation to proceed
+  }
+
+  // Populate the hub greeting with the user's name once app.js loads the account
+  document.addEventListener('sl:account-loaded', function(e) {
+    const el = document.getElementById('hub-hello');
+    if (el && e.detail?.name) el.textContent = 'Welcome back, ' + e.detail.name.split(' ')[0];
+  });
+</script>
 <script src="app.js"></script>
 </body>
 </html>
