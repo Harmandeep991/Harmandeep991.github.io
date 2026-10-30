@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scheduler Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <svg width="36" height="36" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="8" fill="#6366f1"/>
+        <circle cx="14" cy="14" r="5" stroke="white" stroke-width="2"/>
+        <path d="M14 9V14l3 3" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Scheduler</span>
+    </div>
+
+    <!-- Login -->
+    <div id="form-login" class="auth-form">
+      <h1>Welcome back</h1>
+      <p class="auth-sub">Sign in to your Scheduler account.</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn-primary w-full" onclick="submitLogin()">Sign in</button>
+      <p class="auth-switch">Don't have an account? <a href="#" onclick="showForm('signup')">Sign up free</a></p>
+    </div>
+
+    <!-- Signup -->
+    <div id="form-signup" class="auth-form" style="display:none">
+      <h1>Create account</h1>
+      <p class="auth-sub">Start free — 5 jobs, no credit card.</p>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="signup-name" placeholder="Your name">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="Min 8 characters" autocomplete="new-password">
+      </div>
+      <button class="btn-primary w-full" onclick="submitSignup()">Create account</button>
+      <p class="auth-switch">Already have an account? <a href="#" onclick="showForm('login')">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app-shell" class="app-shell" style="display:none">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sb-top">
+      <div class="sb-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="8" fill="#6366f1"/>
+          <circle cx="14" cy="14" r="5" stroke="white" stroke-width="2"/>
+          <path d="M14 9V14l3 3" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="sb-name">Scheduler</span>
+      </div>
+      <nav class="sb-nav">
+        <a class="sb-link active" data-view="jobs" onclick="switchView('jobs', this)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span>Jobs</span>
+        </a>
+        <a class="sb-link" data-view="logs" onclick="switchView('logs', this)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span>Logs</span>
+        </a>
+        <a class="sb-link" data-view="settings" onclick="switchView('settings', this)">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+    <div class="sb-bottom">
+      <div class="sb-plan-chip" id="sb-plan">Free plan</div>
+      <div class="sb-user" id="sb-user">
+        <div class="sb-avatar" id="sb-avatar">H</div>
+        <div class="sb-user-info">
+          <div class="sb-uname" id="sb-uname">User</div>
+          <div class="sb-uemail" id="sb-uemail">user@example.com</div>
+        </div>
+      </div>
+      <button class="sb-signout" onclick="signOut()">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- Main content area -->
+  <main class="main-area">
+
+    <!-- JOBS VIEW -->
+    <div id="view-jobs" class="view">
+      <div class="view-header">
+        <div>
+          <h1>Jobs</h1>
+          <p class="view-sub">Your scheduled HTTP requests</p>
+        </div>
+        <button class="btn-primary" onclick="showCreate()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          New job
+        </button>
+      </div>
+
+      <!-- Job list -->
+      <div id="job-list" class="job-list"></div>
+
+      <!-- Empty state -->
+      <div id="jobs-empty" class="empty-state" style="display:none">
+        <div class="es-icon">
+          <svg width="40" height="40" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="rgba(99,102,241,.15)"/><circle cx="14" cy="14" r="5" stroke="#6366f1" stroke-width="2"/><path d="M14 9V14l3 3" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>No jobs yet</h3>
+        <p>Create your first scheduled HTTP request. It fires at the exact time you set — logged, retried if it fails.</p>
+        <button class="btn-primary" onclick="showCreate()">Create first job</button>
+      </div>
+    </div>
+
+    <!-- CREATE VIEW -->
+    <div id="view-create" class="view" style="display:none">
+      <div class="view-header">
+        <div>
+          <h1>New job</h1>
+          <p class="view-sub">Schedule an HTTP request to fire on a time or interval</p>
+        </div>
+        <button class="btn-ghost" onclick="cancelCreate()">Cancel</button>
+      </div>
+
+      <div class="wizard">
+        <!-- Step indicators -->
+        <div class="wiz-steps">
+          <div class="wiz-step wiz-active" id="ws-1"><span class="ws-num">1</span><span class="ws-label">Request</span></div>
+          <div class="wiz-connector"></div>
+          <div class="wiz-step" id="ws-2"><span class="ws-num">2</span><span class="ws-label">Schedule</span></div>
+          <div class="wiz-connector"></div>
+          <div class="wiz-step" id="ws-3"><span class="ws-num">3</span><span class="ws-label">Done</span></div>
+        </div>
+
+        <!-- Step 1: Request details -->
+        <div id="wiz-pane-1" class="wiz-pane">
+          <div class="form-grid">
+            <div class="form-group fg-full">
+              <label>Job name</label>
+              <input type="text" id="c-name" placeholder="e.g. Weekly digest email">
+            </div>
+            <div class="form-group">
+              <label>HTTP Method</label>
+              <select id="c-method">
+                <option value="POST">POST</option>
+                <option value="GET">GET</option>
+                <option value="PUT">PUT</option>
+                <option value="PATCH">PATCH</option>
+                <option value="DELETE">DELETE</option>
+              </select>
+            </div>
+            <div class="form-group fg-3">
+              <label>URL</label>
+              <input type="url" id="c-url" placeholder="https://api.myapp.com/cron/weekly">
+            </div>
+            <div class="form-group fg-full">
+              <label>Headers <span class="field-note">(optional — one per line: <code>Key: Value</code>)</span></label>
+              <textarea id="c-headers" rows="3" placeholder="Authorization: Bearer sk-…&#10;Content-Type: application/json" spellcheck="false"></textarea>
+            </div>
+            <div class="form-group fg-full">
+              <label>Request body <span class="field-note">(optional — JSON)</span></label>
+              <textarea id="c-body" rows="4" placeholder='{"action":"send_digest"}' spellcheck="false"></textarea>
+            </div>
+          </div>
+          <div class="wiz-footer">
+            <span></span>
+            <button class="btn-primary" onclick="wizStep1Next()">Next: Schedule →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Schedule -->
+        <div id="wiz-pane-2" class="wiz-pane" style="display:none">
+          <div class="form-grid">
+            <div class="form-group fg-full">
+              <label>Schedule type</label>
+              <div class="schedule-type-grid" id="sched-type-grid">
+                <button class="stt-btn stt-active" data-type="once" onclick="pickSchedType(this,'once')">
+                  <span class="stt-icon">📅</span>
+                  <span class="stt-label">Once</span>
+                  <span class="stt-desc">A specific date & time</span>
+                </button>
+                <button class="stt-btn" data-type="daily" onclick="pickSchedType(this,'daily')">
+                  <span class="stt-icon">🔁</span>
+                  <span class="stt-label">Daily</span>
+                  <span class="stt-desc">Every day at a time</span>
+                </button>
+                <button class="stt-btn" data-type="weekly" onclick="pickSchedType(this,'weekly')">
+                  <span class="stt-icon">📆</span>
+                  <span class="stt-label">Weekly</span>
+                  <span class="stt-desc">Once per week</span>
+                </button>
+                <button class="stt-btn" data-type="interval" onclick="pickSchedType(this,'interval')">
+                  <span class="stt-icon">⏱</span>
+                  <span class="stt-label">Interval</span>
+                  <span class="stt-desc">Every N minutes/hours</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Once fields -->
+            <div id="sched-once" class="sched-fields fg-full">
+              <div class="form-grid" style="margin:0">
+                <div class="form-group">
+                  <label>Date</label>
+                  <input type="date" id="c-once-date">
+                </div>
+                <div class="form-group">
+                  <label>Time</label>
+                  <input type="time" id="c-once-time">
+                </div>
+                <div class="form-group">
+                  <label>Timezone</label>
+                  <select id="c-once-tz">
+                    <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                    <option value="UTC">UTC</option>
+                    <option value="America/New_York">America/New_York (ET)</option>
+                    <option value="America/Los_Angeles">America/Los_Angeles (PT)</option>
+                    <option value="Europe/London">Europe/London (GMT/BST)</option>
+                    <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Daily fields -->
+            <div id="sched-daily" class="sched-fields fg-full" style="display:none">
+              <div class="form-grid" style="margin:0">
+                <div class="form-group">
+                  <label>Time each day</label>
+                  <input type="time" id="c-daily-time">
+                </div>
+                <div class="form-group">
+                  <label>Timezone</label>
+                  <select id="c-daily-tz">
+                    <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                    <option value="UTC">UTC</option>
+                    <option value="America/New_York">America/New_York (ET)</option>
+                    <option value="America/Los_Angeles">America/Los_Angeles (PT)</option>
+                    <option value="Europe/London">Europe/London (GMT/BST)</option>
+                    <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Weekly fields -->
+            <div id="sched-weekly" class="sched-fields fg-full" style="display:none">
+              <div class="form-grid" style="margin:0">
+                <div class="form-group">
+                  <label>Day of week</label>
+                  <select id="c-weekly-day">
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>
+                    <option value="0">Sunday</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>At time</label>
+                  <input type="time" id="c-weekly-time">
+                </div>
+                <div class="form-group">
+                  <label>Timezone</label>
+                  <select id="c-weekly-tz">
+                    <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                    <option value="UTC">UTC</option>
+                    <option value="America/New_York">America/New_York (ET)</option>
+                    <option value="America/Los_Angeles">America/Los_Angeles (PT)</option>
+                    <option value="Europe/London">Europe/London (GMT/BST)</option>
+                    <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interval fields -->
+            <div id="sched-interval" class="sched-fields fg-full" style="display:none">
+              <div class="form-grid" style="margin:0">
+                <div class="form-group">
+                  <label>Every</label>
+                  <input type="number" id="c-interval-val" min="1" max="9999" value="60" style="width:100px">
+                </div>
+                <div class="form-group">
+                  <label>Unit</label>
+                  <select id="c-interval-unit">
+                    <option value="minutes">Minutes</option>
+                    <option value="hours" selected>Hours</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wiz-footer">
+            <button class="btn-ghost" onclick="wizBack()">← Back</button>
+            <button class="btn-primary" onclick="wizStep2Submit()">Create job</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Done -->
+        <div id="wiz-pane-3" class="wiz-pane wiz-done" style="display:none">
+          <div class="done-icon">✓</div>
+          <h2>Job created!</h2>
+          <p>Your job has been scheduled. The next run is shown below.</p>
+          <div class="done-job-card" id="done-job-card"></div>
+          <div class="done-actions">
+            <button class="btn-primary" onclick="goToJobDetail()">View job →</button>
+            <button class="btn-ghost" onclick="showCreate()">Create another</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAIL VIEW -->
+    <div id="view-detail" class="view" style="display:none">
+      <div class="view-header">
+        <button class="btn-ghost btn-icon" onclick="switchView('jobs')">← Jobs</button>
+        <div class="vh-actions">
+          <button class="btn-ghost" id="detail-run-btn" onclick="runJobNow()">Run now</button>
+          <button class="btn-ghost" id="detail-pause-btn" onclick="toggleJobPause()">Pause</button>
+          <button class="btn-danger" onclick="deleteJob()">Delete</button>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <!-- Left: main info -->
+        <div class="detail-left">
+          <div class="detail-card">
+            <div class="detail-header">
+              <div>
+                <h1 id="detail-name">Job name</h1>
+                <div class="detail-status-row">
+                  <span id="detail-status-chip" class="status-chip status-active">Active</span>
+                  <span id="detail-next-run" class="detail-meta">Next run in …</span>
+                </div>
+              </div>
+            </div>
+            <div class="detail-fields">
+              <div class="df-row">
+                <span class="df-key">Endpoint</span>
+                <span class="df-val df-mono" id="detail-method-url">—</span>
+              </div>
+              <div class="df-row">
+                <span class="df-key">Schedule</span>
+                <span class="df-val" id="detail-schedule">—</span>
+              </div>
+              <div class="df-row">
+                <span class="df-key">Created</span>
+                <span class="df-val" id="detail-created">—</span>
+              </div>
+              <div class="df-row">
+                <span class="df-key">Last run</span>
+                <span class="df-val" id="detail-last-run">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats row -->
+          <div class="detail-stats-row">
+            <div class="ds-card">
+              <div class="ds-num" id="ds-total">—</div>
+              <div class="ds-label">Total runs</div>
+            </div>
+            <div class="ds-card">
+              <div class="ds-num ds-green" id="ds-ok">—</div>
+              <div class="ds-label">Successes</div>
+            </div>
+            <div class="ds-card">
+              <div class="ds-num ds-red" id="ds-fail">—</div>
+              <div class="ds-label">Failures</div>
+            </div>
+            <div class="ds-card">
+              <div class="ds-num" id="ds-avg">—</div>
+              <div class="ds-label">Avg duration</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: recent logs -->
+        <div class="detail-right">
+          <div class="detail-card">
+            <div class="dc-header">
+              <h3>Recent executions</h3>
+              <button class="btn-ghost btn-sm" onclick="loadDetailLogs()">Refresh</button>
+            </div>
+            <div id="detail-logs" class="log-table"></div>
+            <div id="detail-logs-empty" class="log-empty" style="display:none">No runs yet. <a href="#" onclick="runJobNow()">Run now</a> to test.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGS VIEW -->
+    <div id="view-logs" class="view" style="display:none">
+      <div class="view-header">
+        <div>
+          <h1>Execution log</h1>
+          <p class="view-sub">All requests fired across all jobs</p>
+        </div>
+        <div class="log-filter-row">
+          <select id="log-filter-job" onchange="loadGlobalLogs()">
+            <option value="">All jobs</option>
+          </select>
+          <select id="log-filter-status" onchange="loadGlobalLogs()">
+            <option value="">All statuses</option>
+            <option value="ok">Success (2xx)</option>
+            <option value="fail">Failure</option>
+          </select>
+        </div>
+      </div>
+      <div id="global-logs" class="log-table"></div>
+      <div id="global-logs-empty" class="log-empty" style="display:none">No executions yet. Jobs fire according to their schedule.</div>
+    </div>
+
+    <!-- SETTINGS VIEW -->
+    <div id="view-settings" class="view" style="display:none">
+      <div class="view-header">
+        <div><h1>Settings</h1><p class="view-sub">Account, plan and notification preferences</p></div>
+      </div>
+      <div class="settings-grid">
+        <div class="settings-section">
+          <h2>Profile</h2>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="s-name" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="s-email" placeholder="you@example.com" disabled>
+          </div>
+          <button class="btn-primary" onclick="saveProfile()">Save profile</button>
+        </div>
+
+        <div class="settings-section">
+          <h2>Plan</h2>
+          <div class="plan-info-card" id="plan-info-card">
+            <div class="pic-name" id="pic-name">Free</div>
+            <div class="pic-details">
+              <div><span id="pic-jobs">0</span> / <span id="pic-max-jobs">5</span> jobs used</div>
+              <div><span id="pic-runs">0</span> / <span id="pic-max-runs">200</span> executions this month</div>
+            </div>
+            <a href="/scheduler/" class="btn-primary" style="width:fit-content">Upgrade plan</a>
+          </div>
+        </div>
+
+        <div class="settings-section settings-danger">
+          <h2>Danger zone</h2>
+          <div class="danger-row">
+            <div>
+              <div class="dr-title">Delete all jobs</div>
+              <div class="dr-sub">Removes all your scheduled jobs and their logs. Cannot be undone.</div>
+            </div>
+            <button class="btn-danger" onclick="confirmDeleteAll()">Delete all</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast" style="display:none"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
