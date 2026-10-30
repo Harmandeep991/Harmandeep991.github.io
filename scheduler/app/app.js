@@ -482,13 +482,25 @@ function toast(msg, type = 'ok') {
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 (function init() {
-  // Check for signup param
   const params = new URLSearchParams(location.search);
   if (params.get('signup')) showForm('signup');
 
-  // Try to resume session
-  const storedRefresh = (() => { try { return localStorage.getItem('sched_refresh'); } catch { return null; } })();
-  if (storedRefresh) {
+  // 1. Try main-site session (user navigated here from account.html already logged in)
+  try {
+    const mainSession = JSON.parse(localStorage.getItem('sl-session'));
+    if (mainSession?.refreshToken) {
+      token = mainSession.accessToken;
+      // Store the refresh token under our own key for future reloads
+      try { localStorage.setItem('sched_refresh', mainSession.refreshToken); } catch {}
+    }
+  } catch {}
+
+  // 2. Fall back to our own stored refresh token
+  const storedRefresh = (() => {
+    try { return localStorage.getItem('sched_refresh'); } catch { return null; }
+  })();
+
+  if (token || storedRefresh) {
     refreshToken().then(ok => {
       if (ok && token) {
         api('GET', '/account').then(async res => {
@@ -496,13 +508,9 @@ function toast(msg, type = 'ok') {
             const d = await res.json();
             currentUser = d.user || d;
             showApp();
-          } else {
-            showAuth();
-          }
+          } else { showAuth(); }
         });
-      } else {
-        showAuth();
-      }
+      } else { showAuth(); }
     });
   } else {
     showAuth();

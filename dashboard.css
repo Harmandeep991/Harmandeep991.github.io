@@ -327,3 +327,27 @@ dialog .acts { justify-content: flex-end; margin-top: 18px; }
 .help-list:empty { display: none; }
 .help-list li { padding: 12px 14px; border-radius: 12px; background: var(--soft); font-size: 14px; }
 .help-list .reply { margin-top: 8px; padding-left: 10px; border-left: 3px solid var(--accent); }
+
+/* Products hub */
+.hub-cards { display: grid; gap: 14px; margin-bottom: 36px; }
+.hub-card { display: flex; align-items: center; gap: 18px; padding: 22px 24px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; text-decoration: none; color: var(--fg); transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+.hub-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); text-decoration: none; }
+.hc-icon { font-size: 36px; line-height: 1; flex-shrink: 0; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 14px; }
+.hc-ext { background: color-mix(in srgb, var(--accent) 12%, var(--card)); }
+.hc-forms { background: rgba(14,165,233,.1); }
+.hc-sched { background: rgba(34,197,94,.1); }
+.hc-body { flex: 1; min-width: 0; }
+.hc-tag { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
+.hc-tag-new { color: #0ea5e9; }
+.hc-body h2 { font-size: 18px; font-weight: 800; margin: 0 0 4px; letter-spacing: -0.01em; }
+.hc-body p { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.45; }
+.hc-links { margin-top: 10px; }
+.hc-arrow { width: 20px; height: 20px; flex-shrink: 0; color: var(--muted); transition: transform 0.15s; }
+.hub-card:hover .hc-arrow { transform: translateX(4px); color: var(--accent); }
+.hub-manage { border-top: 1px solid var(--line); padding-top: 28px; }
+.hub-manage-label { font-size: 11.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.hub-manage-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.hml-item { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 10px; background: var(--soft); color: var(--fg); text-decoration: none; font-size: 14px; font-weight: 500; transition: background 0.15s; }
+.hml-item:hover { background: var(--card); text-decoration: none; }
+.hml-item svg { width: 15px; height: 15px; }
+@media (max-width: 760px) { .hub-card { flex-wrap: wrap; } .hc-arrow { display: none; } }
