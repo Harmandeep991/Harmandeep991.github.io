@@ -411,7 +411,7 @@ const RING = 2 * Math.PI * 52;
 
 const acct = { user: null, plan: null, ext: 'checking', extEmail: null };
 
-const VIEWS = ['overview', 'billing', 'invoices', 'extension', 'profile', 'security'];
+const VIEWS = ['hub', 'overview', 'billing', 'invoices', 'extension', 'profile', 'security', 'forms', 'scheduler'];
 
 function showView(name) {
   if (!VIEWS.includes(name)) name = 'overview';
@@ -910,8 +910,16 @@ async function logout() {
 
 function initAccountUi() {
   // Views
-  addEventListener('hashchange', () => showView(location.hash.slice(1)));
-  showView(location.hash.slice(1));
+  addEventListener('hashchange', () => {
+    const view = location.hash.slice(1);
+    showView(view);
+    if (view === 'forms' && window.formsModule) formsModule.init();
+    if (view === 'scheduler' && window.schedulerModule) schedulerModule.init();
+  });
+  const _initView = location.hash.slice(1);
+  showView(_initView);
+  if (_initView === 'forms' && window.formsModule) formsModule.init();
+  if (_initView === 'scheduler' && window.schedulerModule) schedulerModule.init();
 
   // User menu
   const btn = $('#um-btn');

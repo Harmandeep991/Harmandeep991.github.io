@@ -1,0 +1,404 @@
+<!-- Webhook Scheduler view fragment — paste inside account.html's .dash-main -->
+<!-- Requires: scheduler-module.js loaded after app.js, scheduler-addon.css -->
+<!-- The outer routing in app.js calls schedulerModule.init() when #scheduler is shown -->
+
+<section class="view" data-view="scheduler" hidden>
+
+  <!-- ── Header ─────────────────────────────────────────────────────────────── -->
+  <div class="view-head sc-view-head">
+    <div>
+      <h1>Webhook Scheduler</h1>
+      <p class="view-sub">Fire any HTTP request on a schedule — no server needed.</p>
+    </div>
+    <button class="btn sc-new-top-btn" id="sc-new-btn">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+      New job
+    </button>
+  </div>
+
+  <!-- ── Usage bar ──────────────────────────────────────────────────────────── -->
+  <div id="sc-usage-wrap" class="sc-usage-outer"></div>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- SUB-VIEW: LIST                                                          -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <div id="sc-subview-list">
+    <div id="sc-list" class="sc-grid"></div>
+
+    <!-- Empty state -->
+    <div id="sc-empty" class="sc-empty-state" hidden>
+      <div class="sc-es-icon">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <rect width="48" height="48" rx="14" fill="rgba(99,102,241,.12)"/>
+          <circle cx="24" cy="24" r="9" stroke="#6366f1" stroke-width="2.2"/>
+          <path d="M24 16v8l5 5" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 36h4M30 36h4" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+        </svg>
+      </div>
+      <h3>No jobs yet</h3>
+      <p>Schedule any HTTP webhook — a cron endpoint, a Slack message, a database backup. It fires at the exact time you set, and every run is logged.</p>
+      <button class="btn sc-new-top-btn" onclick="schedulerModule.showCreate()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+        Create first job
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- SUB-VIEW: CREATE WIZARD                                                 -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <div id="sc-subview-create" hidden>
+
+    <!-- Back link -->
+    <div class="sc-subview-back">
+      <button class="sc-back-link" onclick="schedulerModule._backToList()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to jobs
+      </button>
+    </div>
+
+    <div class="sc-wizard">
+
+      <!-- Step indicators -->
+      <div class="sc-wiz-steps" aria-label="Wizard progress">
+        <div class="sc-wiz-step sc-wiz-active" id="sc-ws-1">
+          <span class="sc-ws-num" aria-hidden="true">1</span>
+          <span class="sc-ws-label">Request</span>
+        </div>
+        <div class="sc-wiz-connector" aria-hidden="true"></div>
+        <div class="sc-wiz-step" id="sc-ws-2">
+          <span class="sc-ws-num" aria-hidden="true">2</span>
+          <span class="sc-ws-label">Schedule</span>
+        </div>
+        <div class="sc-wiz-connector" aria-hidden="true"></div>
+        <div class="sc-wiz-step" id="sc-ws-3">
+          <span class="sc-ws-num" aria-hidden="true">3</span>
+          <span class="sc-ws-label">Done</span>
+        </div>
+      </div>
+
+      <!-- ── Pane 1: Request ──────────────────────────────────────────────── -->
+      <div id="sc-wiz-pane-1" class="sc-wiz-pane">
+        <div class="sc-form-grid">
+
+          <div class="sc-form-group sc-fg-full">
+            <label for="sc-c-name">Job name</label>
+            <input type="text" id="sc-c-name" placeholder="e.g. Weekly digest email" autocomplete="off">
+          </div>
+
+          <div class="sc-form-group">
+            <label for="sc-c-method">HTTP method</label>
+            <select id="sc-c-method">
+              <option value="POST">POST</option>
+              <option value="GET">GET</option>
+              <option value="PUT">PUT</option>
+              <option value="PATCH">PATCH</option>
+              <option value="DELETE">DELETE</option>
+            </select>
+          </div>
+
+          <div class="sc-form-group sc-fg-3">
+            <label for="sc-c-url">URL</label>
+            <input type="url" id="sc-c-url" placeholder="https://api.myapp.com/cron/weekly" autocomplete="off">
+          </div>
+
+          <div class="sc-form-group sc-fg-full">
+            <label for="sc-c-headers">
+              Headers
+              <span class="sc-field-note">optional — one per line: <code>Key: Value</code></span>
+            </label>
+            <textarea id="sc-c-headers" rows="3"
+              placeholder="Authorization: Bearer sk-…&#10;Content-Type: application/json"
+              spellcheck="false" autocomplete="off"></textarea>
+          </div>
+
+          <div class="sc-form-group sc-fg-full">
+            <label for="sc-c-body">
+              Request body
+              <span class="sc-field-note">optional — JSON</span>
+            </label>
+            <textarea id="sc-c-body" rows="4"
+              placeholder='{"action":"send_digest"}'
+              spellcheck="false" autocomplete="off"></textarea>
+          </div>
+        </div>
+
+        <div class="sc-wiz-footer">
+          <span></span>
+          <button class="btn sc-new-top-btn" onclick="schedulerModule._wizStep1Next()">Next: Schedule →</button>
+        </div>
+      </div>
+
+      <!-- ── Pane 2: Schedule ─────────────────────────────────────────────── -->
+      <div id="sc-wiz-pane-2" class="sc-wiz-pane" hidden>
+        <div class="sc-form-grid">
+
+          <div class="sc-form-group sc-fg-full">
+            <label>Schedule type</label>
+            <div class="sc-sched-type-grid" role="group" aria-label="Schedule type">
+              <button class="sc-stt-btn sc-stt-active" data-type="once"
+                onclick="schedulerModule._pickSchedType('once')" type="button">
+                <svg class="sc-stt-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                <span class="sc-stt-label">Once</span>
+                <span class="sc-stt-desc">A specific date &amp; time</span>
+              </button>
+              <button class="sc-stt-btn" data-type="daily"
+                onclick="schedulerModule._pickSchedType('daily')" type="button">
+                <svg class="sc-stt-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="sc-stt-label">Daily</span>
+                <span class="sc-stt-desc">Every day at a time</span>
+              </button>
+              <button class="sc-stt-btn" data-type="weekly"
+                onclick="schedulerModule._pickSchedType('weekly')" type="button">
+                <svg class="sc-stt-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M17 3v2M7 3v2M3 8h18M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <circle cx="12" cy="14" r="1.5" fill="currentColor"/>
+                </svg>
+                <span class="sc-stt-label">Weekly</span>
+                <span class="sc-stt-desc">Once per week</span>
+              </button>
+              <button class="sc-stt-btn" data-type="interval"
+                onclick="schedulerModule._pickSchedType('interval')" type="button">
+                <svg class="sc-stt-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 12h4l3 6 4-12 3 6h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="sc-stt-label">Interval</span>
+                <span class="sc-stt-desc">Every N minutes/hours</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Once fields -->
+          <div id="sc-sched-once" class="sc-sched-fields sc-fg-full">
+            <div class="sc-form-grid" style="margin:0">
+              <div class="sc-form-group">
+                <label for="sc-c-once-date">Date</label>
+                <input type="date" id="sc-c-once-date">
+              </div>
+              <div class="sc-form-group">
+                <label for="sc-c-once-time">Time</label>
+                <input type="time" id="sc-c-once-time">
+              </div>
+              <div class="sc-form-group">
+                <label for="sc-c-once-tz">Timezone</label>
+                <select id="sc-c-once-tz">
+                  <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                  <option value="UTC">UTC</option>
+                  <option value="America/New_York">America/New_York (ET)</option>
+                  <option value="America/Los_Angeles">America/Los_Angeles (PT)</option>
+                  <option value="Europe/London">Europe/London (GMT/BST)</option>
+                  <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Daily fields -->
+          <div id="sc-sched-daily" class="sc-sched-fields sc-fg-full" hidden>
+            <div class="sc-form-grid" style="margin:0">
+              <div class="sc-form-group">
+                <label for="sc-c-daily-time">Time each day</label>
+                <input type="time" id="sc-c-daily-time">
+              </div>
+              <div class="sc-form-group">
+                <label for="sc-c-daily-tz">Timezone</label>
+                <select id="sc-c-daily-tz">
+                  <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                  <option value="UTC">UTC</option>
+                  <option value="America/New_York">America/New_York (ET)</option>
+                  <option value="America/Los_Angeles">America/Los_Angeles (PT)</option>
+                  <option value="Europe/London">Europe/London (GMT/BST)</option>
+                  <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weekly fields -->
+          <div id="sc-sched-weekly" class="sc-sched-fields sc-fg-full" hidden>
+            <div class="sc-form-grid" style="margin:0">
+              <div class="sc-form-group">
+                <label for="sc-c-weekly-day">Day of week</label>
+                <select id="sc-c-weekly-day">
+                  <option value="1">Monday</option>
+                  <option value="2">Tuesday</option>
+                  <option value="3">Wednesday</option>
+                  <option value="4">Thursday</option>
+                  <option value="5">Friday</option>
+                  <option value="6">Saturday</option>
+                  <option value="0">Sunday</option>
+                </select>
+              </div>
+              <div class="sc-form-group">
+                <label for="sc-c-weekly-time">At time</label>
+                <input type="time" id="sc-c-weekly-time">
+              </div>
+              <div class="sc-form-group">
+                <label for="sc-c-weekly-tz">Timezone</label>
+                <select id="sc-c-weekly-tz">
+                  <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                  <option value="UTC">UTC</option>
+                  <option value="America/New_York">America/New_York (ET)</option>
+                  <option value="America/Los_Angeles">America/Los_Angeles (PT)</option>
+                  <option value="Europe/London">Europe/London (GMT/BST)</option>
+                  <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interval fields -->
+          <div id="sc-sched-interval" class="sc-sched-fields sc-fg-full" hidden>
+            <div class="sc-form-grid" style="margin:0">
+              <div class="sc-form-group">
+                <label for="sc-c-interval-val">Every</label>
+                <input type="number" id="sc-c-interval-val" min="1" max="9999" value="1" style="max-width:120px">
+              </div>
+              <div class="sc-form-group">
+                <label for="sc-c-interval-unit">Unit</label>
+                <select id="sc-c-interval-unit">
+                  <option value="minutes">Minutes</option>
+                  <option value="hours" selected>Hours</option>
+                  <option value="days">Days</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc-wiz-footer">
+          <button class="sc-ghost-btn" onclick="schedulerModule._wizBack()" type="button">← Back</button>
+          <button class="btn sc-new-top-btn" id="sc-wiz-submit-btn"
+            onclick="schedulerModule._wizStep2Submit()" type="button">Create job</button>
+        </div>
+      </div>
+
+      <!-- ── Pane 3: Done ─────────────────────────────────────────────────── -->
+      <div id="sc-wiz-pane-3" class="sc-wiz-pane sc-wiz-done" hidden>
+        <div class="sc-done-icon" aria-hidden="true">✓</div>
+        <h2>Job created!</h2>
+        <p>Your job has been scheduled. Every run is logged automatically.</p>
+        <div class="sc-done-card" id="sc-done-card"></div>
+        <div class="sc-done-actions">
+          <button class="btn sc-new-top-btn" onclick="schedulerModule._goToNewJob()">View job →</button>
+          <button class="sc-ghost-btn" onclick="schedulerModule.showCreate()" type="button">Create another</button>
+        </div>
+      </div>
+
+    </div><!-- /.sc-wizard -->
+  </div><!-- /#sc-subview-create -->
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- SUB-VIEW: JOB DETAIL                                                    -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <div id="sc-subview-detail" hidden>
+
+    <!-- Back + action bar -->
+    <div class="sc-detail-topbar">
+      <button class="sc-back-link" onclick="schedulerModule._backToList()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Jobs
+      </button>
+      <div class="sc-detail-actions">
+        <button class="sc-ghost-btn" id="sc-detail-run-btn" type="button"
+          onclick="schedulerModule._runNow(schedulerModule._currentJobId())">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 2l10 6-10 6z" fill="currentColor"/>
+          </svg>
+          Run now
+        </button>
+        <button class="sc-ghost-btn" id="sc-detail-pause-btn" type="button"
+          onclick="schedulerModule._togglePause(schedulerModule._currentJobId(), document.getElementById('sc-detail-status').textContent)">
+          Pause
+        </button>
+        <button class="sc-ghost-btn sc-btn-danger" type="button"
+          onclick="schedulerModule._deleteJob(schedulerModule._currentJobId())">Delete</button>
+      </div>
+    </div>
+
+    <div class="sc-detail-grid">
+      <!-- Left: main info + stats -->
+      <div class="sc-detail-left">
+
+        <div class="sc-detail-card">
+          <div class="sc-detail-header">
+            <h2 id="sc-detail-name" class="sc-detail-title">—</h2>
+            <div class="sc-detail-status-row">
+              <span id="sc-detail-status" class="sc-status sc-active">active</span>
+              <span id="sc-detail-next-run" class="sc-detail-meta">—</span>
+            </div>
+          </div>
+          <dl class="sc-detail-fields">
+            <div class="sc-df-row">
+              <dt class="sc-df-key">Endpoint</dt>
+              <dd class="sc-df-val sc-df-mono" id="sc-detail-endpoint">—</dd>
+            </div>
+            <div class="sc-df-row">
+              <dt class="sc-df-key">Schedule</dt>
+              <dd class="sc-df-val" id="sc-detail-sched">—</dd>
+            </div>
+            <div class="sc-df-row">
+              <dt class="sc-df-key">Last run</dt>
+              <dd class="sc-df-val" id="sc-detail-last-run">—</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Stats row -->
+        <div class="sc-detail-stats" role="list" aria-label="Job statistics">
+          <div class="sc-ds-card" role="listitem">
+            <div class="sc-ds-num" id="sc-ds-total">—</div>
+            <div class="sc-ds-label">Total runs</div>
+          </div>
+          <div class="sc-ds-card" role="listitem">
+            <div class="sc-ds-num sc-ds-green" id="sc-ds-ok">—</div>
+            <div class="sc-ds-label">Successes</div>
+          </div>
+          <div class="sc-ds-card" role="listitem">
+            <div class="sc-ds-num sc-ds-red" id="sc-ds-fail">—</div>
+            <div class="sc-ds-label">Failures</div>
+          </div>
+          <div class="sc-ds-card" role="listitem">
+            <div class="sc-ds-num" id="sc-ds-avg">—</div>
+            <div class="sc-ds-label">Avg duration</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: recent logs -->
+      <div class="sc-detail-right">
+        <div class="sc-detail-card">
+          <div class="sc-dc-header">
+            <h3>Recent executions</h3>
+            <button class="sc-ghost-btn sc-ghost-sm" type="button"
+              onclick="schedulerModule._refreshLogs()">Refresh</button>
+          </div>
+          <div id="sc-detail-logs" class="sc-logs-table" aria-live="polite"></div>
+          <div id="sc-detail-logs-empty" class="sc-logs-empty" hidden>
+            No runs yet.
+            <button class="sc-inline-link" type="button"
+              onclick="schedulerModule._runNow(schedulerModule._currentJobId())">Run now</button>
+            to test.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.sc-detail-grid -->
+  </div><!-- /#sc-subview-detail -->
+
+</section>

@@ -1,0 +1,161 @@
+<!-- Forms Enforcer view — paste inside .dash-main in account.html -->
+<!-- Routed to via #forms hash; formsModule.init() is called on first navigation -->
+
+<section class="view" data-view="forms" hidden>
+
+  <!-- ── List sub-view ── -->
+  <div id="fm-list-view">
+    <div class="view-head">
+      <div>
+        <h1>Forms Enforcer</h1>
+        <p>Server-gated Google Forms — tamper-proof deadlines.</p>
+      </div>
+      <button class="btn" id="fm-new-btn" type="button">+ New gated form</button>
+    </div>
+
+    <!-- Empty state -->
+    <div id="fm-empty" class="fm-empty-state" hidden>
+      <div class="fm-empty-icon" aria-hidden="true">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="4" width="36" height="48" rx="4" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+          <rect x="16" y="4" width="36" height="48" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="2"/>
+          <path d="M24 20h16M24 28h16M24 36h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+          <circle cx="48" cy="48" r="12" fill="var(--card)" stroke="currentColor" stroke-width="2"/>
+          <path d="M44 48l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+        </svg>
+      </div>
+      <h2>No gated forms yet</h2>
+      <p>Wrap your first Google Form with a server-enforced deadline. Clock spoofing impossible.</p>
+      <button class="btn" id="fm-empty-new-btn" type="button" onclick="formsModule.showCreate()">
+        Wrap your first form &rarr;
+      </button>
+    </div>
+
+    <!-- Cards grid -->
+    <div id="fm-list" class="fm-grid"></div>
+  </div>
+
+
+  <!-- ── Create / Edit sub-view ── -->
+  <div id="fm-create-view" hidden>
+    <div class="view-head">
+      <div>
+        <button class="fm-back-btn" type="button" id="fm-wizard-cancel">&#8592; Back to forms</button>
+        <h1 id="fm-wizard-title">New gated form</h1>
+      </div>
+    </div>
+
+    <div class="fm-wizard">
+      <form id="fm-wizard-form" class="fm-wizard-form" novalidate>
+
+        <div class="fm-wizard-section">
+          <div class="fm-field-group">
+            <label for="fm-c-title">Form name <span class="fm-field-hint">(for your reference)</span></label>
+            <input type="text" id="fm-c-title" name="title" placeholder="e.g. MBA Admissions 2026" maxlength="100" required autocomplete="off">
+          </div>
+
+          <div class="fm-field-group">
+            <label for="fm-c-url">Google Form URL</label>
+            <input type="url" id="fm-c-url" name="googleFormUrl" placeholder="https://docs.google.com/forms/d/…" required autocomplete="off">
+            <span class="fm-field-hint">Paste the full URL — we wrap it without touching the original form</span>
+          </div>
+        </div>
+
+        <div class="fm-wizard-section">
+          <div class="fm-field-row">
+            <div class="fm-field-group">
+              <label for="fm-c-open">Opens on</label>
+              <input type="datetime-local" id="fm-c-open" name="openAt">
+            </div>
+            <div class="fm-field-group">
+              <label for="fm-c-close">Closes on</label>
+              <input type="datetime-local" id="fm-c-close" name="closeAt">
+            </div>
+          </div>
+
+          <div class="fm-field-group">
+            <label for="fm-c-tz">Timezone</label>
+            <select id="fm-c-tz" name="timezone">
+              <option value="Asia/Kolkata">Asia/Kolkata (IST, UTC+5:30)</option>
+              <option value="America/New_York">America/New_York (EST/EDT)</option>
+              <option value="America/Los_Angeles">America/Los_Angeles (PST/PDT)</option>
+              <option value="America/Chicago">America/Chicago (CST/CDT)</option>
+              <option value="Europe/London">Europe/London (GMT/BST)</option>
+              <option value="Europe/Paris">Europe/Paris (CET/CEST)</option>
+              <option value="Asia/Singapore">Asia/Singapore (SGT, UTC+8)</option>
+              <option value="Asia/Dubai">Asia/Dubai (GST, UTC+4)</option>
+              <option value="Australia/Sydney">Australia/Sydney (AEST/AEDT)</option>
+              <option value="UTC">UTC</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="fm-wizard-error" class="fm-form-error" hidden></div>
+
+        <div class="fm-wizard-actions">
+          <button type="button" class="btn soft" id="fm-wizard-cancel-bottom" onclick="document.getElementById('fm-wizard-cancel').click()">Cancel</button>
+          <button type="submit" class="btn" id="fm-wizard-submit">Create form</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ── Detail sub-view ── -->
+  <div id="fm-detail-view" hidden>
+    <div class="view-head">
+      <div>
+        <button class="fm-back-btn" type="button" id="fm-detail-back">&#8592; Back to forms</button>
+        <h1 id="fm-detail-title">Form</h1>
+      </div>
+      <div class="fm-detail-head-actions">
+        <button class="btn soft" type="button" id="fm-detail-edit">Edit</button>
+        <button class="btn fm-btn-danger" type="button" id="fm-detail-delete">Delete</button>
+      </div>
+    </div>
+
+    <div class="fm-detail">
+      <!-- Status + link card -->
+      <div class="card fm-detail-main">
+        <div class="fm-stats-row">
+          <div class="fm-stat-tile">
+            <div class="fm-stat-num" id="fm-detail-access">—</div>
+            <div class="fm-stat-label">Accesses</div>
+          </div>
+          <div class="fm-stat-tile fm-stat-status">
+            <div id="fm-detail-status-chip" class="fm-status-chip chip-draft">—</div>
+            <div class="fm-stat-label">Status</div>
+          </div>
+        </div>
+
+        <div class="fm-detail-row">
+          <span class="fm-detail-row-label">Public link</span>
+          <div class="fm-detail-link-group">
+            <code class="fm-detail-link" id="fm-detail-link-text"></code>
+            <button class="fm-copy-btn" type="button" id="fm-detail-copy">Copy link</button>
+          </div>
+        </div>
+
+        <div class="fm-detail-row">
+          <span class="fm-detail-row-label">Opens</span>
+          <span class="fm-detail-row-val" id="fm-detail-open">—</span>
+        </div>
+        <div class="fm-detail-row">
+          <span class="fm-detail-row-label">Closes</span>
+          <span class="fm-detail-row-val" id="fm-detail-close">—</span>
+        </div>
+        <div class="fm-detail-row">
+          <span class="fm-detail-row-label">Timezone</span>
+          <span class="fm-detail-row-val" id="fm-detail-tz">—</span>
+        </div>
+        <div class="fm-detail-row">
+          <span class="fm-detail-row-label">Google Form</span>
+          <a class="fm-detail-row-link" id="fm-detail-gform" href="#" target="_blank" rel="noopener">
+            Open original form &#8599;
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
