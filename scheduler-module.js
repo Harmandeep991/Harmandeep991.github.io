@@ -52,26 +52,27 @@ window.schedulerModule = (function () {
   function schedLabel(s) {
     if (!s) return '—';
     if (s.type === 'once') {
-      if (!s.at) return 'Once';
+      if (!s.runAt) return 'Once';
       try {
-        return 'Once on ' + new Date(s.at).toLocaleDateString('en-IN', {
-          day: 'numeric', month: 'short', year: 'numeric',
+        return 'Once on ' + new Date(s.runAt).toLocaleString('en-IN', {
+          day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
         });
-      } catch (_) { return 'Once on ' + s.at; }
+      } catch (_) { return 'Once on ' + s.runAt; }
     }
     if (s.type === 'interval') {
-      var n = s.interval || 0;
-      var u = s.intervalUnit || 'minutes';
-      return 'Every ' + n + ' ' + (n === 1 ? u.replace(/s$/, '') : u);
+      var minutes = Number(s.intervalMinutes) || 0;
+      if (minutes >= 1440 && minutes % 1440 === 0) return 'Every ' + (minutes / 1440) + ' day' + (minutes === 1440 ? '' : 's');
+      if (minutes >= 60 && minutes % 60 === 0) return 'Every ' + (minutes / 60) + ' hour' + (minutes === 60 ? '' : 's');
+      return 'Every ' + minutes + ' minute' + (minutes === 1 ? '' : 's');
     }
     if (s.type === 'daily') {
       var tz = _tzShort(s.timezone);
-      return 'Every day at ' + (s.at || '') + (tz ? ' ' + tz : '');
+      return 'Every day at ' + (s.clockTime || '') + (tz ? ' ' + tz : '');
     }
     if (s.type === 'weekly') {
       var tz = _tzShort(s.timezone);
       var day = SHORT_DAYS[s.dayOfWeek] || '';
-      return 'Every ' + day + ' at ' + (s.at || '') + (tz ? ' ' + tz : '');
+      return 'Every ' + day + ' at ' + (s.clockTime || '') + (tz ? ' ' + tz : '');
     }
     return '—';
   }
@@ -105,22 +106,22 @@ window.schedulerModule = (function () {
       var d = await api('/scheduler/usage');
       var wrap = $id('sc-usage-wrap');
       if (!wrap) return;
-      var jobUsed = (d.used && d.used.jobs != null) ? d.used.jobs : 0;
-      var jobMax  = (d.limits && d.limits.maxJobs)  ? d.limits.maxJobs : 5;
-      var runUsed = (d.used && d.used.runsThisMonth != null) ? d.used.runsThisMonth : 0;
-      var runMax  = (d.limits && d.limits.maxRunsPerMonth)   ? d.limits.maxRunsPerMonth : 200;
-      var jp = Math.min(100, jobMax > 0 ? Math.round(jobUsed / jobMax * 100) : 0);
-      var rp = Math.min(100, runMax > 0 ? Math.round(runUsed / runMax * 100) : 0);
+      var jobUsed = (d.used && d.used.jobs != null) ? d.used.jobs : (d.jobCount || 0);
+      var jobMax  = d.limits ? d.limits.maxJobs : (d.plan && d.plan.maxJobs);
+      var runUsed = (d.used && d.used.runsThisMonth != null) ? d.used.runsThisMonth : (d.runsThisMonth || 0);
+      var runMax  = d.limits ? d.limits.maxRunsPerMonth : (d.plan && d.plan.maxRunsPerMonth);
+      var jp = Number.isFinite(jobMax) && jobMax > 0 ? Math.min(100, Math.round(jobUsed / jobMax * 100)) : 0;
+      var rp = Number.isFinite(runMax) && runMax > 0 ? Math.min(100, Math.round(runUsed / runMax * 100)) : 0;
       var jWarn = jp >= 80 ? ' sc-usage-warn' : '';
       var rWarn = rp >= 80 ? ' sc-usage-warn' : '';
       wrap.innerHTML =
         '<div class="sc-usage-bar-wrap">' +
           '<div class="sc-usage-item">' +
-            '<span class="sc-usage-label">Jobs <strong>' + jobUsed + ' / ' + jobMax + '</strong></span>' +
+            '<span class="sc-usage-label">Jobs <strong>' + jobUsed + ' / ' + (jobMax == null ? 'Unlimited' : jobMax) + '</strong></span>' +
             '<div class="sc-usage-track"><div class="sc-usage-fill' + jWarn + '" style="width:' + jp + '%"></div></div>' +
           '</div>' +
           '<div class="sc-usage-item">' +
-            '<span class="sc-usage-label">Runs this month <strong>' + runUsed + ' / ' + runMax + '</strong></span>' +
+            '<span class="sc-usage-label">Runs this month <strong>' + runUsed + ' / ' + (runMax == null ? 'Unlimited' : runMax) + '</strong></span>' +
             '<div class="sc-usage-track"><div class="sc-usage-fill' + rWarn + '" style="width:' + rp + '%"></div></div>' +
           '</div>' +
         '</div>';
@@ -221,6 +222,15 @@ window.schedulerModule = (function () {
     var btn = $id('sc-wiz-submit-btn');
     if (btn) { btn.disabled = false; btn.textContent = 'Create job'; }
 
+    var onceDate = $id('sc-c-once-date');
+    var onceTime = $id('sc-c-once-time');
+    if (onceDate && onceTime) {
+      var defaultRun = new Date(Date.now() + 10 * 60 * 1000);
+      onceDate.value = defaultRun.getFullYear() + '-' + String(defaultRun.getMonth() + 1).padStart(2, '0') + '-' + String(defaultRun.getDate()).padStart(2, '0');
+      onceTime.value = String(defaultRun.getHours()).padStart(2, '0') + ':' + String(defaultRun.getMinutes()).padStart(2, '0');
+      onceDate.min = new Date().toISOString().slice(0, 10);
+    }
+
     _showSub('create');
   }
 
@@ -267,26 +277,27 @@ window.schedulerModule = (function () {
       var time = $id('sc-c-once-time') ? $id('sc-c-once-time').value : '';
       var tz   = $id('sc-c-once-tz')   ? $id('sc-c-once-tz').value   : 'Asia/Kolkata';
       if (!date || !time) return null;
-      return { type: 'once', at: new Date(date + 'T' + time).toISOString(), timezone: tz };
+      return { type: 'once', localDate: date, clockTime: time, timezone: tz };
     }
     if (_schedType === 'daily') {
       var t  = $id('sc-c-daily-time') ? $id('sc-c-daily-time').value : '';
       var tz = $id('sc-c-daily-tz')   ? $id('sc-c-daily-tz').value   : 'Asia/Kolkata';
       if (!t) return null;
-      return { type: 'daily', at: t, timezone: tz };
+      return { type: 'daily', clockTime: t, timezone: tz };
     }
     if (_schedType === 'weekly') {
       var day = parseInt(($id('sc-c-weekly-day') ? $id('sc-c-weekly-day').value : '1'), 10);
       var t   = $id('sc-c-weekly-time') ? $id('sc-c-weekly-time').value : '';
       var tz  = $id('sc-c-weekly-tz')   ? $id('sc-c-weekly-tz').value   : 'Asia/Kolkata';
       if (!t) return null;
-      return { type: 'weekly', at: t, dayOfWeek: day, timezone: tz };
+      return { type: 'weekly', clockTime: t, dayOfWeek: day, timezone: tz };
     }
     if (_schedType === 'interval') {
       var val  = parseInt(($id('sc-c-interval-val')  ? $id('sc-c-interval-val').value  : '0'), 10);
       var unit = $id('sc-c-interval-unit') ? $id('sc-c-interval-unit').value : 'hours';
       if (!val || val < 1) return null;
-      return { type: 'interval', interval: val, intervalUnit: unit };
+      var multiplier = unit === 'days' ? 1440 : (unit === 'hours' ? 60 : 1);
+      return { type: 'interval', intervalMinutes: val * multiplier };
     }
     return null;
   }
@@ -332,7 +343,7 @@ window.schedulerModule = (function () {
           '<span class="sc-method ' + (mMap[m] || 'sc-post') + '">' + esc(m) + '</span> ' +
           '<strong>' + esc(payload.name) + '</strong><br>' +
           '<span class="sc-done-url">' + esc(payload.url) + '</span><br>' +
-          '<span class="sc-done-sched">' + esc(schedLabel(schedule)) + '</span>';
+          '<span class="sc-done-sched">' + esc(schedLabel((d.job && d.job.schedule) || schedule)) + '</span>';
       }
       var p2 = $id('sc-wiz-pane-2'); if (p2) p2.hidden = true;
       var p3 = $id('sc-wiz-pane-3'); if (p3) p3.hidden = false;
@@ -384,10 +395,10 @@ window.schedulerModule = (function () {
       var logs  = data.logs  || [];
       var stats = data.stats || {};
 
-      _setText('sc-ds-total', stats.totalRuns   != null ? stats.totalRuns   : 0);
-      _setText('sc-ds-ok',    stats.successRuns != null ? stats.successRuns : 0);
-      _setText('sc-ds-fail',  stats.failRuns    != null ? stats.failRuns    : 0);
-      _setText('sc-ds-avg',   stats.avgDurationMs != null ? stats.avgDurationMs + 'ms' : '—');
+      _setText('sc-ds-total', stats.total != null ? stats.total : 0);
+      _setText('sc-ds-ok',    stats.ok    != null ? stats.ok    : 0);
+      _setText('sc-ds-fail',  stats.fail  != null ? stats.fail  : 0);
+      _setText('sc-ds-avg',   stats.avgMs != null ? stats.avgMs + 'ms' : '—');
 
       var logsEl  = $id('sc-detail-logs');
       var emptyEl = $id('sc-detail-logs-empty');

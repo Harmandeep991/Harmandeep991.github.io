@@ -164,7 +164,7 @@ function formStatus(f) {
   const now = Date.now();
   if (!f.openAt) return { label: 'Draft', cls: 'status-draft' };
   if (now < new Date(f.openAt).getTime()) return { label: 'Upcoming', cls: 'status-upcoming' };
-  if (f.closeAt && now > new Date(f.closeAt).getTime()) return { label: 'Closed', cls: 'status-closed' };
+  if (f.closeAt && now >= new Date(f.closeAt).getTime()) return { label: 'Closed', cls: 'status-closed' };
   return { label: 'Live', cls: 'status-live' };
 }
 
@@ -197,7 +197,7 @@ function wizardStep1Next() {
   const name = (document.getElementById('c-name')?.value || '').trim();
   const url = (document.getElementById('c-url')?.value || '').trim();
   if (!name) return toast('Enter a form name', 'err');
-  if (!url.includes('docs.google.com/forms')) return toast('Enter a valid Google Forms URL', 'err');
+  if (!/^https:\/\/(?:docs\.google\.com\/forms\/d\/(?:e\/)?[\w-]+(?:\/|$)|forms\.gle\/[\w-]+(?:[/?#]|$))/i.test(url)) return toast('Enter a valid Google Forms URL', 'err');
   document.getElementById('wiz-pane-1').style.display = 'none';
   document.getElementById('wiz-pane-2').style.display = '';
   setWizStep(2);

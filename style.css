@@ -95,6 +95,7 @@ code { font: 0.9em ui-monospace, Menlo, monospace; padding: 1px 6px; border-radi
 .btn:hover::after { transform: translateX(100%); }
 .btn:hover { text-decoration: none; filter: brightness(1.06); }
 .btn:active { transform: scale(0.97); }
+.btn.is-disabled, .btn[aria-disabled="true"] { opacity: .58; filter: grayscale(.35); cursor: not-allowed; pointer-events: none; box-shadow: none; }
 .btn svg { width: 18px; height: 18px; }
 .btn.primary, main .btn.primary {
   color: #fff; background: linear-gradient(135deg, var(--brand-1), var(--brand-2));

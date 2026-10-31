@@ -3,7 +3,8 @@
 (() => {
   const q = (s, root = document) => root.querySelector(s);
   const qa = (s, root = document) => [...root.querySelectorAll(s)];
-  const VIEWS = ['overview', 'users', 'user', 'payments', 'requests', 'installs', 'errors', 'emails', 'audit', 'settings'];
+  const VIEWS = ['overview', 'users', 'user', 'plans', 'payments', 'requests', 'installs', 'errors', 'emails', 'audit', 'settings'];
+  const PRODUCT = { extension: 'Button Scheduler', forms: 'Timed Forms', scheduler: 'Webhook Scheduler' };
   const inr = (n) => `₹${Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
   const d = (ms) => (ms ? new Date(ms).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '–');
   const dt = (ms) => (ms ? new Date(ms).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : '–');
@@ -31,10 +32,16 @@
     el.replaceChildren(h('thead', {}, h('tr', {}, head.map((x) => h('th', {}, x)))), h('tbody', {}, rows.length ? rows : h('tr', {}, h('td', { colspan: head.length, class: 'muted' }, empty))));
   };
   const badge = (text, kind = '') => h('span', { class: `badge-v ${kind}` }, text);
-  const planBadge = (p) =>
-    p.status === 'active' ? badge(`Pro · until ${d(p.paidUntil)}`, 'ok') : p.status === 'trial' ? badge(`Trial · until ${d(p.trialEndsAt)}`, 'warn') : badge(`Free · ${p.freeUsed}/${p.freeLimit} used`, 'off');
-  const planName = (p) => (p.plan === 'custom' ? `Custom · ${p.days} days` : p.plan === 'comp' ? 'Complimentary' : p.plan);
-  const STATUS = { success: ['Paid', 'ok'], pending: ['Pending', 'warn'], failed: ['Failed', 'bad'], cancelled: ['Cancelled', 'off'], abandoned: ['Abandoned', 'off'] };
+  const planBadge = (p) => {
+    const paid = Object.values(p.products || {}).filter((x) => x.status === 'active');
+    return paid.length
+      ? badge(`${paid.length} paid product${paid.length === 1 ? '' : 's'}`, 'ok')
+      : p.status === 'trial'
+        ? badge(`Trial · until ${d(p.trialEndsAt)}`, 'warn')
+        : badge(`Free · ${p.freeUsed}/${p.freeLimit} used`, 'off');
+  };
+  const planName = (p) => p.planName || (p.plan === 'custom' ? `${PRODUCT[p.product] || 'Product'} custom · ${p.days} days` : p.plan === 'comp' ? 'Complimentary' : p.plan);
+  const STATUS = { success: ['Paid', 'ok'], applying: ['Applying', 'warn'], pending: ['Pending', 'warn'], failed: ['Failed', 'bad'], cancelled: ['Cancelled', 'off'], abandoned: ['Abandoned', 'off'] };
 
   function stats(el, items) {
     el.replaceChildren(
@@ -139,7 +146,7 @@
       const OFFER = { open: ['Waiting for payment', 'warn'], paid: ['Paid', 'ok'], cancelled: ['Cancelled', 'off'] };
       table(
         q('#ud-offers'),
-        ['Offer', 'Price', 'Status', 'Made', ''],
+        ['Offer', 'Product', 'Price', 'Status', 'Made', ''],
         (r.offers || []).map((o) => {
           const expired = o.status === 'open' && o.expiresAt < Date.now();
           const cancel = o.status === 'open' && !expired
@@ -147,6 +154,7 @@
             : null;
           return h('tr', {},
             h('td', {}, `${o.days} days`, o.note ? h('br') : null, o.note ? h('small', { class: 'muted' }, o.note) : null),
+            h('td', {}, PRODUCT[o.product] || o.product),
             h('td', {}, inr(o.amount)),
             h('td', {}, expired ? badge('Expired', 'off') : badge(...(OFFER[o.status] || [o.status]))),
             h('td', {}, d(o.createdAt)),
@@ -159,6 +167,35 @@
       table(q('#ud-sess'), ['Where', 'Signed in', 'Last used'], r.sessions.map((s) => h('tr', {}, h('td', {}, s.kind === 'extension' ? 'Extension' : 'Website', h('br'), h('small', { class: 'muted' }, (s.userAgent || '').slice(0, 70))), h('td', {}, dt(s.createdAt)), h('td', {}, ago(s.lastUsedAt)))), 'Not signed in anywhere.');
     },
 
+    async plans() {
+      const r = await api('/admin/plans');
+      const root = q('#plan-editor');
+      const nodes = [];
+      for (const product of r.products) {
+        nodes.push(h('div', { class: 'adm-plan-product' }, h('h2', {}, product.name), h('p', {}, product.description)));
+        for (const plan of r.plans.filter((x) => x.product === product.id)) {
+          const form = h('form', {},
+            h('label', {}, 'Plan name', h('input', { name: 'name', value: plan.name, required: true, maxlength: 80 })),
+            h('label', {}, 'Price (₹)', h('input', { name: 'amount', type: 'number', min: 1, max: 200000, step: '.01', value: plan.amount, required: true })),
+            h('label', {}, 'Access period', h('input', { name: 'days', type: 'text', value: `${plan.days} days (${plan.interval})`, readonly: true }), h('small', { class: 'muted' }, 'Fixed for monthly and annual plans; use a custom offer for another term.')),
+            h('label', { class: 'plan-enabled' }, h('input', { name: 'active', type: 'checkbox', checked: plan.active }), 'Available for purchase'),
+            h('button', { class: 'btn sm primary', type: 'submit' }, 'Save plan')
+          );
+          const card = h('article', { class: `card adm-plan-card${plan.active ? '' : ' is-off'}` },
+            h('header', {}, h('b', {}, plan.interval === 'annual' ? 'Annual' : 'Monthly'), badge(plan.active ? 'Live' : 'Hidden', plan.active ? 'ok' : 'off')),
+            form
+          );
+          form.onsubmit = (e) => {
+            e.preventDefault();
+            const body = { name: form.elements.name.value.trim(), amount: Number(form.elements.amount.value), active: form.elements.active.checked };
+            act(form.querySelector('button'), () => api(`/admin/plans/${plan.id}`, { method: 'PATCH', body }), 'Plan updated everywhere', load.plans);
+          };
+          nodes.push(card);
+        }
+      }
+      root.replaceChildren(...nodes);
+    },
+
     async payments() {
       const params = new URLSearchParams({ status: q('#p-status').value, from: q('#p-from').value, to: q('#p-to').value });
       const r = await api(`/admin/payments?${params}`);
@@ -167,7 +204,7 @@
         q('#p-table'),
         ['Transaction', 'Customer', 'Plan', 'Amount', 'Status', 'Mode', 'Created', ''],
         r.payments.map((p) => {
-          const recheck = p.status === 'pending' || p.status === 'abandoned' || p.status === 'failed'
+          const recheck = p.status === 'pending' || p.status === 'applying' || p.status === 'abandoned' || p.status === 'failed'
             ? h('button', { type: 'button', class: 'btn sm soft', onclick: (e) => act(e.target, () => api(`/admin/payments/${p.txnId}/recheck`, { method: 'POST' }), (o) => `${p.provider === 'cashfree' ? 'Cashfree' : 'PayU'} says: ${o.status}${o.changed ? ' (updated)' : ''}`, load.payments) }, 'Re-check')
             : null;
           return h('tr', {},
@@ -319,8 +356,8 @@
     q('#ud-offer').addEventListener('submit', (e) => {
       e.preventDefault();
       const f = e.target;
-      const body = { amount: Number(f.amount.value), days: Number(f.days.value), note: f.note.value };
-      if (!window.confirm(`Email ${state.user.email} an offer of ₹${body.amount} for ${body.days} days?`)) return;
+      const body = { product: f.product.value, amount: Number(f.amount.value), days: Number(f.days.value), note: f.note.value };
+      if (!window.confirm(`Email ${state.user.email} a ${PRODUCT[body.product]} offer of ₹${body.amount} for ${body.days} days?`)) return;
       act(f.querySelector('button'), () => api(`/admin/users/${state.user.id}/offers`, { method: 'POST', body }), 'Offer sent', () => {
         f.reset();
         load.user(state.user.id);
@@ -329,7 +366,7 @@
     q('#ud-extend').addEventListener('submit', (e) => {
       e.preventDefault();
       const f = e.target;
-      const body = { days: Number(f.days.value), target: f.target.value, note: f.note.value };
+      const body = { product: f.product.value, days: Number(f.days.value), target: f.target.value, note: f.note.value };
       act(f.querySelector('button'), () => api(`/admin/users/${state.user.id}/extend`, { method: 'POST', body }), `Added ${body.days} days`, () => load.user(state.user.id));
     });
     qa('[data-act]').forEach((b) =>

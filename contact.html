@@ -14,22 +14,45 @@
 </script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contact us · Submit Later</title>
-<meta name="description" content="Contact Submit Later: email and support.">
+<title>Contact Submit Later | Product Support, Billing &amp; Feedback</title>
+<meta name="description" content="Get help with the Submit Later Chrome extension, Timed Forms, webhook scheduling, account access or billing. Contact the Submit Later support team by email.">
 <link rel="canonical" href="https://submitlater.co.in/contact.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Submit Later">
-<meta property="og:title" content="Contact us · Submit Later">
-<meta property="og:description" content="Contact Submit Later: email and support.">
+<meta property="og:title" content="Contact Submit Later | Product Support">
+<meta property="og:description" content="Get help with Submit Later products, your account or billing. Our support team replies by email.">
 <meta property="og:url" content="https://submitlater.co.in/contact.html">
 <meta property="og:image" content="https://submitlater.co.in/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact Submit Later | Product Support">
+<meta name="twitter:description" content="Product support for the Submit Later Chrome extension, Timed Forms and webhook scheduling.">
 <link rel="icon" href="icon32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap">
 <script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Contact Submit Later",
+  "url": "https://submitlater.co.in/contact.html",
+  "description": "Support for Submit Later products, accounts and billing.",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "Submit Later",
+    "url": "https://submitlater.co.in/",
+    "email": "submitlater.review@gmail.com",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer support",
+      "email": "submitlater.review@gmail.com",
+      "availableLanguage": ["English", "Hindi"]
+    }
+  }
+}
+</script>
 </head>
 <body>
 <header class="top">
@@ -41,7 +64,7 @@
       <a href="index.html#uses">Use cases</a>
       <a href="pricing.html">Pricing</a>
       <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
+      <a class="on" href="contact.html" aria-current="page">Contact</a>
       <a class="nav-mobile-cta nav-login" href="login.html">Log in</a>
       <a class="nav-mobile-cta" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Add to Chrome, it's free</a>
     </nav>
@@ -54,120 +77,209 @@
   </div>
 </header>
 <style>
-.contact-hero{padding:80px 0 56px;text-align:center;background:linear-gradient(180deg,var(--soft) 0%,transparent 100%)}
-.contact-hero h1{font-size:clamp(28px,5vw,48px);letter-spacing:-0.03em;margin:0 0 12px}
-.contact-hero p{color:var(--muted);max-width:480px;margin:0 auto;font-size:17px;line-height:1.6}
+.contact-hero{position:relative;isolation:isolate;overflow:hidden;padding:92px 0 88px;background:linear-gradient(145deg,color-mix(in srgb,var(--brand-1) 13%,var(--bg)),var(--bg) 58%,color-mix(in srgb,var(--brand-2) 9%,var(--bg)))}
+.contact-hero::before{content:"";position:absolute;z-index:-1;inset:0;background-image:linear-gradient(color-mix(in srgb,var(--accent) 8%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--accent) 8%,transparent) 1px,transparent 1px);background-size:46px 46px;mask-image:linear-gradient(to bottom,#000,transparent 88%)}
+.contact-hero::after{content:"";position:absolute;z-index:-1;width:440px;height:440px;right:-110px;top:-210px;border-radius:50%;background:color-mix(in srgb,var(--accent) 12%,transparent);filter:blur(10px)}
+.contact-hero-inner{max-width:780px}
+.contact-kicker{display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;padding:6px 11px;border:1px solid color-mix(in srgb,var(--accent) 24%,var(--line));border-radius:999px;background:color-mix(in srgb,var(--card) 78%,transparent);color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;box-shadow:var(--shadow-sm)}
+.contact-kicker::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 14%,transparent)}
+.contact-hero h1{max-width:720px;margin:0 0 20px;font-size:clamp(42px,6vw,68px);line-height:1.02;letter-spacing:-.05em}
+.contact-hero h1 span{background:linear-gradient(120deg,var(--brand-1),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.contact-hero p{max-width:650px;margin:0;color:var(--muted);font-size:18px;line-height:1.7}
+.contact-hero-actions{display:flex;align-items:center;gap:18px;margin-top:30px;flex-wrap:wrap}
+.contact-hero-actions .btn svg{width:18px;height:18px}
+.support-hours{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:13.5px;font-weight:600}
+.support-hours svg{width:17px;height:17px;color:var(--ok)}
 
-.contact-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:56px 0}
-.contact-card2{
-  display:flex;flex-direction:column;gap:12px;
-  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px 24px;
-  text-decoration:none;color:var(--fg);
-  transition:border-color 0.15s,transform 0.15s,box-shadow 0.15s;
-}
-.contact-card2:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
-.contact-card2 .cc-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
-.cc-icon.ci1{background:rgba(99,102,241,.12);color:#6366f1}
-.cc-icon.ci2{background:rgba(245,158,11,.12);color:#f59e0b}
-.cc-icon.ci3{background:rgba(16,185,129,.12);color:#10b981}
-.cc-icon.ci4{background:rgba(239,68,68,.12);color:#ef4444}
-.contact-card2 b{font-size:15.5px;font-weight:700;color:var(--fg)}
-.contact-card2 span{font-size:13.5px;color:var(--muted);line-height:1.5}
-.contact-card2 .cc-action{font-size:13px;font-weight:600;color:var(--accent);margin-top:auto;padding-top:4px;display:flex;align-items:center;gap:5px}
+.contact-main{padding-top:70px;padding-bottom:96px}
+.contact-section-head{max-width:700px;margin:0 0 28px}
+.contact-section-head span{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.contact-section-head h2{margin:6px 0 8px;font-size:clamp(28px,4vw,38px);line-height:1.15;letter-spacing:-.035em}
+.contact-section-head p{margin:0;color:var(--muted)}
+.contact-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:24px}
+.contact-card2{position:relative;display:grid;grid-template-columns:52px minmax(0,1fr);gap:6px 18px;padding:26px;border:1px solid var(--line);border-radius:20px;background:var(--card);box-shadow:var(--shadow-sm);transition:transform .2s var(--ease-spring),border-color .2s,box-shadow .2s}
+.contact-card2:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent) 38%,var(--line));box-shadow:var(--shadow)}
+.contact-card2 .cc-icon{grid-row:1/4;width:52px;height:52px;border-radius:15px;display:grid;place-items:center}
+.contact-card2 .cc-icon svg{width:23px;height:23px}
+.cc-icon.ci1{background:color-mix(in srgb,#6366f1 12%,var(--card));color:#6366f1}
+.cc-icon.ci2{background:color-mix(in srgb,#f59e0b 13%,var(--card));color:#d97706}
+.cc-icon.ci3{background:color-mix(in srgb,#10b981 13%,var(--card));color:#059669}
+.cc-icon.ci4{background:color-mix(in srgb,#ec4899 12%,var(--card));color:#db2777}
+.contact-card2 h3{margin:0;font-size:18px;line-height:1.35;letter-spacing:-.015em}
+.contact-card2 p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.6}
+.contact-card2 .cc-action{width:max-content;max-width:100%;display:inline-flex;align-items:center;gap:7px;margin-top:7px;color:var(--accent);font-size:13.5px;font-weight:750;overflow-wrap:anywhere}
+.contact-card2 .cc-action:hover{text-decoration:none;gap:10px}
+.contact-card2 .cc-action svg{width:14px;height:14px;transition:transform .15s}
+.contact-card2 .cc-action:hover svg{transform:translateX(2px)}
 
-.contact-details{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:0 0 64px}
-@media(max-width:680px){.contact-details{grid-template-columns:1fr}}
-
-.cd-block{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px 24px}
-.cd-block h3{font-size:16px;font-weight:700;margin:0 0 12px;display:flex;align-items:center;gap:8px}
-.cd-block h3 svg{opacity:.6}
-.cd-block p,.cd-block li{font-size:14.5px;color:var(--muted);line-height:1.65;margin:0 0 8px}
-.cd-block ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
-.cd-block li{display:flex;align-items:flex-start;gap:8px}
-.cd-block li::before{content:"•";color:var(--accent);flex:none;margin-top:1px}
-.cd-block a{color:var(--accent)}
-
-.response-strip{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:0 0 56px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.response-strip svg{flex:none;opacity:.5}
-.response-strip p{margin:0;font-size:14px;color:var(--muted);line-height:1.5;flex:1}
+.response-strip{display:flex;align-items:center;gap:14px;margin:0 0 72px;padding:16px 20px;border:1px solid color-mix(in srgb,var(--ok) 25%,var(--line));border-radius:14px;background:color-mix(in srgb,var(--ok-bg) 55%,var(--card))}
+.response-strip > svg{width:20px;height:20px;color:var(--ok)}
+.response-strip p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
 .response-strip strong{color:var(--fg)}
+
+.support-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:24px;align-items:start}
+.support-panel,.support-side-card{border:1px solid var(--line);border-radius:22px;background:var(--card);box-shadow:var(--shadow-sm)}
+.support-panel{padding:30px}
+.panel-heading{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px}
+.panel-heading .panel-icon{width:42px;height:42px;display:grid;place-items:center;flex:none;border-radius:13px;color:var(--accent);background:var(--info)}
+.panel-heading .panel-icon svg{width:20px;height:20px}
+.panel-heading h2,.support-side-card h2{margin:0;font-size:22px;line-height:1.25;letter-spacing:-.025em}
+.panel-heading p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.support-faq{display:grid;gap:10px}
+.support-faq details{border:1px solid var(--line);border-radius:14px;padding:0 18px;background:color-mix(in srgb,var(--soft) 45%,var(--card));transition:border-color .15s,background .15s}
+.support-faq details[open]{border-color:color-mix(in srgb,var(--accent) 36%,var(--line));background:var(--card)}
+.support-faq summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:17px 0;cursor:pointer;list-style:none;color:var(--fg);font-size:14.5px;font-weight:750;line-height:1.4}
+.support-faq summary::-webkit-details-marker{display:none}
+.support-faq summary::after{content:"+";width:24px;height:24px;display:grid;place-items:center;flex:none;border-radius:50%;color:var(--muted);background:var(--soft);font-size:18px;font-weight:500;line-height:1;transition:transform .15s,color .15s}
+.support-faq details[open] summary::after{transform:rotate(45deg);color:var(--accent)}
+.support-faq details p{margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.7}
+.support-faq details a{font-weight:650}
+.support-sidebar{display:grid;gap:16px}
+.support-side-card{padding:26px}
+.support-side-card h2{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:18px}
+.support-side-card h2 svg{width:20px;height:20px;color:var(--accent)}
+.support-side-card p{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.65}
+.support-side-card ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.support-side-card li{position:relative;padding-left:20px;color:var(--muted);font-size:14px;line-height:1.55}
+.support-side-card li::before{content:"";position:absolute;left:2px;top:.63em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.support-side-card a{font-weight:650;overflow-wrap:anywhere}
+.support-side-card.legal{background:linear-gradient(145deg,var(--card),color-mix(in srgb,var(--info) 55%,var(--card)))}
+.legal-label{display:inline-flex;margin-top:4px;padding:5px 9px;border-radius:999px;background:var(--soft);color:var(--muted);font-size:11.5px;font-weight:750}
+
+@media(max-width:800px){
+  .contact-hero{padding:72px 0 68px}
+  .contact-cards,.support-layout{grid-template-columns:1fr}
+  .support-sidebar{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:580px){
+  .contact-hero{padding:56px 0 54px}
+  .contact-hero h1{font-size:40px}
+  .contact-hero p{font-size:16px}
+  .contact-hero-actions{align-items:flex-start;flex-direction:column}
+  .contact-hero-actions .btn{width:100%}
+  .contact-main{padding-top:52px;padding-bottom:72px}
+  .contact-card2{grid-template-columns:44px minmax(0,1fr);gap:5px 14px;padding:21px 18px}
+  .contact-card2 .cc-icon{width:44px;height:44px;border-radius:13px}
+  .contact-card2 .cc-action{grid-column:1/-1;margin-top:12px}
+  .response-strip{align-items:flex-start;margin-bottom:52px}
+  .support-panel,.support-side-card{padding:21px 18px;border-radius:18px}
+  .support-sidebar{grid-template-columns:1fr}
+  .panel-heading{gap:11px}
+  .panel-heading .panel-icon{width:38px;height:38px}
+}
 </style>
 
-<div class="contact-hero">
-  <div class="wrap">
-    <h1>We're here to help</h1>
-    <p>Questions, feedback or payment issues — pick the right channel and we'll get back to you fast.</p>
+<section class="contact-hero">
+  <div class="wrap contact-hero-inner">
+    <span class="contact-kicker">Human support, by email</span>
+    <h1>Get help without <span>the runaround.</span></h1>
+    <p>Tell us what you are trying to schedule and where you got stuck. Whether it is a button press, a timed form, a webhook or your account, your message reaches the team building Submit Later.</p>
+    <div class="contact-hero-actions">
+      <a class="btn primary lg" href="mailto:submitlater.review@gmail.com?subject=Submit%20Later%20support">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        Email support
+      </a>
+      <span class="support-hours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Monday–Saturday, 10:00 AM–6:00 PM IST</span>
+    </div>
   </div>
-</div>
+</section>
 
-<main class="wrap page-body">
+<main class="wrap contact-main">
+  <section aria-labelledby="contact-route-heading">
+    <div class="contact-section-head">
+      <span>Choose a topic</span>
+      <h2 id="contact-route-heading">Start with the right conversation</h2>
+      <p>A useful subject line helps us understand your message before we open it.</p>
+    </div>
 
-<div class="contact-cards">
-  <a class="contact-card2" href="mailto:submitlater.review@gmail.com?subject=Support%20question">
-    <span class="cc-icon ci1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
-    <b>General support</b>
-    <span>Questions about any of the three tools — extension, Timed Forms, Webhook Scheduler.</span>
-    <span class="cc-action">submitlater.review@gmail.com <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-  </a>
-  <a class="contact-card2" href="mailto:submitlater.review@gmail.com?subject=Payment%20%2F%20Billing%20query">
-    <span class="cc-icon ci2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><path d="M6 15h2M10 15h4"/></svg></span>
-    <b>Payments &amp; refunds</b>
-    <span>Issue with a charge, refund request, or invoice question. Include your transaction ID.</span>
-    <span class="cc-action">submitlater.review@gmail.com <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-  </a>
-  <a class="contact-card2" href="mailto:submitlater.review@gmail.com?subject=Bug%20report">
-    <span class="cc-icon ci3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4 0 7-3 7-7V9a7 7 0 1 0-14 0v6c0 4 3 7 7 7z"/><path d="M9 3a3 3 0 0 1 6 0M5 11H2M22 11h-3M5 18l-2 2M21 20l-2-2"/></svg></span>
-    <b>Bug report</b>
-    <span>Something not working as expected? Use <b>Report a problem</b> inside the extension, or email us — it sends the logs we need.</span>
-    <span class="cc-action">Report a problem in the extension <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-  </a>
-  <a class="contact-card2" href="mailto:submitlater.review@gmail.com?subject=Feature%20request">
-    <span class="cc-icon ci4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 18l-6.2 3.1 1.2-6.9L2 9.3l6.9-1z"/></svg></span>
-    <b>Feature request</b>
-    <span>Have an idea for the extension or a new tool? Tell us — it goes straight to the roadmap.</span>
-    <span class="cc-action">submitlater.review@gmail.com <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-  </a>
-</div>
+    <div class="contact-cards">
+      <article class="contact-card2">
+        <span class="cc-icon ci1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.7-5A7 7 0 0 1 3 12a7 7 0 0 1 7-7h7a4 4 0 0 1 4 4z"/><path d="M8 10h8M8 14h5"/></svg></span>
+        <h3>Product support</h3>
+        <p>Questions about the Chrome extension, Timed Forms, webhook scheduling or how a feature should work.</p>
+        <a class="cc-action" href="mailto:submitlater.review@gmail.com?subject=Product%20support">Ask a product question <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </article>
 
-<div class="response-strip">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-  <p><strong>Response time:</strong> We reply within 2 working days, Monday to Saturday, 10 AM – 6 PM IST. Billing issues are prioritised and usually resolved same day.</p>
-</div>
+      <article class="contact-card2">
+        <span class="cc-icon ci2" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20M6 15h2M10 15h4"/></svg></span>
+        <h3>Billing and refunds</h3>
+        <p>Help with a payment, plan activation, receipt or refund. Include the transaction ID shown on your receipt.</p>
+        <a class="cc-action" href="mailto:submitlater.review@gmail.com?subject=Billing%20support">Contact billing support <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </article>
 
-<div class="contact-details">
-  <div class="cd-block">
-    <h3>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-      Common questions
-    </h3>
-    <ul>
-      <li>The extension is installed but <b>nothing happens at the scheduled time</b> — use <em>Report a problem</em> from the extension options; it captures exactly what happened.</li>
-      <li>Your <b>plan didn't activate</b> after payment — email us with the transaction ID from your receipt and we'll fix it within a few hours.</li>
-      <li>You want a <b>refund</b> — requests within 7 days of purchase are approved, no questions asked. See our <a href="refund.html">Refund policy</a>.</li>
-      <li>The <b>extension was removed</b> from Chrome — re-install it from the Chrome Web Store; your account and plan carry over automatically.</li>
-    </ul>
-  </div>
-  <div class="cd-block">
-    <h3>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-6 9 6v13H3z"/><path d="M9 21V12h6v9"/></svg>
-      Legal &amp; grievance
-    </h3>
-    <p>For formal grievances under the Consumer Protection Act, 2019:</p>
-    <ul>
-      <li>Email <a href="mailto:submitlater.review@gmail.com">submitlater.review@gmail.com</a> with the subject <em>Formal grievance</em>.</li>
-      <li>Complaints are acknowledged within 48 hours and resolved within 30 days.</li>
-      <li>For payment disputes, include the transaction ID from your Cashfree receipt.</li>
-    </ul>
-    <p style="margin-top:12px">Grievance officer: Submit Later</p>
-  </div>
-</div>
+      <article class="contact-card2">
+        <span class="cc-icon ci3" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4 0 7-3 7-7V9a7 7 0 1 0-14 0v6c0 4 3 7 7 7Z"/><path d="M9 3a3 3 0 0 1 6 0M5 11H2M22 11h-3M5 18l-2 2M21 20l-2-2"/></svg></span>
+        <h3>Report a bug</h3>
+        <p>Share the page, expected result and what happened instead. Extension users can attach diagnostic details from Report a problem.</p>
+        <a class="cc-action" href="mailto:submitlater.review@gmail.com?subject=Bug%20report">Send a bug report <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </article>
 
+      <article class="contact-card2">
+        <span class="cc-icon ci4" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15.1 8.3l6.9 1-5 4.9 1.2 6.9L12 18l-6.2 3.1L7 14.2 2 9.3l6.9-1Z"/></svg></span>
+        <h3>Share an idea</h3>
+        <p>Tell us about the repetitive task or deadline you want to simplify. Real workflows make the most useful product feedback.</p>
+        <a class="cc-action" href="mailto:submitlater.review@gmail.com?subject=Product%20feedback">Share product feedback <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </article>
+    </div>
+
+    <div class="response-strip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <p><strong>What to expect:</strong> We aim to reply within two working days. Messages received outside support hours are reviewed on the next working day.</p>
+    </div>
+  </section>
+
+  <section class="support-layout" aria-label="Support resources">
+    <div class="support-panel">
+      <div class="panel-heading">
+        <span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.3 2.3 0 1 1 3.7 1.8c-.9.6-1.5 1-1.5 2.2M12 17h.01"/></svg></span>
+        <div><h2>Answers before you email</h2><p>Quick checks for the questions we see most often.</p></div>
+      </div>
+      <div class="support-faq">
+        <details>
+          <summary>The scheduled action did not run. What should I send?</summary>
+          <p>Open the extension options and choose <strong>Report a problem</strong>. Add the scheduled time, website and outcome you expected. The diagnostic details help us distinguish a browser timing issue from a page that changed.</p>
+        </details>
+        <details>
+          <summary>My paid plan is not showing on my account.</summary>
+          <p>Email us from the address used for your Submit Later account and include the transaction ID from your payment receipt. Do not send card, bank or UPI credentials.</p>
+        </details>
+        <details>
+          <summary>How do I request a refund?</summary>
+          <p>Send a billing support email with your account address and transaction ID. Eligibility and processing details are explained in the <a href="refund.html">refund and cancellation policy</a>.</p>
+        </details>
+        <details>
+          <summary>I reinstalled the extension. Is my plan still available?</summary>
+          <p>Yes. Sign in with the same Submit Later account to restore the plan attached to that account. Locally stored schedules and contacts may not follow you to a new browser or profile.</p>
+        </details>
+      </div>
+    </div>
+
+    <div class="support-sidebar">
+      <aside class="support-side-card">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h6M8 17h4"/></svg>A better bug report</h2>
+        <p>These details make it easier to reproduce the issue:</p>
+        <ul>
+          <li>The product and browser you were using</li>
+          <li>The steps that led to the error</li>
+          <li>The exact error message or a screenshot</li>
+          <li>The date, time and timezone of a scheduled run</li>
+        </ul>
+      </aside>
+
+      <aside class="support-side-card legal">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V8l9-6 9 6v13H3Z"/><path d="M9 21v-9h6v9"/></svg>Formal grievance</h2>
+        <p>Email <a href="mailto:submitlater.review@gmail.com?subject=Formal%20grievance">submitlater.review@gmail.com</a> with the subject <strong>Formal grievance</strong>. Include your account email, a clear description and any relevant transaction ID.</p>
+        <p>We acknowledge formal complaints within 48 hours and aim to resolve them within 30 days.</p>
+        <span class="legal-label">Grievance officer: Submit Later</span>
+      </aside>
+    </div>
+  </section>
 </main>
 <footer class="foot">
   <div class="wrap foot-grid">
     <div>
       <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-      <p>A Chrome extension that presses any button at exactly the time you choose. Free plan forever; Pro is $7 a month or $49 a year.</p>
+      <p>Practical scheduling tools for browser actions, timed forms and webhooks—built to help you prepare now and run it later.</p>
     </div>
     <div>
       <h4>Product</h4>

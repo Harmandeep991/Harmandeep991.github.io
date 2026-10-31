@@ -3,11 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SubmitLater Forms — Google Form deadlines that actually work</title>
-  <meta name="description" content="Server-enforced open and close windows for Google Forms. Students can't submit a second too early or too late. No disputes. No exceptions.">
+  <title>Timed Google Form Access Links | Submit Later</title>
+  <meta name="description" content="Create a timed link for any Google Form. Show a live countdown before opening, redirect during the access window, and display a clear closed page afterward.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://submitlater.co.in/forms/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Timed Google Form Access Links | Submit Later">
+  <meta property="og:description" content="Schedule when a shared link reveals your existing Google Form—with a live countdown and timezone-aware access window.">
+  <meta property="og:url" content="https://submitlater.co.in/forms/">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
   <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json" id="forms-structured-data">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Submit Later Timed Forms",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "Create timezone-aware timed access links for existing Google Forms.",
+    "url": "https://submitlater.co.in/forms/",
+    "offers": [
+      { "@type": "Offer", "name": "Timed Forms Monthly", "price": "99", "priceCurrency": "INR" },
+      { "@type": "Offer", "name": "Timed Forms Annual", "price": "799", "priceCurrency": "INR" }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -19,7 +41,7 @@
         <rect width="28" height="28" rx="8" fill="#6366f1"/>
         <path d="M8 14h4l2-5 3 10 2-5h3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <span>SubmitLater <strong>Forms</strong></span>
+      <span>Submit Later <strong>Timed Forms</strong></span>
     </a>
     <nav class="nav-links">
       <a href="#how">How it works</a>
@@ -27,8 +49,8 @@
       <a href="#pricing">Pricing</a>
     </nav>
     <div class="nav-actions">
-      <a href="/forms/app/" class="btn-ghost">Sign in</a>
-      <a href="/forms/app/?signup=1" class="btn-primary">Start free</a>
+      <a href="/login.html?next=account.html%23forms" class="btn-ghost">Sign in</a>
+      <a href="/signup.html?next=account.html%23forms" class="btn-primary">Start free</a>
     </div>
     <button class="nav-burger" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
       <span></span><span></span><span></span>
@@ -42,45 +64,44 @@
   <div class="hero-content">
     <div class="hero-badge">
       <span class="badge-dot"></span>
-      Used by 500+ admission offices worldwide
+      Timed access links for Google Forms
     </div>
     <h1 class="hero-headline">
-      Stop arguing about<br>
-      <span class="gradient-text">late submissions.</span>
+      Open your form on schedule.<br>
+      <span class="gradient-text">Close the link automatically.</span>
     </h1>
     <p class="hero-sub">
-      Server-enforced open and close windows for Google Forms.<br>
-      Your deadline is enforced at the millisecond — on our servers, not a browser anyone can spoof.
+      Share one link before registration begins. Visitors see a live countdown, reach your existing Google Form during the access window, and see a clear closed page afterward.
     </p>
     <div class="hero-ctas">
-      <a href="/forms/app/?signup=1" class="btn-primary btn-lg">
-        Wrap your first form — free
+      <a href="/signup.html?next=account.html%23forms" class="btn-primary btn-lg">
+        Create your first timed link
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
-      <span class="hero-trust">No credit card &nbsp;·&nbsp; 30-day money back &nbsp;·&nbsp; Cancel anytime</span>
+      <span class="hero-trust">No new form to build &nbsp;·&nbsp; Timezone-aware &nbsp;·&nbsp; Set up in minutes</span>
     </div>
   </div>
   <div class="hero-demo">
     <div class="demo-card demo-before">
-      <div class="demo-label demo-label-bad">Google Forms (right now)</div>
+        <div class="demo-label demo-label-bad">Before the access window</div>
       <div class="demo-form-mock">
         <div class="dfm-header">
           <div class="dfm-logo-bar"></div>
           <div class="dfm-title">MBA Admissions 2025</div>
-          <div class="dfm-sub">Application Form · Open for submissions</div>
+          <div class="dfm-sub">The original link is not shown yet</div>
         </div>
         <div class="dfm-field"></div>
         <div class="dfm-field dfm-field-sm"></div>
         <div class="dfm-field"></div>
         <div class="dfm-submit">Submit Application</div>
-        <div class="dfm-time-bad">⚠️ Deadline was 3 hours ago</div>
+        <div class="dfm-time-bad">Share the timed link in advance</div>
       </div>
     </div>
     <div class="demo-arrow">
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 16h20M19 9l7 7-7 7" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="demo-card demo-after">
-      <div class="demo-label demo-label-good">SubmitLater Forms</div>
+      <div class="demo-label demo-label-good">Submit Later Timed Forms</div>
       <div class="countdown-mock">
         <div class="cm-org">Masters Union · Admissions</div>
         <div class="cm-title">MBA Admissions 2025</div>
@@ -93,10 +114,7 @@
           <div class="cm-unit"><span class="cm-num" id="t-s">37</span><span class="cm-label">seconds</span></div>
         </div>
         <div class="cm-date">Opens 30 Oct 2026, 4:00 PM IST</div>
-        <div class="cm-prequeue">
-          <span class="cm-pq-icon">✦</span>
-          Join the queue now — submit the moment it opens
-        </div>
+        <div class="cm-prequeue"><span class="cm-pq-icon">✓</span> The access window is checked by the server</div>
       </div>
     </div>
   </div>
@@ -106,23 +124,23 @@
 <div class="stats-bar">
   <div class="stats-inner">
     <div class="stat-item">
-      <span class="stat-num">12,000+</span>
-      <span class="stat-label">forms protected</span>
+      <span class="stat-num">Live</span>
+      <span class="stat-label">countdown before opening</span>
     </div>
     <div class="stat-div"></div>
     <div class="stat-item">
-      <span class="stat-num">42</span>
-      <span class="stat-label">countries</span>
+      <span class="stat-num">Timezone</span>
+      <span class="stat-label">timezone-aware scheduling</span>
     </div>
     <div class="stat-div"></div>
     <div class="stat-item">
-      <span class="stat-num">&lt; 50ms</span>
-      <span class="stat-label">enforcement precision</span>
+      <span class="stat-num">Automatic</span>
+      <span class="stat-label">redirect while the link is open</span>
     </div>
     <div class="stat-div"></div>
     <div class="stat-item">
-      <span class="stat-num">0</span>
-      <span class="stat-label">successful bypass attempts</span>
+      <span class="stat-num">Unchanged</span>
+      <span class="stat-label">existing Google Form stays unchanged</span>
     </div>
   </div>
 </div>
@@ -130,32 +148,31 @@
 <!-- ══════════════════════════ PROBLEM ══════════════════════════ -->
 <section class="problem">
   <div class="section-inner">
-    <div class="section-label">The problem</div>
-    <h2>Google Forms doesn't know<br>what time it is.</h2>
+    <div class="section-label">A cleaner way to launch forms</div>
+    <h2>Publish the link now.<br>Control when it opens.</h2>
     <p class="section-sub">
-      When your registration window closes, Google Forms stays open until you manually close it — if you remember.<br>
-      And every minute it stays open, someone submits. Then the argument begins.
+      Google Forms is excellent for collecting responses, but it does not give you a shareable pre-opening countdown. Submit Later adds that timed entry point without replacing your form.
     </p>
     <div class="problem-cards">
       <div class="prob-card">
         <div class="prob-icon">🕐</div>
-        <h3>Manual closing</h3>
-        <p>You have to remember to close the form yourself. Forget it for 10 minutes and 20 late submissions come in.</p>
+        <h3>Share before launch</h3>
+        <p>Publish one stable URL in emails, notices, or event pages before registration opens. Visitors see the schedule instead of the form.</p>
       </div>
       <div class="prob-card">
         <div class="prob-icon">🖥️</div>
-        <h3>Browser clock spoofing</h3>
-        <p>Students change their system clock to beat the deadline. Google Forms trusts the browser — it can't tell.</p>
+        <h3>Server-timed window</h3>
+        <p>The timed link uses server time, so changing a visitor's device clock does not change what the link displays.</p>
       </div>
       <div class="prob-card">
         <div class="prob-icon">⚡</div>
-        <h3>The F5 stampede</h3>
-        <p>When seats are limited and the form opens at 9 AM, thousands of students hammer reload. The first page load wins, not the fastest applicant.</p>
+        <h3>A useful countdown</h3>
+        <p>Before opening, the page shows the form name, organization, scheduled time, and a live countdown that refreshes when access begins.</p>
       </div>
       <div class="prob-card">
         <div class="prob-icon">📨</div>
-        <h3>No open-time enforcement</h3>
-        <p>JotForm confirmed in 2025: "Open at scheduling is not available." Google, Typeform, JotForm — none of them enforce an open time server-side.</p>
+        <h3>A clear closing state</h3>
+        <p>After the window ends, the timed link stops redirecting and shows a closed page with the scheduled closing time.</p>
       </div>
     </div>
   </div>
@@ -165,7 +182,7 @@
 <section class="how" id="how">
   <div class="section-inner">
     <div class="section-label">How it works</div>
-    <h2>Three steps. Two minutes.<br>Zero late submissions.</h2>
+    <h2>Three steps.<br>No new form to build.</h2>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
@@ -185,7 +202,7 @@
         <div class="step-num">2</div>
         <div class="step-body">
           <h3>Set your window</h3>
-          <p>Pick the exact open date, open time, close date and close time. Choose your timezone. We enforce it all on our servers.</p>
+          <p>Choose an opening time, a closing time, and the timezone your audience understands. The timed link evaluates that window on the server.</p>
           <div class="step-visual sv-times">
             <div class="sv-time-row">
               <span class="sv-time-label">Opens</span>
@@ -203,164 +220,109 @@
         <div class="step-num">3</div>
         <div class="step-body">
           <h3>Share your new link</h3>
-          <p>Replace the Google Form URL everywhere with your SubmitLater link. That's the one that enforces the deadline — share it and you're done.</p>
+          <p>Use the Submit Later URL in invitations and announcements. It reveals the original Google Form only while your timed access window is open.</p>
           <div class="step-visual">
             <div class="sv-link">
-              <span class="sv-link-url">submitlater.co.in/f/<strong>mba25</strong></span>
+              <span class="sv-link-url">api.submitlater.co.in/f/<strong>mba25</strong></span>
               <button class="sv-copy">Copy link</button>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <p class="compare-note">Important: Submit Later controls the timed link, not the Google Form itself. Anyone who already has the original Google Form URL can open it according to the form owner's Google settings.</p>
   </div>
 </section>
 
 <!-- ══════════════════════════ COMPARE ══════════════════════════ -->
 <section class="compare" id="compare">
   <div class="section-inner">
-    <div class="section-label">Comparison</div>
-    <h2>The only tool built<br>for deadline enforcement.</h2>
-    <p class="section-sub">Every other form tool was built for data collection. We were built for deadline enforcement.</p>
+    <div class="section-label">What the product controls</div>
+    <h2>A timed front door<br>for your existing form.</h2>
+    <p class="section-sub">Submit Later manages access through the link it creates. Your Google Form remains separate and continues to follow its own settings.</p>
     <div class="compare-table-wrap">
       <table class="compare-table">
         <thead>
           <tr>
-            <th>Feature</th>
-            <th>Google Forms</th>
-            <th>JotForm</th>
-            <th>Typeform</th>
-            <th class="compare-us">SubmitLater Forms</th>
+            <th>Capability</th>
+            <th>Included</th>
+            <th>Visitor experience</th>
+            <th>Scope</th>
+            <th class="compare-us">Notes</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Server-side close enforcement</td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cyes-partial">~</span></td>
-            <td><span class="cno">✗</span></td>
-            <td class="compare-us"><span class="cyes">✓</span></td>
-          </tr>
-          <tr>
-            <td>Server-side open enforcement</td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cno">✗</span></td>
-            <td class="compare-us"><span class="cyes">✓</span></td>
-          </tr>
-          <tr>
-            <td>Countdown page before open</td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cno">✗</span></td>
-            <td class="compare-us"><span class="cyes">✓</span></td>
-          </tr>
-          <tr>
-            <td>Pre-queue (fair first-come, first-served)</td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cno">✗</span></td>
-            <td class="compare-us"><span class="cyes">✓</span></td>
-          </tr>
-          <tr>
-            <td>Works with your existing Google Form</td>
-            <td>—</td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cno">✗</span></td>
-            <td class="compare-us"><span class="cyes">✓</span></td>
-          </tr>
-          <tr>
-            <td>Embed on your own site</td>
-            <td><span class="cyes">✓</span></td>
-            <td><span class="cyes">✓</span></td>
-            <td><span class="cyes">✓</span></td>
-            <td class="compare-us"><span class="cyes">✓</span></td>
-          </tr>
-          <tr>
-            <td>Timezone-aware enforcement</td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cyes-partial">~</span></td>
-            <td><span class="cno">✗</span></td>
-            <td class="compare-us"><span class="cyes">✓</span></td>
-          </tr>
-          <tr>
-            <td>Anti-spoofing (browser clock attacks)</td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cno">✗</span></td>
-            <td><span class="cno">✗</span></td>
-            <td class="compare-us"><span class="cyes">✓</span></td>
-          </tr>
-          <tr>
-            <td>Price to get started</td>
-            <td>Free</td>
-            <td>$34/mo</td>
-            <td>$25/mo</td>
-            <td class="compare-us"><strong>Free</strong></td>
-          </tr>
+          <tr><td>Pre-opening countdown</td><td><span class="cyes">✓</span></td><td>Shows the scheduled opening time and a live timer</td><td>Timed link</td><td class="compare-us">Refreshes when the window opens</td></tr>
+          <tr><td>Open-window redirect</td><td><span class="cyes">✓</span></td><td>Sends visitors to your Google Form</td><td>Timed link</td><td class="compare-us">Original URL is revealed during the window</td></tr>
+          <tr><td>Post-closing page</td><td><span class="cyes">✓</span></td><td>Stops redirecting and shows that the link is closed</td><td>Timed link</td><td class="compare-us">Does not change Google Form settings</td></tr>
+          <tr><td>Timezone-aware schedule</td><td><span class="cyes">✓</span></td><td>Displays dates in the timezone you selected</td><td>Timed link</td><td class="compare-us">Server time determines the state</td></tr>
+          <tr><td>Link view count</td><td><span class="cyes">✓</span></td><td>Counts visits to the timed URL</td><td>Dashboard</td><td class="compare-us">A view is not a confirmed submission</td></tr>
+          <tr><td>Original form controls</td><td><span class="cno">Not changed</span></td><td>Google continues to host and process responses</td><td>Google Form</td><td class="compare-us">You manage response settings in Google Forms</td></tr>
+          <tr><td>Direct-URL protection</td><td><span class="cno">Not included</span></td><td>Anyone with the original URL can follow Google's settings</td><td>Google Form</td><td class="compare-us">Share the timed URL, not the original</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="compare-note">~ JotForm supports close scheduling on Business plan but confirmed in June 2025: "Open at scheduling is not available."</p>
+    <p class="compare-note">Submit Later schedules access to a link. It does not impersonate Google Forms or submit responses on a visitor's behalf.</p>
   </div>
 </section>
 
-<!-- ══════════════════════════ PRE-QUEUE ══════════════════════════ -->
+<!-- ══════════════════════════ LINK LIFECYCLE ══════════════════════════ -->
 <section class="prequeue-spot">
   <div class="section-inner pq-inner">
     <div class="pq-text">
-      <div class="section-label">Unique feature</div>
-      <h2>The fair queue.<br>Nobody else has it.</h2>
-      <p>For high-demand registrations — limited seats, competitive applications — we let applicants fill in the form <em>during the countdown</em> and submit at the exact opening moment, in queue order.</p>
+      <div class="section-label">A predictable visitor journey</div>
+      <h2>One link.<br>Three clear states.</h2>
+      <p>Your audience can use the same URL before, during, and after the registration window. The page changes automatically as the schedule moves forward.</p>
       <ul class="pq-benefits">
         <li>
           <span class="pq-check">✓</span>
-          No more F5 stampede crashing your form
+          Share the timed URL before registration opens
         </li>
         <li>
           <span class="pq-check">✓</span>
-          Queue position is provably fair — first to join, first to submit
+          Show the selected timezone and exact opening time
         </li>
         <li>
           <span class="pq-check">✓</span>
-          Students get confirmation before the window opens
+          Redirect to the existing Google Form during the window
         </li>
         <li>
           <span class="pq-check">✓</span>
-          You can show applicants their position in real-time
+          Stop redirecting when the timed link closes
         </li>
       </ul>
-      <a href="/forms/app/?signup=1" class="btn-primary">Get pre-queue on Pro →</a>
+      <a href="/signup.html?next=account.html%23forms" class="btn-primary">Create a timed link →</a>
     </div>
     <div class="pq-visual">
       <div class="pq-card">
         <div class="pq-card-header">
-          <div class="pq-card-title">Pre-queue — 847 joined</div>
-          <div class="pq-card-status"><span class="pq-live">● Live</span></div>
+          <div class="pq-card-title">Timed link lifecycle</div>
+          <div class="pq-card-status"><span class="pq-live">● Server-timed</span></div>
         </div>
         <div class="pq-entries">
           <div class="pq-entry pq-entry-you">
-            <span class="pq-pos">#1</span>
-            <span class="pq-name">Aisha Malik</span>
-            <span class="pq-badge pq-badge-ready">Ready</span>
+            <span class="pq-pos">01</span>
+            <span class="pq-name">Before opening</span>
+            <span class="pq-badge pq-badge-ready">Countdown</span>
           </div>
           <div class="pq-entry">
-            <span class="pq-pos">#2</span>
-            <span class="pq-name">James O'Brien</span>
-            <span class="pq-badge">Queued</span>
+            <span class="pq-pos">02</span>
+            <span class="pq-name">Access window</span>
+            <span class="pq-badge">Redirect</span>
           </div>
           <div class="pq-entry">
-            <span class="pq-pos">#3</span>
-            <span class="pq-name">Priya Nair</span>
-            <span class="pq-badge">Queued</span>
+            <span class="pq-pos">03</span>
+            <span class="pq-name">After closing</span>
+            <span class="pq-badge">Closed page</span>
           </div>
           <div class="pq-entry pq-entry-dim">
-            <span class="pq-pos">#4–847</span>
-            <span class="pq-name">844 others queued</span>
-            <span class="pq-badge">Queued</span>
+            <span class="pq-pos">—</span>
+            <span class="pq-name">Original Google Form</span>
+            <span class="pq-badge">Unchanged</span>
           </div>
         </div>
         <div class="pq-opens">
-          Form opens in <strong id="pq-timer">01:47:23</strong>
+          Schedule shown in <strong>Asia/Kolkata</strong>
         </div>
       </div>
     </div>
@@ -371,8 +333,8 @@
 <section class="pricing" id="pricing">
   <div class="section-inner">
     <div class="section-label">Pricing</div>
-    <h2>Simple pricing.<br>Scale when you need to.</h2>
-    <p class="section-sub">Start free. Upgrade when the deadline gets serious.</p>
+    <h2>Pay for Timed Forms.<br>Nothing you do not need.</h2>
+    <p class="section-sub">Forms is billed separately from the Chrome extension and Webhook Scheduler. Choose monthly or annual access.</p>
 
     <div class="pricing-toggle">
       <span class="pt-label">Monthly</span>
@@ -380,83 +342,44 @@
         <input type="checkbox" id="annual-toggle" onchange="toggleAnnual(this)">
         <span class="pt-slider"></span>
       </label>
-      <span class="pt-label">Annual <span class="pt-save">Save 30%</span></span>
+      <span class="pt-label">Annual <span class="pt-save" id="forms-plan-saving">Save ₹389</span></span>
     </div>
 
     <div class="pricing-cards">
       <div class="plan-card">
-        <div class="plan-name">Free</div>
-        <div class="plan-price"><span class="plan-amt">$0</span><span class="plan-per">/month</span></div>
-        <div class="plan-tagline">Try it. No card needed.</div>
+        <div class="plan-name">Account trial</div>
+        <div class="plan-price"><span class="plan-amt">₹0</span></div>
+        <div class="plan-tagline">Explore the workflow before choosing a Forms plan.</div>
         <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> 1 gated form</li>
-          <li><span class="pf-yes">✓</span> 100 views / month</li>
-          <li><span class="pf-yes">✓</span> Countdown + closed pages</li>
-          <li><span class="pf-yes">✓</span> 7-day analytics</li>
-          <li><span class="pf-no">–</span> Pre-queue</li>
-          <li><span class="pf-no">–</span> Custom branding</li>
+          <li><span class="pf-yes">✓</span> Create an account without a card</li>
+          <li><span class="pf-yes">✓</span> Up to 20 timed forms during the account trial</li>
+          <li><span class="pf-yes">✓</span> Keep up to 2 forms on the free tier afterward</li>
+          <li><span class="pf-yes">✓</span> See countdown and closed states</li>
+          <li><span class="pf-yes">✓</span> Choose from supported timezones</li>
         </ul>
-        <a href="/forms/app/?signup=1" class="plan-cta btn-ghost">Start free</a>
+        <a href="/signup.html?next=account.html%23forms" class="plan-cta btn-ghost">Create free account</a>
       </div>
 
       <div class="plan-card plan-card-featured">
-        <div class="plan-popular">Most popular</div>
-        <div class="plan-name">Pro</div>
+        <div class="plan-popular">Timed Forms</div>
+        <div class="plan-name">Forms plan</div>
         <div class="plan-price">
-          <span class="plan-amt" data-monthly="$49" data-annual="$34">$49</span>
-          <span class="plan-per">/month</span>
+          <span class="plan-amt" id="forms-plan-amt" data-monthly="₹99" data-annual="₹799">₹99</span>
+          <span class="plan-per">/30 days</span>
         </div>
-        <div class="plan-tagline">For serious registration windows.</div>
+        <div class="plan-tagline">A dedicated plan for people who only need timed Google Form links.</div>
         <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> 20 gated forms</li>
-          <li><span class="pf-yes">✓</span> 5,000 views / month</li>
-          <li><span class="pf-yes">✓</span> Countdown + closed pages</li>
-          <li><span class="pf-yes">✓</span> 90-day analytics</li>
-          <li><span class="pf-yes">✓</span> <strong>Pre-queue</strong></li>
-          <li><span class="pf-yes">✓</span> Custom branding + logo</li>
-          <li><span class="pf-yes">✓</span> Email reminders to applicants</li>
+          <li><span class="pf-yes">✓</span> Up to 20 timed Google Form links</li>
+          <li><span class="pf-yes">✓</span> Live countdown before opening</li>
+          <li><span class="pf-yes">✓</span> Automatic redirect during the window</li>
+          <li><span class="pf-yes">✓</span> Clear closed page afterward</li>
+          <li><span class="pf-yes">✓</span> Timezone-aware scheduling</li>
+          <li><span class="pf-yes">✓</span> Edit, delete, copy, and view-count tools</li>
         </ul>
-        <a href="/forms/app/?signup=1&plan=pro" class="plan-cta btn-primary">Get Pro</a>
-      </div>
-
-      <div class="plan-card">
-        <div class="plan-name">Starter</div>
-        <div class="plan-price">
-          <span class="plan-amt" data-monthly="$19" data-annual="$13">$19</span>
-          <span class="plan-per">/month</span>
-        </div>
-        <div class="plan-tagline">For one-off events and coaches.</div>
-        <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> 5 gated forms</li>
-          <li><span class="pf-yes">✓</span> 500 views / month</li>
-          <li><span class="pf-yes">✓</span> Countdown + closed pages</li>
-          <li><span class="pf-yes">✓</span> 30-day analytics</li>
-          <li><span class="pf-no">–</span> Pre-queue</li>
-          <li><span class="pf-no">–</span> Custom branding</li>
-        </ul>
-        <a href="/forms/app/?signup=1&plan=starter" class="plan-cta btn-outline">Get Starter</a>
-      </div>
-
-      <div class="plan-card">
-        <div class="plan-name">Org</div>
-        <div class="plan-price">
-          <span class="plan-amt" data-monthly="$99" data-annual="$69">$99</span>
-          <span class="plan-per">/month</span>
-        </div>
-        <div class="plan-tagline">For universities and large orgs.</div>
-        <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> Unlimited forms</li>
-          <li><span class="pf-yes">✓</span> Unlimited views</li>
-          <li><span class="pf-yes">✓</span> All Pro features</li>
-          <li><span class="pf-yes">✓</span> Team access (5 members)</li>
-          <li><span class="pf-yes">✓</span> 1-year analytics</li>
-          <li><span class="pf-yes">✓</span> CSV export</li>
-          <li><span class="pf-yes">✓</span> Priority support</li>
-        </ul>
-        <a href="/forms/app/?signup=1&plan=org" class="plan-cta btn-outline">Get Org</a>
+        <a href="/signup.html?plan=forms-monthly" class="plan-cta btn-primary" id="forms-plan-cta">Choose Timed Forms</a>
       </div>
     </div>
-    <p class="pricing-note">All plans include a 30-day money-back guarantee. Annual plans billed once per year.</p>
+    <p class="pricing-note" id="forms-pricing-note">Prices are in INR. Monthly access is ₹99 for 30 days; annual access is ₹799 for 365 days. Checkout shows the final amount before payment.</p>
   </div>
 </section>
 
@@ -464,37 +387,37 @@
 <section class="usecases">
   <div class="section-inner">
     <div class="section-label">Who uses it</div>
-    <h2>Built for every registration<br>with a hard deadline.</h2>
+    <h2>Useful wherever one form<br>needs a clear access window.</h2>
     <div class="uc-grid">
       <div class="uc-card">
         <div class="uc-icon">🎓</div>
         <h3>University Admissions</h3>
-        <p>Enforce application windows for MBA, BTech and scholarship forms. Students can't claim "I submitted before the deadline" when the server disagrees.</p>
+        <p>Publish application links before admissions open and give applicants one clear place to check the schedule.</p>
       </div>
       <div class="uc-card">
         <div class="uc-icon">🏆</div>
         <h3>Hackathons & Competitions</h3>
-        <p>Registration opens at 10 AM, closes at 6 PM, first 200 teams get in. The pre-queue ensures it's fair, not just fastest Wi-Fi.</p>
+        <p>Share registration details early, then reveal the Google Form automatically when entries open.</p>
       </div>
       <div class="uc-card">
         <div class="uc-icon">📚</div>
         <h3>Coaching & Courses</h3>
-        <p>Batch enrollment opens for 24 hours. Every student gets the same shot. You close the form and move on — no manual work.</p>
+        <p>Give learners a countdown before enrollment and a clear message when the timed link is no longer available.</p>
       </div>
       <div class="uc-card">
         <div class="uc-icon">🏛️</div>
         <h3>Government & NGO Schemes</h3>
-        <p>Scheme registration with a hard legal window. The submission timestamp in your dashboard is server-stamped and unimpeachable.</p>
+        <p>Coordinate public application windows while keeping the original Google Form and its response data in Google.</p>
       </div>
       <div class="uc-card">
         <div class="uc-icon">🎪</div>
         <h3>Events & Workshops</h3>
-        <p>Early-bird registrations, workshop slots, conference sign-ups — all with a proper countdown and a clean closed page.</p>
+        <p>Use a single URL for workshop registration, conference interest forms, and scheduled event sign-ups.</p>
       </div>
       <div class="uc-card">
         <div class="uc-icon">💼</div>
         <h3>HR & Internal Processes</h3>
-        <p>Internal surveys, benefit enrollment, and self-evaluations with a firm close date. No more chasing stragglers after the window.</p>
+        <p>Schedule access to internal surveys, benefit enrollment, and review forms without rebuilding them in another platform.</p>
       </div>
     </div>
   </div>
@@ -505,33 +428,37 @@
   <div class="section-inner faq-inner">
     <div class="faq-left">
       <div class="section-label">FAQ</div>
-      <h2>Questions we get<br>every week.</h2>
-      <a href="/forms/app/?signup=1" class="btn-primary">Start free anyway →</a>
+      <h2>What to know<br>before you publish.</h2>
+      <a href="/signup.html?next=account.html%23forms" class="btn-primary">Create a timed link →</a>
     </div>
     <div class="faq-right">
       <details class="faq-item" open>
-        <summary>Can students bypass the deadline by changing their browser clock?</summary>
-        <p>No. We check the time on our server — never in the browser. A student can set their system clock to any year they want; they'll still see the countdown or the closed page, because we decide what page they get, not their device.</p>
+        <summary>Does changing a device clock affect the timed link?</summary>
+        <p>No. Submit Later uses server time to decide whether its link shows a countdown, redirects, or displays the closed page. Device time does not change that link state.</p>
       </details>
       <details class="faq-item">
         <summary>Do I need to rebuild my Google Form?</summary>
-        <p>No. You paste your existing Google Form URL, set the window and share the SubmitLater link. Your form stays exactly as it is. We just control when people can reach it.</p>
+        <p>No. Paste the URL of an existing Google Form, choose the window, and share the new timed URL. The form itself stays hosted by Google.</p>
       </details>
       <details class="faq-item">
-        <summary>What do students see before the form opens?</summary>
-        <p>A branded countdown page with your organization name, the form name and a live countdown timer. On Pro and above you can add your logo and choose a color. On Pro, they also see the option to join the pre-queue.</p>
+        <summary>What does a visitor see at each stage?</summary>
+        <p>Before opening, they see a live countdown and scheduled time. During the window, the link redirects to your Google Form. After closing, it shows a closed message and stops redirecting.</p>
       </details>
       <details class="faq-item">
         <summary>What happens if I update my Google Form URL?</summary>
-        <p>Update it in your dashboard in one click. Your SubmitLater link stays the same — the one you already shared still works.</p>
+        <p>Edit the form in your dashboard and save the new destination. The Submit Later short link stays the same, so previously published copies continue to work.</p>
       </details>
       <details class="faq-item">
-        <summary>How does the pre-queue actually submit to Google Forms?</summary>
-        <p>Using the Google Forms API. Queued entries are submitted in queue order at the exact millisecond the form opens. We handle rate limiting and retry failures. Students get a confirmation as soon as their entry is submitted.</p>
+        <summary>Can someone use the original Google Form URL directly?</summary>
+        <p>Yes. Submit Later controls only the timed URL it creates. If someone already has the original Google Form URL, access follows the settings you configured in Google Forms. Share the timed URL and keep the original private until you are ready.</p>
       </details>
       <details class="faq-item">
-        <summary>Is the submission timestamp in Google Forms reliable?</summary>
-        <p>Yes. Since we submit to Google Forms at the moment of opening, all pre-queue entries have a submission timestamp at or within seconds of the open time. Entries submitted directly during the window have normal Google Forms timestamps, all of which fall within your window by definition — because we block access outside it.</p>
+        <summary>Does closing the timed link stop Google Form responses?</summary>
+        <p>No. The timed link stops redirecting, but it does not switch off response collection inside Google Forms. If you require the underlying form itself to stop accepting responses, change that setting in Google Forms as well.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What does the view count measure?</summary>
+        <p>It counts visits to the timed URL across countdown, open, and closed states. A view is not proof that a visitor submitted the Google Form.</p>
       </details>
     </div>
   </div>
@@ -540,13 +467,13 @@
 <!-- ══════════════════════════ FINAL CTA ══════════════════════════ -->
 <section class="final-cta">
   <div class="section-inner fc-inner">
-    <h2>Your next registration window<br>should be airtight.</h2>
-    <p>Two minutes to set up. Zero late submissions. Every deadline, from now on.</p>
-    <a href="/forms/app/?signup=1" class="btn-primary btn-lg">
-      Wrap your first form — it's free
+    <h2>Give your next Google Form<br>a better opening page.</h2>
+    <p>Publish the schedule early, keep one shareable URL, and let the timed link handle each stage of the window.</p>
+    <a href="/signup.html?next=account.html%23forms" class="btn-primary btn-lg">
+      Create your first timed link
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
-    <p class="fc-trust">Free plan · No credit card · 30-day money back on paid plans</p>
+    <p class="fc-trust">No credit card to create an account · Separate Forms-only monthly and annual plans</p>
   </div>
 </section>
 
@@ -559,29 +486,29 @@
           <rect width="28" height="28" rx="8" fill="#6366f1"/>
           <path d="M8 14h4l2-5 3 10 2-5h3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span>SubmitLater Forms</span>
+        <span>Submit Later Timed Forms</span>
       </a>
-      <p>Server-enforced deadlines for Google Forms.</p>
+      <p>Timezone-aware timed access links for the Google Forms you already use.</p>
     </div>
     <div class="footer-links">
       <div class="fl-col">
         <div class="fl-head">Product</div>
         <a href="#how">How it works</a>
         <a href="#pricing">Pricing</a>
-        <a href="#compare">Compare</a>
-        <a href="/forms/app/">Dashboard</a>
+        <a href="#compare">Product scope</a>
+        <a href="/account.html#forms">Dashboard</a>
       </div>
       <div class="fl-col">
         <div class="fl-head">Company</div>
         <a href="https://submitlater.co.in">Submit Later</a>
         <a href="https://submitlater.co.in/privacy.html">Privacy</a>
         <a href="https://submitlater.co.in/terms.html">Terms</a>
-        <a href="mailto:help@submitlater.co.in">Contact</a>
+        <a href="mailto:submitlater.review@gmail.com">Contact</a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 SubmitLater. All rights reserved.</span>
+    <span>© 2026 Submit Later. All rights reserved.</span>
     <span>A product of <a href="https://submitlater.co.in">Submit Later</a></span>
   </div>
 </footer>

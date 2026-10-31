@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SubmitLater Forms — Dashboard</title>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Submit Later Timed Forms — Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="style.css">
@@ -18,7 +19,7 @@
         <rect width="28" height="28" rx="8" fill="#6366f1"/>
         <path d="M8 14h4l2-5 3 10 2-5h3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <span>SubmitLater <strong>Forms</strong></span>
+      <span>Submit Later <strong>Timed Forms</strong></span>
     </a>
 
     <!-- Login form -->
@@ -43,7 +44,7 @@
     <!-- Signup form -->
     <div id="view-signup" hidden>
       <h1>Create account</h1>
-      <p class="auth-sub">Start protecting your Google Forms deadlines — free.</p>
+      <p class="auth-sub">Create timed access links for the Google Forms you already use.</p>
       <form id="signup-form" class="auth-form">
         <div class="field-group">
           <label>Name</label>
@@ -82,10 +83,6 @@
         My Forms
         <span class="sb-badge" id="forms-count">0</span>
       </a>
-      <a href="#" class="sb-link" data-view="analytics" onclick="return switchView('analytics')">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 13V9l3-4 3 3 3-5 3 3v7H2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-        Analytics
-      </a>
       <a href="#" class="sb-link" data-view="settings" onclick="return switchView('settings')">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M11.53 4.47l1.42-1.42M3.05 12.95l1.42-1.42" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         Settings
@@ -123,9 +120,9 @@
       <!-- Empty state -->
       <div id="forms-empty" class="empty-state" hidden>
         <div class="es-icon">🔐</div>
-        <h2>No gated forms yet</h2>
-        <p>Wrap your first Google Form with a server-enforced deadline in under 2 minutes.</p>
-        <button class="btn-primary" onclick="showCreateWizard()">Wrap your first form →</button>
+        <h2>No timed forms yet</h2>
+        <p>Create a timed access link for an existing Google Form. Your original form and its response settings stay unchanged.</p>
+        <button class="btn-primary" onclick="showCreateWizard()">Create your first timed link →</button>
       </div>
 
       <!-- Forms list -->
@@ -155,14 +152,14 @@
         <div id="wz-step-1" class="wz-panel">
           <div class="wz-card">
             <h2>Paste your Google Form URL</h2>
-            <p class="wz-sub">You keep your form exactly as-is. We just control when people can reach it.</p>
+            <p class="wz-sub">Your form stays exactly as it is. We create a separate link with the opening and closing window you choose.</p>
             <div class="field-group">
               <label>Form name <span class="field-hint">(for your reference)</span></label>
               <input type="text" id="form-name" placeholder="e.g. MBA Admissions 2026" maxlength="100">
             </div>
             <div class="field-group">
               <label>Google Form URL</label>
-              <input type="url" id="form-url" placeholder="https://docs.google.com/forms/d/…">
+              <input type="url" id="form-url" placeholder="https://docs.google.com/forms/… or https://forms.gle/…">
               <span class="field-hint">Paste the full URL of your Google Form</span>
             </div>
             <div id="step1-error" class="form-error" hidden></div>
@@ -176,7 +173,7 @@
         <div id="wz-step-2" class="wz-panel" hidden>
           <div class="wz-card">
             <h2>Set the window</h2>
-            <p class="wz-sub">Choose when the form opens and closes. Enforced by our server to the second.</p>
+            <p class="wz-sub">Choose when this access link opens and closes. The original Google Form remains under your control.</p>
             <div class="field-row">
               <div class="field-group">
                 <label>Opens on</label>
@@ -219,7 +216,7 @@
             <div id="step2-error" class="form-error" hidden></div>
             <div class="wz-actions">
               <button class="btn-ghost" onclick="wizardGoToStep(1)">← Back</button>
-              <button class="btn-primary" onclick="wizardStep2Next()">Create form →</button>
+              <button class="btn-primary" id="wizard-save-btn" onclick="wizardStep2Next(this)">Create form →</button>
             </div>
           </div>
         </div>
@@ -229,7 +226,7 @@
           <div class="wz-card wz-done">
             <div class="done-icon">✓</div>
             <h2>Your form is protected.</h2>
-            <p class="wz-sub">Share this link instead of the Google Form URL. We'll enforce the deadline.</p>
+            <p class="wz-sub">Share this timed link instead of the original Google Form URL.</p>
             <div class="done-link-box">
               <span id="done-link-url" class="done-link-url"></span>
               <button class="btn-copy" id="copy-btn" onclick="copyLink()">Copy link</button>
@@ -270,7 +267,7 @@
 
           <!-- Link card -->
           <div class="detail-card">
-            <div class="dc-head">Your gated link</div>
+            <div class="dc-head">Your timed access link</div>
             <div class="dc-link-row">
               <span class="dc-link" id="detail-link"></span>
               <button class="btn-copy-sm" onclick="copyDetailLink()">Copy</button>
@@ -294,40 +291,11 @@
             <div class="stats-grid">
               <div class="stat-tile">
                 <div class="st-num" id="stat-views">—</div>
-                <div class="st-label">Views</div>
-              </div>
-              <div class="stat-tile">
-                <div class="st-num" id="stat-queue">—</div>
-                <div class="st-label">Pre-queue</div>
+                <div class="st-label">Timed-link views</div>
               </div>
             </div>
           </div>
-
-          <!-- QR code placeholder -->
-          <div class="detail-card">
-            <div class="dc-head">QR Code</div>
-            <div class="qr-placeholder" id="qr-code">
-              <div class="qr-grid" id="qr-canvas"></div>
-            </div>
-            <button class="btn-ghost btn-sm" onclick="downloadQR()" style="width:100%;margin-top:12px">Download QR</button>
-          </div>
         </div>
-      </div>
-    </div>
-
-    <!-- ── ANALYTICS VIEW ── -->
-    <div id="view-analytics" class="view" hidden>
-      <div class="view-header">
-        <div>
-          <h1>Analytics</h1>
-          <p class="view-sub">View access for each form across your account.</p>
-        </div>
-      </div>
-      <div class="upgrade-gate" id="analytics-gate">
-        <div class="ug-icon">📊</div>
-        <h2>Analytics on Starter and above</h2>
-        <p>Upgrade to see view counts, peak traffic, queue sizes and submission windows for all your forms.</p>
-        <a href="../#pricing" class="btn-primary">See plans →</a>
       </div>
     </div>
 
@@ -378,6 +346,7 @@
 <script>
   const API = 'https://api.submitlater.co.in'; // production
   // const API = 'http://localhost:8080'; // dev
+  const publicFormLink = code => `${API}/f/${encodeURIComponent(code)}`;
 
   let session = null;
   let forms = [];
@@ -504,10 +473,15 @@
       document.getElementById('sb-avatar').textContent = user.name[0].toUpperCase();
       document.getElementById('settings-name').value = user.name;
       document.getElementById('settings-email').value = user.email;
-      // Plan badge
-      const planLabel = plan.status === 'trial' ? `Trial (${daysLeft(plan.trialEndsAt)}d left)` : plan.status === 'active' ? `Pro — expires ${fmtDate(plan.paidUntil)}` : 'Free';
-      document.getElementById('sb-plan').innerHTML = `<div class="plan-chip plan-${plan.status}">${planLabel}</div>`;
-      document.getElementById('pib-plan-name').textContent = planLabel;
+      // Product entitlements are independent. Never present an extension-only
+      // purchase as Timed Forms access (or hide a Forms-only purchase).
+      const formsPlan = formsPlanCopy(plan);
+      const planChip = document.createElement('div');
+      planChip.className = `plan-chip plan-${formsPlan.status}`;
+      planChip.textContent = formsPlan.label;
+      document.getElementById('sb-plan').replaceChildren(planChip);
+      document.getElementById('pib-plan-name').textContent = formsPlan.label;
+      document.getElementById('pib-plan-status').textContent = formsPlan.detail;
     } catch {}
     // Check if signup plan query param
     const sp = new URLSearchParams(location.search);
@@ -545,10 +519,10 @@
       <div class="form-card" onclick="openFormDetail('${f._id}')">
         <div class="fc-info">
           <div class="fc-name">${escHtml(f.name)}</div>
-          <div class="fc-url"><code>submitlater.co.in/f/${f.shortCode}</code></div>
+          <div class="fc-url"><code>${escHtml(publicFormLink(f.shortCode).replace(/^https?:\/\//, ''))}</code></div>
           <div class="fc-times">
-            ${f.openAt ? `Opens ${fmtDateShort(f.openAt)}` : 'No open time'} →
-            ${f.closeAt ? `Closes ${fmtDateShort(f.closeAt)}` : 'No close time'}
+            ${f.openAt ? `Opens ${fmtDateShort(f.openAt, f.timezone)}` : 'Available immediately'} →
+            ${f.closeAt ? `Closes ${fmtDateShort(f.closeAt, f.timezone)}` : 'No closing time'}
           </div>
         </div>
         <div class="fc-right">
@@ -567,7 +541,7 @@
     const open = f.openAt ? new Date(f.openAt).getTime() : null;
     const close = f.closeAt ? new Date(f.closeAt).getTime() : null;
     if (open && now < open) return { key: 'upcoming', label: 'Upcoming' };
-    if (close && now > close) return { key: 'closed', label: 'Closed' };
+    if (close && now >= close) return { key: 'closed', label: 'Closed' };
     return { key: 'live', label: '● Live' };
   }
 
@@ -576,15 +550,14 @@
     const f = forms.find(x => x._id === id);
     if (!f) return;
     document.getElementById('detail-title').textContent = f.name;
-    const link = `submitlater.co.in/f/${f.shortCode}`;
+    const link = publicFormLink(f.shortCode);
     document.getElementById('detail-link').textContent = link;
-    document.getElementById('detail-open-at').textContent = f.openAt ? fmtDate(f.openAt) : 'No open time set';
-    document.getElementById('detail-close-at').textContent = f.closeAt ? fmtDate(f.closeAt) : 'No close time set';
+    document.getElementById('detail-open-at').textContent = f.openAt ? fmtDate(f.openAt, f.timezone) : 'Available immediately';
+    document.getElementById('detail-close-at').textContent = f.closeAt ? fmtDate(f.closeAt, f.timezone) : 'No closing time';
     document.getElementById('detail-tz').textContent = f.timezone || 'UTC';
     const gLink = document.getElementById('detail-gform-link');
     gLink.href = f.googleFormUrl; gLink.textContent = 'Open original form ↗';
     document.getElementById('stat-views').textContent = f.stats?.views ?? 0;
-    document.getElementById('stat-queue').textContent = f.stats?.queuedEntries ?? 0;
     updateDetailStatus(f);
     switchView('detail');
   }
@@ -624,14 +597,21 @@
   // ─── CREATE WIZARD ───
   let wizardData = {};
 
-  function showCreateWizard() {
-    wizardData = {};
-    document.getElementById('form-name').value = '';
-    document.getElementById('form-url').value = '';
-    document.getElementById('form-open-at').value = '';
-    document.getElementById('form-close-at').value = '';
+  function showCreateWizard(form = null) {
+    wizardData = form ? { editingId: form._id } : {};
+    document.getElementById('form-name').value = form?.name || '';
+    document.getElementById('form-url').value = form?.googleFormUrl || '';
+    document.getElementById('form-timezone').value = form?.timezone || 'Asia/Kolkata';
+    document.getElementById('form-open-at').value = form?.openAt ? fmtDateLocal(form.openAt, form.timezone) : '';
+    document.getElementById('form-close-at').value = form?.closeAt ? fmtDateLocal(form.closeAt, form.timezone) : '';
+    document.getElementById('wizard-save-btn').textContent = form ? 'Save changes →' : 'Create form →';
     wizardGoToStep(1);
     switchView('create');
+  }
+
+  function editForm() {
+    const form = forms.find(item => item._id === currentFormId);
+    if (form) showCreateWizard(form);
   }
 
   function wizardGoToStep(n) {
@@ -649,8 +629,8 @@
     const err = document.getElementById('step1-error');
     err.hidden = true;
     if (!name) { err.textContent = 'Enter a name for this form.'; err.hidden = false; return; }
-    if (!url || !url.includes('docs.google.com/forms')) {
-      err.textContent = 'Paste a valid Google Forms URL (docs.google.com/forms/…)'; err.hidden = false; return;
+    if (!/^https:\/\/(?:docs\.google\.com\/forms\/d\/(?:e\/)?[\w-]+(?:\/|$)|forms\.gle\/[\w-]+(?:[/?#]|$))/i.test(url)) {
+      err.textContent = 'Paste a valid Google Forms URL (docs.google.com/forms/… or forms.gle/…)'; err.hidden = false; return;
     }
     wizardData.name = name;
     wizardData.googleFormUrl = url;
@@ -669,11 +649,21 @@
     const preview = document.getElementById('window-preview');
     if (!openVal && !closeVal) { preview.hidden = true; return; }
     preview.hidden = false;
-    const fmt = v => v ? new Date(v).toLocaleString('en-US', { timeZone: tz, dateStyle: 'medium', timeStyle: 'short' }) : '—';
-    document.getElementById('wp-open').textContent = openVal ? fmt(openVal) + ` (${tz})` : 'No open time';
-    document.getElementById('wp-close').textContent = closeVal ? fmt(closeVal) + ` (${tz})` : 'No close time';
-    if (openVal && closeVal) {
-      const diffMs = new Date(closeVal) - new Date(openVal);
+    let openAt = null;
+    let closeAt = null;
+    try {
+      openAt = zonedLocalToIso(openVal, tz);
+      closeAt = zonedLocalToIso(closeVal, tz);
+    } catch {
+      document.getElementById('wp-open').textContent = 'Check this local time';
+      document.getElementById('wp-close').textContent = 'Check this local time';
+      document.getElementById('wp-duration').textContent = '—';
+      return;
+    }
+    document.getElementById('wp-open').textContent = openAt ? fmtDate(openAt, tz) : 'No open time';
+    document.getElementById('wp-close').textContent = closeAt ? fmtDate(closeAt, tz) : 'No close time';
+    if (openAt && closeAt) {
+      const diffMs = new Date(closeAt) - new Date(openAt);
       if (diffMs > 0) {
         const h = Math.floor(diffMs / 3600000);
         const m = Math.floor((diffMs % 3600000) / 60000);
@@ -682,45 +672,62 @@
     }
   }
 
-  async function wizardStep2Next() {
+  async function wizardStep2Next(btn) {
     const openVal = document.getElementById('form-open-at').value;
     const closeVal = document.getElementById('form-close-at').value;
     const tz = document.getElementById('form-timezone').value;
     const err = document.getElementById('step2-error');
     err.hidden = true;
 
-    if (openVal && closeVal && new Date(openVal) >= new Date(closeVal)) {
+    let openAt;
+    let closeAt;
+    try {
+      openAt = zonedLocalToIso(openVal, tz);
+      closeAt = zonedLocalToIso(closeVal, tz);
+    } catch (e) {
+      err.textContent = e.message || 'Check the dates and timezone.'; err.hidden = false; return;
+    }
+    if (openAt && closeAt && new Date(openAt) >= new Date(closeAt)) {
       err.textContent = 'Close time must be after open time.'; err.hidden = false; return;
     }
 
-    wizardData.openAt = openVal ? new Date(openVal).toISOString() : null;
-    wizardData.closeAt = closeVal ? new Date(closeVal).toISOString() : null;
+    wizardData.openAt = openAt;
+    wizardData.closeAt = closeAt;
     wizardData.timezone = tz;
 
-    const btn = event.target;
-    btn.textContent = 'Creating…'; btn.disabled = true;
+    btn.textContent = wizardData.editingId ? 'Saving…' : 'Creating…'; btn.disabled = true;
 
     try {
-      const data = await api('POST', '/forms', wizardData);
+      const editingId = wizardData.editingId;
+      const body = { ...wizardData };
+      delete body.editingId;
+      const data = await api(editingId ? 'PATCH' : 'POST', editingId ? `/forms/${editingId}` : '/forms', body);
       const f = data.form;
-      forms.unshift(f);
+      if (editingId) forms = forms.map(item => item._id === f._id ? f : item);
+      else forms.unshift(f);
       renderFormsList();
-      const link = `submitlater.co.in/f/${f.shortCode}`;
+      if (editingId) {
+        currentFormId = f._id;
+        openFormDetail(f._id);
+        toast('Timed form updated.');
+        return;
+      }
+      const link = publicFormLink(f.shortCode);
       document.getElementById('done-link-url').textContent = link;
       document.getElementById('done-meta').innerHTML = `
-        <div class="dm-row">${openVal ? `Opens: ${fmtDate(f.openAt)}` : 'No open time'}</div>
-        <div class="dm-row">${closeVal ? `Closes: ${fmtDate(f.closeAt)}` : 'No close time'}</div>
+        <div class="dm-row">${openVal ? `Opens: ${fmtDate(f.openAt, f.timezone)}` : 'Available immediately'}</div>
+        <div class="dm-row">${closeVal ? `Closes: ${fmtDate(f.closeAt, f.timezone)}` : 'No closing time'}</div>
       `;
       wizardGoToStep(3);
     } catch(e) {
       err.textContent = e.message; err.hidden = false;
-    } finally { btn.textContent = 'Create form →'; btn.disabled = false; }
+    } finally { btn.textContent = wizardData.editingId ? 'Save changes →' : 'Create form →'; btn.disabled = false; }
   }
 
   async function deleteForm() {
     if (!currentFormId) return;
     const f = forms.find(x => x._id === currentFormId);
-    if (!confirm(`Delete "${f?.name}"? This will break the gated link.`)) return;
+    if (!confirm(`Delete "${f?.name}"? This timed link will stop working.`)) return;
     try {
       await api('DELETE', `/forms/${currentFormId}`);
       forms = forms.filter(x => x._id !== currentFormId);
@@ -732,7 +739,7 @@
 
   // ─── VIEWS ───
   function switchView(name) {
-    ['forms','create','detail','analytics','settings'].forEach(v => {
+    ['forms','create','detail','settings'].forEach(v => {
       document.getElementById(`view-${v}`).hidden = v !== name;
     });
     document.querySelectorAll('.sb-link').forEach(a => {
@@ -745,14 +752,14 @@
   // ─── COPY ───
   function copyLink() {
     const url = document.getElementById('done-link-url').textContent;
-    navigator.clipboard.writeText(`https://${url}`).then(() => toast('Link copied!')).catch(() => {});
+    navigator.clipboard.writeText(url).then(() => toast('Link copied!')).catch(() => {});
     const btn = document.getElementById('copy-btn');
     btn.textContent = 'Copied!'; btn.style.background = 'var(--green-bg)'; btn.style.color = 'var(--green)';
     setTimeout(() => { btn.textContent = 'Copy link'; btn.style.background = ''; btn.style.color = ''; }, 1800);
   }
   function copyDetailLink() {
     const url = document.getElementById('detail-link').textContent;
-    navigator.clipboard.writeText(`https://${url}`).then(() => toast('Link copied!')).catch(() => {});
+    navigator.clipboard.writeText(url).then(() => toast('Link copied!')).catch(() => {});
   }
 
   // ─── SETTINGS ───
@@ -789,24 +796,79 @@
   }
 
   // ─── UTILS ───
-  function fmtDate(iso) {
-    if (!iso) return '—';
-    return new Date(iso).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+  function wallParts(date, timezone) {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone || 'UTC',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+    }).formatToParts(date);
+    return Object.fromEntries(parts.filter(p => p.type !== 'literal').map(p => [p.type, Number(p.value)]));
   }
-  function fmtDateShort(iso) {
+  function zonedLocalToIso(value, timezone) {
+    if (!value) return null;
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+    if (!match) throw new Error('Enter a valid date and time.');
+    const desired = Date.UTC(+match[1], +match[2] - 1, +match[3], +match[4], +match[5]);
+    let instant = desired;
+    for (let i = 0; i < 4; i++) {
+      const p = wallParts(new Date(instant), timezone);
+      const shownAsUtc = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second || 0);
+      const next = desired - (shownAsUtc - instant);
+      if (next === instant) break;
+      instant = next;
+    }
+    const result = new Date(instant);
+    const p = wallParts(result, timezone);
+    const expected = match.slice(1).map(Number);
+    if ([p.year, p.month, p.day, p.hour, p.minute].some((n, i) => n !== expected[i])) {
+      throw new Error('That local time does not exist in the selected timezone. Choose another time.');
+    }
+    return result.toISOString();
+  }
+  function fmtDateLocal(iso, timezone) {
+    if (!iso) return '';
+    const p = wallParts(new Date(iso), timezone);
+    const pad = n => String(n).padStart(2, '0');
+    return `${p.year}-${pad(p.month)}-${pad(p.day)}T${pad(p.hour)}:${pad(p.minute)}`;
+  }
+  function fmtDate(iso, timezone = 'UTC') {
     if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return new Date(iso).toLocaleString('en-US', { timeZone: timezone, dateStyle: 'medium', timeStyle: 'short' });
+  }
+  function fmtDateShort(iso, timezone = 'UTC') {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('en-US', { timeZone: timezone, month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
   function daysLeft(iso) {
     if (!iso) return 0;
     return Math.max(0, Math.ceil((new Date(iso) - Date.now()) / 86400000));
   }
+  function formsPlanCopy(plan) {
+    const access = plan?.products?.forms || { status: 'free' };
+    if (access.status === 'trial') {
+      const days = daysLeft(access.trialEndsAt);
+      return {
+        status: 'trial',
+        label: `Timed Forms trial · ${days} day${days === 1 ? '' : 's'} left`,
+        detail: 'The account trial includes up to 20 timed forms.',
+      };
+    }
+    if (access.status === 'active') {
+      return {
+        status: 'active',
+        label: `Timed Forms active · until ${fmtDate(access.paidUntil, 'UTC')}`,
+        detail: 'This Forms entitlement is separate from the Chrome extension and Webhook Scheduler.',
+      };
+    }
+    return {
+      status: 'free',
+      label: 'Timed Forms free',
+      detail: 'The free tier includes up to 2 timed forms.',
+    };
+  }
   function escHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
-
-  // ─── QR CODE (simple visual placeholder) ───
-  function downloadQR() { toast('QR download coming soon.'); }
 
   // ─── BOOT ───
   // Handle ?signup=1 before auth check
@@ -816,6 +878,5 @@
   initApp();
 </script>
 
-<script src="app.js"></script>
 </body>
 </html>

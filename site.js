@@ -2,6 +2,7 @@
 // button ([data-store-link]). The pages also have the link written in, so
 // the buttons work before this script runs. Keep the two in sync.
 const STORE_URL = 'https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website';
+const PLAN_CATALOG_URL = 'https://api.submitlater.co.in/plans';
 
 // Submit Later backend (server/report-mailer.gs): the same Web app URL as
 // REPORT_URL in the extension's config.js. Loads approved reviews onto the
@@ -14,6 +15,113 @@ if (STORE_URL) {
     a.hidden = false;
   });
 }
+
+// Prices in the HTML are useful fallbacks for visitors on a slow or offline
+// connection. Once loaded, the public catalogue replaces those values with
+// the same admin-managed prices used by checkout.
+const formatInr = new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+
+async function hydratePlanCatalogue() {
+  if (!document.querySelector('[data-plan-price], [data-plan-saving], [data-plan-effective]')) return;
+  try {
+    const response = await fetch(PLAN_CATALOG_URL, { headers: { Accept: 'application/json' } });
+    if (!response.ok) return;
+    const data = await response.json();
+    const plans = new Map((data.plans || []).map((plan) => [plan.id, plan]));
+    const signedIn = (() => {
+      try { return !!JSON.parse(localStorage.getItem('sl-session'))?.refreshToken; } catch { return false; }
+    })();
+
+    const syncPlanLink = (link, planId) => {
+      const plan = plans.get(planId);
+      if (!plan) return;
+      link.dataset.availableLabel ||= link.textContent.trim();
+      if (plan.active === false) {
+        link.removeAttribute('href');
+        link.setAttribute('aria-disabled', 'true');
+        link.setAttribute('tabindex', '-1');
+        link.classList.add('is-disabled');
+        link.textContent = 'Currently unavailable';
+        return;
+      }
+      link.href = `${signedIn ? 'account.html?buy=' : 'signup.html?plan='}${encodeURIComponent(planId)}`;
+      link.removeAttribute('aria-disabled');
+      link.removeAttribute('tabindex');
+      link.classList.remove('is-disabled');
+      link.textContent = link.dataset.availableLabel;
+    };
+
+    globalThis.SLPlanCatalogue = { data, plans, syncPlanLink };
+
+    document.querySelectorAll('[data-plan-price]').forEach((element) => {
+      const plan = plans.get(element.dataset.planPrice);
+      if (!plan) return;
+      element.textContent = plan.active === false ? 'Unavailable' : Number.isFinite(Number(plan.amount)) ? formatInr.format(Number(plan.amount)) : element.textContent;
+    });
+
+    document.querySelectorAll('[data-plan-effective]').forEach((element) => {
+      const plan = plans.get(element.dataset.planEffective);
+      if (plan?.active === false) {
+        element.textContent = 'Not currently offered';
+      } else if (plan && Number.isFinite(Number(plan.amount))) {
+        element.textContent = `${formatInr.format(Math.round(Number(plan.amount) / 12))}/month when paid yearly`;
+      }
+    });
+
+    document.querySelectorAll('[data-plan-saving]').forEach((element) => {
+      const requested = element.dataset.planSaving;
+      const products = requested === 'max' ? ['extension', 'forms', 'scheduler'] : [requested];
+      const savings = products.map((product) => {
+        const monthlyId = product === 'extension' ? 'monthly' : `${product}-monthly`;
+        const annualId = product === 'extension' ? 'annual' : `${product}-annual`;
+        const monthlyPlan = plans.get(monthlyId);
+        const annualPlan = plans.get(annualId);
+        const monthly = Number(monthlyPlan?.amount);
+        const annual = Number(annualPlan?.amount);
+        return monthlyPlan?.active !== false && annualPlan?.active !== false && monthly > 0 && annual > 0
+          ? Math.max(0, Math.round((1 - annual / (monthly * 12)) * 100))
+          : 0;
+      });
+      const saving = Math.max(...savings);
+      element.textContent = saving ? `${requested === 'max' ? 'Save up to' : 'Save'} ${saving}%` : 'See available plans';
+    });
+
+    document.querySelectorAll('[data-plan-link]').forEach((link) => {
+      const billing = document.body.dataset.billing || 'annual';
+      const planId = link.dataset.planAnnual
+        ? billing === 'monthly' ? link.dataset.planMonthly : link.dataset.planAnnual
+        : new URL(link.getAttribute('href'), location.href).searchParams.get('plan');
+      if (planId) syncPlanLink(link, planId);
+    });
+
+    const structured = document.getElementById('site-structured-data');
+    if (structured) {
+      try {
+        const schema = JSON.parse(structured.textContent);
+        schema.offers = [...plans.values()]
+          .filter((plan) => plan.active !== false)
+          .map((plan) => ({
+            '@type': 'Offer',
+            name: plan.name,
+            price: String(plan.amount),
+            priceCurrency: data.currency || 'INR',
+          }));
+        structured.textContent = JSON.stringify(schema);
+      } catch {}
+    }
+
+    document.dispatchEvent(new CustomEvent('sl:plans-loaded', { detail: data }));
+  } catch {
+    // Keep the truthful fallback prices rendered in the page.
+  }
+}
+
+hydratePlanCatalogue();
 
 // Signed in (see app.js)? Show "Account" instead of "Log in", and send the
 // pricing buttons straight to checkout instead of sign-up.

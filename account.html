@@ -51,7 +51,6 @@
     <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></symbol>
     <symbol id="i-grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></g></symbol>
     <symbol id="i-forms" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></g></symbol>
-    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
   </defs>
 </svg>
 
@@ -169,7 +168,7 @@
           <div class="hc-body">
             <div class="hc-tag hc-tag-new">New · Server-side</div>
             <h2>Webhook Scheduler</h2>
-            <p>Schedule any HTTP request to fire from our servers. Logs, retries, failure alerts. No cron needed.</p>
+            <p>Schedule HTTPS requests from our servers and inspect each run in a clear execution history.</p>
           </div>
           <svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
@@ -262,31 +261,17 @@
 
       <div id="offers" class="offers" hidden></div>
 
-      <div class="section-title"><h2 id="buy-title">Choose a plan</h2><p id="buy-sub">Every feature is included in every plan. Time you buy is added after your trial or current plan.</p></div>
+      <div class="section-title"><h2 id="buy-title">Choose what you need</h2><p id="buy-sub">Each product has its own plan, so you only pay for the tools you use.</p></div>
       <div id="buy-notice" class="notice" hidden></div>
-      <div class="plan-cards">
-        <div class="pcard">
-          <div class="pc-top"><b>Pro Monthly</b><span class="muted">For a one-off project</span></div>
-          <div class="pc-price">₹49 <small>a month (30 days)</small></div>
-          <ul class="pc-list"><li><svg><use href="#i-check"/></svg>Unlimited scheduled buttons</li><li><svg><use href="#i-check"/></svg>Reopen &amp; press, repeats, WhatsApp</li><li><svg><use href="#i-check"/></svg>Email support</li></ul>
-          <button type="button" class="btn alt" data-buy="monthly"><span class="spin" aria-hidden="true"></span><span>Buy Monthly · ₹49</span></button>
-        </div>
-        <div class="pcard best">
-          <span class="pc-tag">Best value · save 32%</span>
-          <div class="pc-top"><b>Pro Annual</b><span class="muted">Just ₹33 a month</span></div>
-          <div class="pc-price">₹399 <small>a year (365 days)</small></div>
-          <ul class="pc-list"><li><svg><use href="#i-check"/></svg>Unlimited scheduled buttons</li><li><svg><use href="#i-check"/></svg>Reopen &amp; press, repeats, WhatsApp</li><li><svg><use href="#i-check"/></svg>Priority email support</li></ul>
-          <button type="button" class="btn btn-block" data-buy="annual"><span class="spin" aria-hidden="true"></span><span>Buy Annual · ₹399</span></button>
-        </div>
-        <div class="pcard custom">
-          <div class="pc-top"><b>Custom</b><span class="muted">For teams, colleges, or a longer period</span></div>
-          <p class="muted">Pro for several people, or for 2 or 3 years at once. Tell us what you need and we'll send you a plan you can pay right here.</p>
-          <button type="button" class="btn line" id="ask-custom">Request a custom plan</button>
-        </div>
+      <div id="plan-cards" class="product-plan-groups" aria-live="polite"></div>
+      <div class="pcard custom">
+        <div class="pc-top"><b>Need a custom arrangement?</b><span class="muted">Colleges, events and non-standard access periods</span></div>
+        <p class="muted">Tell us which product you need, how many people will use it and for how long. We’ll send a private offer to this account.</p>
+        <button type="button" class="btn line" id="ask-custom">Request a custom plan</button>
       </div>
       <div class="pay-note">
         <svg><use href="#i-shield"/></svg>
-        <span>Secure checkout by <b>Cashfree Payments</b>. Prices in INR, including all taxes.</span>
+        <span>Secure checkout by <b>Cashfree Payments</b>. Prices are in INR; checkout shows the final amount before payment.</span>
         <span class="pay-chips"><span>UPI</span><span>Cards</span><span>Net banking</span><span>Wallets</span></span>
       </div>
 
@@ -302,7 +287,7 @@
         <form id="help-form" class="help-form" novalidate>
           <div class="field" data-field="kind">
             <label for="help-kind">What do you need?</label>
-            <select id="help-kind" name="kind"><option value="extend">Extend my plan</option><option value="refund">Refund</option><option value="problem">Something isn't working</option><option value="custom">Custom plan (teams, longer periods)</option><option value="other">Other</option></select>
+            <select id="help-kind" name="kind"><option value="extend">Extend my plan</option><option value="refund">Refund</option><option value="problem">Something isn't working</option><option value="custom">Custom plan or access period</option><option value="other">Other</option></select>
             <div class="f-err" role="alert"></div>
           </div>
           <div class="field" data-field="message">
@@ -436,13 +421,13 @@
     <section class="view" data-view="forms" hidden>
       <div id="fm-list-view">
         <div class="view-head">
-          <div><h1>Timed Forms</h1><p>Share the link now — students see a countdown until your form opens.</p></div>
+          <div><h1>Timed Forms</h1><p>Give every participant one timed link for your existing Google Form.</p></div>
           <button class="btn" id="fm-new-btn" type="button">+ New timed form</button>
         </div>
         <div id="fm-empty" class="fm-empty-state" hidden>
           <div class="fm-empty-icon" aria-hidden="true"><svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="8" y="4" width="36" height="48" rx="4" stroke="currentColor" stroke-width="2" opacity="0.3"/><rect x="16" y="4" width="36" height="48" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="2"/><path d="M24 20h16M24 28h16M24 36h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/><circle cx="48" cy="48" r="12" fill="var(--card)" stroke="currentColor" stroke-width="2"/><path d="M44 48l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/></svg></div>
           <h2>No timed forms yet</h2>
-          <p>Wrap your first Google Form with a live countdown. Students can't open it early — the URL hides until the window opens.</p>
+          <p>Create a timed access link that shows a countdown, opens your Google Form on schedule, and closes at the time you choose.</p>
           <button class="btn" id="fm-empty-new-btn" type="button" onclick="formsModule.showCreate()">Create your first form →</button>
         </div>
         <div id="fm-list" class="fm-grid"></div>
@@ -451,8 +436,8 @@
         <div class="view-head"><div><button class="fm-back-btn" type="button" id="fm-wizard-cancel">← Back to forms</button><h1 id="fm-wizard-title">New timed form</h1></div></div>
         <div class="fm-wizard"><form id="fm-wizard-form" class="fm-wizard-form" novalidate>
           <div class="fm-wizard-section">
-            <div class="fm-field-group"><label for="fm-c-title">Form name <span class="fm-field-hint">(for your reference)</span></label><input type="text" id="fm-c-title" name="title" placeholder="e.g. MBA Admissions 2026" maxlength="100" required autocomplete="off"></div>
-            <div class="fm-field-group"><label for="fm-c-url">Google Form URL</label><input type="url" id="fm-c-url" name="googleFormUrl" placeholder="https://docs.google.com/forms/d/…" required autocomplete="off"><span class="fm-field-hint">Paste the full URL — we wrap it without touching the original form</span></div>
+            <div class="fm-field-group"><label for="fm-c-title">Form name <span class="fm-field-hint">(for your reference)</span></label><input type="text" id="fm-c-title" name="name" placeholder="e.g. MBA Admissions 2026" maxlength="100" required autocomplete="off"></div>
+            <div class="fm-field-group"><label for="fm-c-url">Google Form URL</label><input type="url" id="fm-c-url" name="googleFormUrl" placeholder="https://docs.google.com/forms/d/…" required autocomplete="off"><span class="fm-field-hint">We time access to this link; your original Google Form and its own response settings stay unchanged.</span></div>
           </div>
           <div class="fm-wizard-section">
             <div class="fm-field-row">
@@ -468,7 +453,7 @@
       <div id="fm-detail-view" hidden>
         <div class="view-head"><div><button class="fm-back-btn" type="button" id="fm-detail-back">← Back to forms</button><h1 id="fm-detail-title">Form</h1></div><div class="fm-detail-head-actions"><button class="btn soft" type="button" id="fm-detail-edit">Edit</button><button class="btn fm-btn-danger" type="button" id="fm-detail-delete">Delete</button></div></div>
         <div class="fm-detail"><div class="card fm-detail-main">
-          <div class="fm-stats-row"><div class="fm-stat-tile"><div class="fm-stat-num" id="fm-detail-access">—</div><div class="fm-stat-label">Accesses</div></div><div class="fm-stat-tile fm-stat-status"><div id="fm-detail-status-chip" class="fm-status-chip chip-draft">—</div><div class="fm-stat-label">Status</div></div></div>
+          <div class="fm-stats-row"><div class="fm-stat-tile"><div class="fm-stat-num" id="fm-detail-access">—</div><div class="fm-stat-label">Link views</div></div><div class="fm-stat-tile fm-stat-status"><div id="fm-detail-status-chip" class="fm-status-chip chip-draft">—</div><div class="fm-stat-label">Status</div></div></div>
           <div class="fm-detail-row"><span class="fm-detail-row-label">Public link</span><div class="fm-detail-link-group"><code class="fm-detail-link" id="fm-detail-link-text"></code><button class="fm-copy-btn" type="button" id="fm-detail-copy">Copy link</button></div></div>
           <div class="fm-detail-row"><span class="fm-detail-row-label">Opens</span><span class="fm-detail-row-val" id="fm-detail-open">—</span></div>
           <div class="fm-detail-row"><span class="fm-detail-row-label">Closes</span><span class="fm-detail-row-val" id="fm-detail-close">—</span></div>
@@ -480,7 +465,7 @@
 
     <!-- ── Webhook Scheduler view ─────────────────────────────────────────── -->
     <section class="view" data-view="scheduler" hidden>
-      <div class="view-head sc-view-head"><div><h1>Webhook Scheduler</h1><p class="view-sub">Fire any HTTP request on a schedule — no server needed.</p></div><button class="btn sc-new-top-btn" id="sc-new-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>New job</button></div>
+      <div class="view-head sc-view-head"><div><h1>Webhook Scheduler</h1><p class="view-sub">Hosted scheduling for HTTPS requests, with a record of every run.</p></div><button class="btn sc-new-top-btn" id="sc-new-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>New job</button></div>
       <div id="sc-usage-wrap" class="sc-usage-outer"></div>
       <div id="sc-subview-list">
         <div id="sc-list" class="sc-grid"></div>

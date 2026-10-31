@@ -1,5 +1,5 @@
 /**
- * forms-module.js — Forms Enforcer module for the account dashboard.
+ * forms-module.js — Timed Forms module for the account dashboard.
  *
  * Loaded by account.html after app.js. Depends on:
  *   api(path, opts)  — authenticated fetch helper from app.js
@@ -13,7 +13,12 @@ window.formsModule = (function () {
 
   let _initialised = false;
   let _forms = [];
+  let _usage = null;
   let _editingId = null;  // null = create, string = editing existing form
+  const FORM_PUBLIC_ORIGIN = (() => {
+    try { return new URL(ACCOUNT.API_URL).origin; }
+    catch { return 'https://api.submitlater.co.in'; }
+  })();
 
   // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -21,17 +26,55 @@ window.formsModule = (function () {
     return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  function fmtDate(iso) {
+  function fmtDate(iso, timezone = 'UTC') {
     if (!iso) return '—';
-    return new Date(iso).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+    try {
+      return new Date(iso).toLocaleString('en-US', { timeZone: timezone, dateStyle: 'medium', timeStyle: 'short' });
+    } catch {
+      return new Date(iso).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+    }
   }
 
-  function fmtDateLocal(iso) {
+  function wallParts(date, timezone) {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(date);
+    return Object.fromEntries(parts.filter(p => p.type !== 'literal').map(p => [p.type, Number(p.value)]));
+  }
+
+  function fmtDateLocal(iso, timezone) {
     if (!iso) return '';
-    // Convert ISO to local datetime-local input format
     const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    const p = wallParts(d, timezone || 'UTC');
     const pad = n => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    return `${p.year}-${pad(p.month)}-${pad(p.day)}T${pad(p.hour)}:${pad(p.minute)}`;
+  }
+
+  // Convert a datetime-local value in the selected IANA timezone to an instant.
+  function zonedLocalToIso(value, timezone) {
+    if (!value) return null;
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+    if (!match) throw new Error('Enter a valid date and time.');
+    const desired = Date.UTC(+match[1], +match[2] - 1, +match[3], +match[4], +match[5], 0);
+    let instant = desired;
+    for (let i = 0; i < 4; i++) {
+      const p = wallParts(new Date(instant), timezone);
+      const shownAsUtc = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second || 0);
+      const next = desired - (shownAsUtc - instant);
+      if (next === instant) break;
+      instant = next;
+    }
+    const result = new Date(instant);
+    const p = wallParts(result, timezone);
+    const expected = match.slice(1).map(Number);
+    if ([p.year, p.month, p.day, p.hour, p.minute].some((n, i) => n !== expected[i])) {
+      throw new Error('That local time does not exist in the selected timezone. Choose another time.');
+    }
+    return result.toISOString();
   }
 
   function formStatus(f) {
@@ -40,12 +83,12 @@ window.formsModule = (function () {
     const open = f.openAt ? new Date(f.openAt).getTime() : null;
     const close = f.closeAt ? new Date(f.closeAt).getTime() : null;
     if (open && now < open) return { key: 'upcoming', label: 'Upcoming' };
-    if (close && now > close) return { key: 'closed', label: 'Closed' };
+    if (close && now >= close) return { key: 'closed', label: 'Closed' };
     return { key: 'open', label: 'Open' };
   }
 
   function publicLink(code) {
-    return `https://submitlater.co.in/f/${code}`;
+    return `${FORM_PUBLIC_ORIGIN}/f/${encodeURIComponent(code)}`;
   }
 
   function showSub(name) {
@@ -69,11 +112,20 @@ window.formsModule = (function () {
     try {
       data = await api('/forms');
     } catch (e) {
+      if (listEl) listEl.innerHTML = `<div class="fm-loading">${esc(e.message || 'Could not load your forms.')}</div>`;
       toast('Could not load forms: ' + e.message);
       return;
     }
 
     _forms = data.forms || [];
+    _usage = data.usage || null;
+    const usageEl = $('fm-usage');
+    if (usageEl && _usage) usageEl.textContent = `${_usage.used} of ${_usage.limit} links used`;
+    const newBtn = $('fm-new-btn');
+    if (newBtn && _usage) {
+      newBtn.disabled = _usage.used >= _usage.limit;
+      newBtn.title = newBtn.disabled ? 'Your Timed Forms limit is reached. Delete a link or choose a plan.' : '';
+    }
     _renderList();
   }
 
@@ -100,7 +152,7 @@ window.formsModule = (function () {
       if (delBtn) delBtn.addEventListener('click', e => { e.stopPropagation(); _deleteForm(f._id); });
       if (copyBtn) copyBtn.addEventListener('click', e => {
         e.stopPropagation();
-        _copyLink(publicLink(f.code), copyBtn);
+        _copyLink(publicLink(f.shortCode), copyBtn);
       });
     });
 
@@ -112,28 +164,29 @@ window.formsModule = (function () {
 
   function _formCard(f) {
     const s = formStatus(f);
-    const link = publicLink(f.code);
+    const link = publicLink(f.shortCode);
+    const linkLabel = link.replace(/^https?:\/\//, '');
     return `
       <div class="fm-card" data-id="${esc(f._id)}">
         <div class="fm-card-main">
           <div class="fm-card-head">
-            <span class="fm-title">${esc(f.title)}</span>
+            <span class="fm-title">${esc(f.name)}</span>
             <span class="fm-status-chip chip-${s.key}">${esc(s.label)}</span>
           </div>
           <div class="fm-card-url">
-            <code>submitlater.co.in/f/${esc(f.code)}</code>
+            <code>${esc(linkLabel)}</code>
             <button class="fm-copy-btn" id="fm-copy-${esc(f._id)}" title="Copy link" type="button">Copy</button>
           </div>
           <div class="fm-card-times">
-            ${f.openAt ? `Opens ${fmtDate(f.openAt)}` : 'No open time'} &rarr;
-            ${f.closeAt ? `Closes ${fmtDate(f.closeAt)}` : 'No close time'}
+            ${f.openAt ? `Opens ${fmtDate(f.openAt, f.timezone)}` : 'Available immediately'} &rarr;
+            ${f.closeAt ? `Closes ${fmtDate(f.closeAt, f.timezone)}` : 'No closing time'}
           </div>
           <div class="fm-card-access">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <circle cx="6" cy="5" r="2" stroke="currentColor" stroke-width="1.2"/>
               <path d="M1 10c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
             </svg>
-            ${f.accessCount ?? 0} accesses
+            ${f.stats?.views ?? 0} link views
           </div>
         </div>
         <div class="fm-card-actions">
@@ -155,11 +208,11 @@ window.formsModule = (function () {
       if (!f) return;
       if (titleEl) titleEl.textContent = 'Edit gated form';
       if (submitEl) submitEl.textContent = 'Save changes';
-      if ($('fm-c-title')) $('fm-c-title').value = f.title || '';
+      if ($('fm-c-title')) $('fm-c-title').value = f.name || '';
       if ($('fm-c-url')) $('fm-c-url').value = f.googleFormUrl || '';
-      if ($('fm-c-open')) $('fm-c-open').value = fmtDateLocal(f.openAt);
-      if ($('fm-c-close')) $('fm-c-close').value = fmtDateLocal(f.closeAt);
       if ($('fm-c-tz')) $('fm-c-tz').value = f.timezone || 'Asia/Kolkata';
+      if ($('fm-c-open')) $('fm-c-open').value = fmtDateLocal(f.openAt, f.timezone);
+      if ($('fm-c-close')) $('fm-c-close').value = fmtDateLocal(f.closeAt, f.timezone);
     } else {
       if (titleEl) titleEl.textContent = 'New gated form';
       if (submitEl) submitEl.textContent = 'Create form';
@@ -185,7 +238,7 @@ window.formsModule = (function () {
   }
 
   async function _saveForm() {
-    const title = ($('fm-c-title')?.value || '').trim();
+    const name = ($('fm-c-title')?.value || '').trim();
     const googleFormUrl = ($('fm-c-url')?.value || '').trim();
     const openVal = $('fm-c-open')?.value;
     const closeVal = $('fm-c-close')?.value;
@@ -193,21 +246,31 @@ window.formsModule = (function () {
 
     _clearWizardError();
 
-    if (!title) { _showWizardError('Enter a name for this form.'); return; }
-    if (!googleFormUrl || !googleFormUrl.includes('docs.google.com/forms')) {
-      _showWizardError('Paste a valid Google Forms URL (docs.google.com/forms/…)');
+    if (!name) { _showWizardError('Enter a name for this form.'); return; }
+    if (!/^https:\/\/(?:docs\.google\.com\/forms\/d\/(?:e\/)?[\w-]+(?:\/|$)|forms\.gle\/[\w-]+(?:[/?#]|$))/i.test(googleFormUrl)) {
+      _showWizardError('Paste a valid Google Forms URL (docs.google.com/forms/… or forms.gle/…)');
       return;
     }
-    if (openVal && closeVal && new Date(openVal) >= new Date(closeVal)) {
+
+    let openAt;
+    let closeAt;
+    try {
+      openAt = zonedLocalToIso(openVal, timezone);
+      closeAt = zonedLocalToIso(closeVal, timezone);
+    } catch (e) {
+      _showWizardError(e.message || 'Check the dates and timezone.');
+      return;
+    }
+    if (openAt && closeAt && new Date(openAt) >= new Date(closeAt)) {
       _showWizardError('Close time must be after open time.');
       return;
     }
 
     const body = {
-      title,
+      name,
       googleFormUrl,
-      openAt: openVal ? new Date(openVal).toISOString() : null,
-      closeAt: closeVal ? new Date(closeVal).toISOString() : null,
+      openAt,
+      closeAt,
       timezone,
     };
 
@@ -241,19 +304,19 @@ window.formsModule = (function () {
     if (!f) return;
 
     const s = formStatus(f);
-    const link = publicLink(f.code);
+    const link = publicLink(f.shortCode);
 
-    _setDetail('fm-detail-title', f.title);
+    _setDetail('fm-detail-title', f.name);
     _setDetail('fm-detail-status-label', s.label);
 
     const chip = $('fm-detail-status-chip');
     if (chip) chip.className = `fm-status-chip chip-${s.key}`;
 
     _setDetail('fm-detail-link-text', link);
-    _setDetail('fm-detail-open', f.openAt ? fmtDate(f.openAt) : '—');
-    _setDetail('fm-detail-close', f.closeAt ? fmtDate(f.closeAt) : '—');
+    _setDetail('fm-detail-open', f.openAt ? fmtDate(f.openAt, f.timezone) : 'Available immediately');
+    _setDetail('fm-detail-close', f.closeAt ? fmtDate(f.closeAt, f.timezone) : 'No closing time');
     _setDetail('fm-detail-tz', f.timezone || 'UTC');
-    _setDetail('fm-detail-access', String(f.accessCount ?? 0));
+    _setDetail('fm-detail-access', String(f.stats?.views ?? 0));
 
     const gLink = $('fm-detail-gform');
     if (gLink) { gLink.href = f.googleFormUrl; }
@@ -279,7 +342,7 @@ window.formsModule = (function () {
 
   async function _deleteForm(id) {
     const f = _forms.find(x => x._id === id);
-    if (!confirm(`Delete "${f?.title || 'this form'}"? The public link will stop working.`)) return;
+    if (!confirm(`Delete "${f?.name || 'this form'}"? The public link will stop working.`)) return;
     try {
       await api(`/forms/${id}`, { method: 'DELETE' });
       _forms = _forms.filter(x => x._id !== id);

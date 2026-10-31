@@ -8,7 +8,7 @@
   <div class="view-head sc-view-head">
     <div>
       <h1>Webhook Scheduler</h1>
-      <p class="view-sub">Fire any HTTP request on a schedule — no server needed.</p>
+      <p class="view-sub">Send HTTPS requests once or on a recurring schedule, with every result recorded.</p>
     </div>
     <button class="btn sc-new-top-btn" id="sc-new-btn">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -38,7 +38,7 @@
         </svg>
       </div>
       <h3>No jobs yet</h3>
-      <p>Schedule any HTTP webhook — a cron endpoint, a Slack message, a database backup. It fires at the exact time you set, and every run is logged.</p>
+      <p>Trigger an automation endpoint, publish a scheduled update or call a maintenance hook. Submit Later records the response from every run.</p>
       <button class="btn sc-new-top-btn" onclick="schedulerModule.showCreate()">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
@@ -288,8 +288,8 @@
       <!-- ── Pane 3: Done ─────────────────────────────────────────────────── -->
       <div id="sc-wiz-pane-3" class="sc-wiz-pane sc-wiz-done" hidden>
         <div class="sc-done-icon" aria-hidden="true">✓</div>
-        <h2>Job created!</h2>
-        <p>Your job has been scheduled. Every run is logged automatically.</p>
+        <h2>Your webhook is scheduled</h2>
+        <p>You can follow each request from the execution history.</p>
         <div class="sc-done-card" id="sc-done-card"></div>
         <div class="sc-done-actions">
           <button class="btn sc-new-top-btn" onclick="schedulerModule._goToNewJob()">View job →</button>

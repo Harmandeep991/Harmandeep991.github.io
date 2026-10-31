@@ -2,13 +2,10 @@
 (function () {
   'use strict';
 
-  // ── Hero fire counter animation ──
-  let fireCount = 3847;
-  const fireEl = document.getElementById('fire-count');
-  setInterval(() => {
-    fireCount += Math.floor(Math.random() * 3) + 1;
-    if (fireEl) fireEl.textContent = fireCount.toLocaleString();
-  }, 4000);
+  const API_URL = 'https://api.submitlater.co.in';
+  const money = new Intl.NumberFormat('en-IN', {
+    style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 2,
+  });
 
   // ── Hero dash mock animation ──
   // Simulates: job firing → log row updates → done
@@ -53,12 +50,91 @@
   setInterval(animateFire, 7000);
 
   // ── Annual toggle ──
+  let schedulerPlans = null;
   window.toggleAnnual = function (checkbox) {
+    let annual = !!checkbox.checked;
+    if (schedulerPlans) {
+      const wanted = annual ? schedulerPlans.annual : schedulerPlans.monthly;
+      const other = annual ? schedulerPlans.monthly : schedulerPlans.annual;
+      if (wanted?.active === false && other?.active !== false) {
+        annual = !annual;
+        checkbox.checked = annual;
+      }
+    }
     const amounts = document.querySelectorAll('.plan-amt[data-monthly]');
     amounts.forEach(el => {
-      el.textContent = checkbox.checked ? el.dataset.annual : el.dataset.monthly;
+      const selected = schedulerPlans && (annual ? schedulerPlans.annual : schedulerPlans.monthly);
+      el.textContent = selected?.active === false ? 'Unavailable' : annual ? el.dataset.annual : el.dataset.monthly;
     });
+    document.querySelectorAll('.plan-per[data-monthly]').forEach(el => {
+      const selected = schedulerPlans && (annual ? schedulerPlans.annual : schedulerPlans.monthly);
+      el.textContent = selected?.active === false ? '' : annual ? el.dataset.annual : el.dataset.monthly;
+    });
+    const cta = document.getElementById('scheduler-plan-cta');
+    const selected = schedulerPlans && (annual ? schedulerPlans.annual : schedulerPlans.monthly);
+    if (!cta) return;
+    if (selected?.active === false) {
+      cta.removeAttribute('href');
+      cta.setAttribute('aria-disabled', 'true');
+      cta.textContent = 'Scheduler purchases unavailable';
+      return;
+    }
+    let signedIn = false;
+    try { signedIn = !!JSON.parse(localStorage.getItem('sl-session'))?.refreshToken; } catch {}
+    const planId = annual ? 'scheduler-annual' : 'scheduler-monthly';
+    cta.href = `${signedIn ? '/account.html?buy=' : '/signup.html?plan='}${planId}`;
+    cta.removeAttribute('aria-disabled');
+    cta.textContent = 'Choose Scheduler Pro';
   };
+
+  // Prices are administered by the same catalogue used for checkout. The
+  // HTML values remain useful fallbacks if the API is temporarily unavailable.
+  fetch(API_URL + '/plans', { headers: { Accept: 'application/json' } })
+    .then(response => response.ok ? response.json() : Promise.reject(new Error('catalog unavailable')))
+    .then(catalog => {
+      const monthly = catalog.plans?.find(plan => plan.id === 'scheduler-monthly');
+      const annual = catalog.plans?.find(plan => plan.id === 'scheduler-annual');
+      const amount = document.querySelector('.plan-amt[data-monthly]');
+      if (!monthly || !annual || !amount) return;
+      schedulerPlans = { monthly, annual };
+      amount.dataset.monthly = money.format(monthly.amount);
+      amount.dataset.annual = money.format(annual.amount);
+      const saving = document.getElementById('scheduler-plan-saving');
+      const savedAmount = monthly.active !== false && annual.active !== false
+        ? Math.max(0, monthly.amount * 12 - annual.amount)
+        : 0;
+      if (saving) {
+        saving.textContent = savedAmount
+          ? `Save ${money.format(savedAmount)}`
+          : annual.active === false ? 'Not offered' : 'Annual billing';
+      }
+      window.toggleAnnual(document.getElementById('annual-toggle'));
+
+      const note = document.getElementById('scheduler-pricing-note');
+      if (note) {
+        const offers = [monthly, annual]
+          .filter(plan => plan.active !== false)
+          .map(plan => `${plan.interval === 'annual' ? 'Annual' : 'Monthly'} access is ${money.format(plan.amount)} for ${plan.days} days`);
+        note.textContent = offers.length
+          ? `Prices are in INR. ${offers.join('; ')}. Plans do not renew automatically.`
+          : 'Webhook Scheduler purchases are temporarily unavailable. Existing access is unchanged.';
+      }
+
+      const schema = document.getElementById('scheduler-schema');
+      if (schema) {
+        try {
+          const data = JSON.parse(schema.textContent);
+          data.offers = [
+            { '@type': 'Offer', price: '0', priceCurrency: 'INR', name: 'Free' },
+            ...[monthly, annual]
+              .filter(plan => plan.active !== false)
+              .map(plan => ({ '@type': 'Offer', price: String(plan.amount), priceCurrency: catalog.currency || 'INR', name: plan.name })),
+          ];
+          schema.textContent = JSON.stringify(data);
+        } catch {}
+      }
+    })
+    .catch(() => {});
 
   // ── Smooth scroll ──
   document.querySelectorAll('a[href^="#"]').forEach(a => {
