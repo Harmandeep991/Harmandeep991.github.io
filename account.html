@@ -117,23 +117,43 @@
         <p>Choose a tool to open, or manage your account below.</p>
       </div>
 
+      <!-- KPI tiles: populated by app.js -->
+      <div class="hub-kpi" id="hub-kpi">
+        <div class="hub-kpi-tile">
+          <span class="hub-kpi-ic" id="hub-kpi-ext-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4a2 2 0 1 1 4 0v2h4v4h-2a2 2 0 1 0 0 4h2v4h-4v-2a2 2 0 1 0-4 0v2H6v-4H4a2 2 0 1 1 0-4h2V6h4z"/></svg></span>
+          <div class="hub-kpi-body"><div class="hub-kpi-val" id="hub-kpi-ext-val">–</div><div class="hub-kpi-lbl">Extension status</div></div>
+        </div>
+        <div class="hub-kpi-tile">
+          <span class="hub-kpi-ic" id="hub-kpi-forms-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span>
+          <div class="hub-kpi-body"><div class="hub-kpi-val" id="hub-kpi-forms-val">–</div><div class="hub-kpi-lbl">Timed forms</div></div>
+        </div>
+        <div class="hub-kpi-tile">
+          <span class="hub-kpi-ic" id="hub-kpi-jobs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div class="hub-kpi-body"><div class="hub-kpi-val" id="hub-kpi-jobs-val">–</div><div class="hub-kpi-lbl">Scheduled jobs</div></div>
+        </div>
+      </div>
+
       <div class="hub-cards">
 
         <a class="hub-card" href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=account" target="_blank" rel="noopener">
-          <div class="hc-icon hc-ext">⏰</div>
+          <div class="hc-icon-svg hc-ext-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
           <div class="hc-body">
             <div class="hc-tag">Chrome Extension</div>
             <h2>Button Scheduler</h2>
             <p>Press any button on any website at the exact time you choose — emails, forms, meetings, WhatsApp.</p>
             <div class="hc-links">
-              <span class="btn sm soft" onclick="event.preventDefault(); document.querySelector('[data-view=extension]').closest('.dash-main') && (location.hash='#extension')">Manage extension ↗</span>
+              <span class="btn sm soft" onclick="event.preventDefault(); location.hash='#extension'">Manage extension ↗</span>
             </div>
           </div>
           <svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
 
         <a class="hub-card" href="#forms" onclick="event.preventDefault(); location.hash='#forms'">
-          <div class="hc-icon hc-forms">📋</div>
+          <div class="hc-icon-svg hc-forms-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+          </div>
           <div class="hc-body">
             <div class="hc-tag hc-tag-new">New · Server-side</div>
             <h2>Timed Forms</h2>
@@ -143,7 +163,9 @@
         </a>
 
         <a class="hub-card" href="#scheduler" onclick="event.preventDefault(); location.hash='#scheduler'">
-          <div class="hc-icon hc-sched">🔁</div>
+          <div class="hc-icon-svg hc-sched-svg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10l6 3"/><circle cx="12" cy="12" r="10"/></svg>
+          </div>
           <div class="hc-body">
             <div class="hc-tag hc-tag-new">New · Server-side</div>
             <h2>Webhook Scheduler</h2>
