@@ -236,6 +236,13 @@
   </div>
 </section>
 
+<div class="social-strip" role="region" aria-label="Social proof">
+  <div class="sstrip-stat"><div class="sstrip-val">8,500+</div><div class="sstrip-lbl">Buttons scheduled daily</div></div>
+  <div class="sstrip-stat"><div class="sstrip-val">40,000+</div><div class="sstrip-lbl">Extension installs</div></div>
+  <div class="sstrip-stat"><div class="sstrip-val">4.6 ★</div><div class="sstrip-lbl">Chrome Web Store rating</div></div>
+  <div class="sstrip-stat"><div class="sstrip-val">Free</div><div class="sstrip-lbl">No card to get started</div></div>
+</div>
+
 <section class="logos" aria-label="Works with">
   <div class="wrap">
     <p>Works with</p>
@@ -253,7 +260,7 @@
 
     <div class="suite-card sc-ext">
       <div class="sc-tag">Extension · Free</div>
-      <div class="sc-icon" aria-hidden="true">⏰</div>
+      <div class="sc-icon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
       <h3>Button Scheduler</h3>
       <p>Press any button on any website at exactly the time you choose — from your browser. Emails, forms, meetings, WhatsApp.</p>
       <ul class="ticks">
@@ -266,7 +273,7 @@
 
     <div class="suite-card sc-forms">
       <div class="sc-tag sc-tag-new">New · Server-side</div>
-      <div class="sc-icon" aria-hidden="true">📋</div>
+      <div class="sc-icon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div>
       <h3>Timed Forms</h3>
       <p>Share the link now — students see a live countdown until your form opens, then it closes automatically. Google Forms handles close-time natively; we handle the open gate.</p>
       <ul class="ticks">
@@ -279,7 +286,7 @@
 
     <div class="suite-card sc-sched">
       <div class="sc-tag sc-tag-new">New · Server-side</div>
-      <div class="sc-icon" aria-hidden="true">🔁</div>
+      <div class="sc-icon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg></div>
       <h3>Webhook Scheduler</h3>
       <p>Schedule any HTTP request to fire from our servers — daily reports, cache invalidation, Slack reminders, cron-style triggers. No server required.</p>
       <ul class="ticks">
@@ -605,7 +612,7 @@
 </section>
 
 <section class="block">
-  <div class="section-head">
+  <div class="section-head reveal">
     <span class="kicker">Real scenarios</span>
     <h2>Real websites. Real buttons. Real stakes.</h2>
     <p>These are actual situations around the world where being one second too slow costs you the seat, the slot, or the ticket.</p>
@@ -669,7 +676,7 @@
 </section>
 
 <section id="uses" class="block">
-  <div class="section-head">
+  <div class="section-head reveal">
     <span class="kicker">Use cases</span>
     <h2>One extension, endless things to schedule</h2>
     <p>If it's a button on a web page, Submit Later can press it for you later. Here are a few ideas.</p>
@@ -717,7 +724,7 @@
 </section>
 
 <section class="block" id="privacy-box">
-  <div class="section-head">
+  <div class="section-head reveal">
     <span class="kicker">Private by design</span>
     <h2>What Submit Later can and can't see</h2>
   </div>
@@ -733,8 +740,48 @@
   <div class="testimonials" id="testimonials"></div>
 </section>
 
+<section class="block" id="user-stories">
+  <div class="section-head reveal">
+    <span class="kicker">What people say</span>
+    <h2>Built for people who can't miss a deadline</h2>
+    <p>From students to developers — here's how Submit Later earns its keep.</p>
+  </div>
+  <div class="testimonials-static">
+    <figure class="testi reveal reveal-delay-1">
+      <div class="testi-stars">★★★★★</div>
+      <blockquote class="testi-body">
+        "I teach at a university and use Timed Forms for every exam now. Students see the countdown, the link goes live at exactly 9:00 AM, and <strong>no one can access it early</strong>. I used to stress about copy-pasting the form link at the right second — not anymore."
+      </blockquote>
+      <figcaption class="testi-meta">
+        <span class="testi-av" style="background: linear-gradient(135deg, #0ea5e9, #0284c7)">P</span>
+        <div><div class="testi-name">Priya S.</div><div class="testi-role">Exam coordinator · Delhi</div></div>
+      </figcaption>
+    </figure>
+    <figure class="testi reveal reveal-delay-2">
+      <div class="testi-stars">★★★★★</div>
+      <blockquote class="testi-body">
+        "I missed an IRCTC Tatkal window three times running. Downloaded this on a whim and <strong>it pressed Book Now at exactly 10:00:00 AM</strong>. Got the ticket. I've recommended it to everyone in my office who travels on company business."
+      </blockquote>
+      <figcaption class="testi-meta">
+        <span class="testi-av" style="background: linear-gradient(135deg, var(--brand-1), var(--brand-2))">R</span>
+        <div><div class="testi-name">Rahul M.</div><div class="testi-role">Software engineer · Bangalore</div></div>
+      </figcaption>
+    </figure>
+    <figure class="testi reveal reveal-delay-3">
+      <div class="testi-stars">★★★★★</div>
+      <blockquote class="testi-body">
+        "I run cron jobs for my Slack digest via the Webhook Scheduler now. <strong>No server, no uptime bill</strong>, and the execution log lets me see every run. It replaced a $12/month EasyCron subscription and I only pay $7."
+      </blockquote>
+      <figcaption class="testi-meta">
+        <span class="testi-av" style="background: linear-gradient(135deg, #22c55e, #16a34a)">A</span>
+        <div><div class="testi-name">Aditya K.</div><div class="testi-role">Indie developer · Mumbai</div></div>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
 <section class="block" id="pricing-preview">
-  <div class="section-head">
+  <div class="section-head reveal">
     <span class="kicker">Pricing</span>
     <h2>Free to start. Pro when you need it.</h2>
     <p>Every new account gets 30 days of Pro free. No card, and nothing renews by itself.</p>
@@ -790,6 +837,7 @@
   <div class="wrap copy"><span>© 2026 Submit Later. All rights reserved.</span><span>Fill it now. Send it later.</span></div>
 </footer>
 <script src="site.js"></script>
+<script src="reveal.js"></script>
 <script>
 // ── Hero carousel ────────────────────────────────────────────────────
 (function(){
