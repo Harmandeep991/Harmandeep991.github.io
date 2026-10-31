@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SubmitLater Scheduler — HTTP cron-as-a-service</title>
-  <meta name="description" content="Schedule any HTTP request to fire at any time. One-time or recurring. Logs, retries, failure alerts. No server required.">
+  <title>Webhook Scheduler for HTTPS Requests | Submit Later</title>
+  <meta name="description" content="Schedule one-time or recurring HTTPS webhooks without running a cron server. Configure methods, headers and bodies, then review every execution.">
+  <link rel="canonical" href="https://submitlater.co.in/scheduler/">
+  <meta property="og:title" content="Submit Later Webhook Scheduler">
+  <meta property="og:description" content="Schedule HTTPS requests, inspect execution logs and receive an email after repeated failures.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://submitlater.co.in/scheduler/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json" id="scheduler-schema">
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later Webhook Scheduler","applicationCategory":"DeveloperApplication","operatingSystem":"Web","description":"A hosted scheduler for one-time and recurring HTTPS webhook requests.","offers":[{"@type":"Offer","price":"0","priceCurrency":"INR","name":"Free"},{"@type":"Offer","price":"149","priceCurrency":"INR","name":"Monthly"}]}
+  </script>
 </head>
 <body>
 
@@ -20,7 +28,7 @@
         <circle cx="14" cy="14" r="5" stroke="white" stroke-width="2"/>
         <path d="M14 9V14l3 3" stroke="white" stroke-width="2" stroke-linecap="round"/>
       </svg>
-      <span>SubmitLater <strong>Scheduler</strong></span>
+      <span>Submit Later <strong>Webhook Scheduler</strong></span>
     </a>
     <nav class="nav-links">
       <a href="#how">How it works</a>
@@ -44,21 +52,21 @@
   <div class="hero-content">
     <div class="hero-badge">
       <span class="badge-dot"></span>
-      <span id="fire-count">3,847</span> requests fired today
+      Hosted webhook scheduling with execution logs
     </div>
     <h1 class="hero-headline">
-      Schedule any HTTP<br>
-      request. <span class="gradient-text">It fires.</span>
+      Schedule webhooks.<br>
+      <span class="gradient-text">Skip the cron server.</span>
     </h1>
     <p class="hero-sub">
-      Point it at any URL. Set a time or a repeat interval. We fire the request on our servers — on time, every time — and log the result. No cron jobs. No server. No ops.
+      Send a GET, POST, PUT, PATCH or DELETE request to a public HTTPS endpoint. Choose a date, a daily or weekly time, or an interval. Submit Later runs it server-side and records the result.
     </p>
     <div class="hero-ctas">
       <a href="/scheduler/app/?signup=1" class="btn-primary btn-lg">
-        Schedule your first request — free
+        Create your first webhook job
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
-      <span class="hero-trust">Free plan · No credit card · Upgrade anytime</span>
+      <span class="hero-trust">Start free · 5 saved jobs · No credit card</span>
     </div>
     <div class="hero-platforms">
       <span class="hp-label">Works with</span>
@@ -68,7 +76,7 @@
       <span class="hp-chip">Webflow</span>
       <span class="hp-chip">Make</span>
       <span class="hp-chip">Zapier</span>
-      <span class="hp-chip">any URL</span>
+      <span class="hp-chip">Public HTTPS APIs</span>
     </div>
   </div>
   <div class="hero-visual">
@@ -76,7 +84,7 @@
     <div class="dash-mock">
       <div class="dm-winbar">
         <span class="dm-dots"><i></i><i></i><i></i></span>
-        <span class="dm-title">SubmitLater Scheduler</span>
+        <span class="dm-title">Submit Later Webhook Scheduler</span>
         <span class="dm-status" id="dm-status">● Firing now</span>
       </div>
       <div class="dm-body">
@@ -106,7 +114,7 @@
             <span class="dmj-url">api.stripe.com/v1/invoices/pay</span>
           </div>
           <div class="dmj-right">
-            <span class="dmj-repeat">1st of month</span>
+            <span class="dmj-repeat">Every 7 days</span>
             <span class="dmj-status dmj-ok">✓ 200</span>
           </div>
         </div>
@@ -133,13 +141,13 @@
 <!-- STATS -->
 <div class="stats-bar">
   <div class="stats-inner">
-    <div class="stat-item"><span class="stat-num">2M+</span><span class="stat-label">requests fired</span></div>
+    <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">schedule types</span></div>
     <div class="stat-div"></div>
-    <div class="stat-item"><span class="stat-num">99.97%</span><span class="stat-label">on-time rate</span></div>
+    <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">HTTP methods</span></div>
     <div class="stat-div"></div>
-    <div class="stat-item"><span class="stat-num">&lt; 2s</span><span class="stat-label">avg firing latency</span></div>
+    <div class="stat-item"><span class="stat-num">30s</span><span class="stat-label">request timeout</span></div>
     <div class="stat-div"></div>
-    <div class="stat-item"><span class="stat-num">30s</span><span class="stat-label">retry on failure</span></div>
+    <div class="stat-item"><span class="stat-num">1 KB</span><span class="stat-label">response preview</span></div>
   </div>
 </div>
 
@@ -147,28 +155,28 @@
 <section class="pain">
   <div class="section-inner">
     <div class="section-label">The problem</div>
-    <h2>Your hosting doesn't have cron.<br>Running your own is overkill.</h2>
-    <p class="section-sub">Vercel, Netlify, Railway, Render free tier — none of them have reliable built-in cron. Setting up a VPS just to run a cronjob costs $5–20/month and someone has to maintain it.</p>
+    <h2>Scheduled work should not require<br>another server to maintain.</h2>
+    <p class="section-sub">A webhook often needs only one thing: a dependable request at the time you choose. Submit Later gives that request a schedule, a history and a place to manage it.</p>
     <div class="pain-grid">
       <div class="pain-card">
         <div class="pain-icon">☁️</div>
-        <h3>Serverless has no cron</h3>
-        <p>Vercel's built-in cron requires a Pro plan ($20/mo). Netlify's needs a paid tier too. You're paying for deployment hosting, not a scheduler.</p>
+        <h3>Keep deployment separate</h3>
+        <p>Trigger a serverless function, automation workflow or maintenance endpoint without tying its schedule to a particular hosting provider.</p>
       </div>
       <div class="pain-card">
         <div class="pain-icon">🖥️</div>
-        <h3>A server just for cron is waste</h3>
-        <p>Running a $6/mo VPS to do <code>0 9 * * * curl https://…</code> once a day. Then monitoring it. Then fixing it when the server reboots.</p>
+        <h3>Remove the cron machine</h3>
+        <p>Replace a small VPS and a line of <code>curl</code> with a job you can pause, resume, test and inspect from one dashboard.</p>
       </div>
       <div class="pain-card">
         <div class="pain-icon">🔗</div>
-        <h3>No-code tools can't schedule URLs</h3>
-        <p>Bubble, Webflow, Glide — they all support webhooks but have no native scheduler. You end up using Zapier's Schedule trigger just to hit a URL.</p>
+        <h3>Connect no-code workflows</h3>
+        <p>Start a Bubble, Webflow, Make, Zapier or n8n workflow through the public webhook URL it already provides.</p>
       </div>
       <div class="pain-card">
         <div class="pain-icon">🔇</div>
-        <h3>"Did it actually fire?"</h3>
-        <p>curl in cron gives you nothing. No logs. No alert when it fails. No history. You find out a job stopped working when something breaks in production.</p>
+        <h3>See what happened</h3>
+        <p>Each attempt records its time, HTTP status, duration and a short response preview. Repeated failures trigger an email so they do not disappear silently.</p>
       </div>
     </div>
   </div>
@@ -178,13 +186,13 @@
 <section class="how" id="how">
   <div class="section-inner">
     <div class="section-label">How it works</div>
-    <h2>Add a job in 60 seconds.</h2>
+    <h2>From endpoint to scheduled job<br>in three short steps.</h2>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-body">
           <h3>Enter your URL</h3>
-          <p>Any HTTPS endpoint. GET, POST, PUT, DELETE. Add custom headers and a JSON body if you need them.</p>
+          <p>Choose GET, POST, PUT, PATCH or DELETE for a public HTTPS endpoint. Add the headers and request body your API expects.</p>
           <div class="step-visual">
             <div class="sv-code-row">
               <span class="svc-method svc-post">POST</span>
@@ -202,7 +210,7 @@
         <div class="step-num">2</div>
         <div class="step-body">
           <h3>Set the schedule</h3>
-          <p>One-time (a specific date and time), or recurring. Daily, weekly, monthly, or every N minutes/hours.</p>
+          <p>Run once at a local date and time, every day, every week, or at a minute, hour or day interval. The selected IANA timezone is respected.</p>
           <div class="step-visual sv-schedule">
             <div class="svs-row svs-active"><span class="svs-icon">◉</span> Every day at 9:00 AM IST</div>
             <div class="svs-row"><span class="svs-icon">○</span> Every Monday</div>
@@ -215,8 +223,8 @@
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-body">
-          <h3>Check the log — it fired</h3>
-          <p>Every execution is logged: timestamp, HTTP status, response body (first 1 KB), duration. If it fails 3 times in a row, you get an email.</p>
+          <h3>Read the execution record</h3>
+          <p>Review the timestamp, HTTP status, duration and first 1 KB of the response. After three consecutive scheduled failures, Submit Later emails the account owner.</p>
           <div class="step-visual sv-log">
             <div class="svl-row"><span class="svl-time">09:00:00.041</span><span class="svl-tag svl-ok">200</span><span class="svl-msg">cleanup → 200 · 187ms</span></div>
             <div class="svl-row"><span class="svl-time">08:00:00.038</span><span class="svl-tag svl-ok">200</span><span class="svl-msg">cleanup → 200 · 203ms</span></div>
@@ -232,37 +240,37 @@
 <section class="features" id="features">
   <div class="section-inner">
     <div class="section-label">Features</div>
-    <h2>Everything a reliable<br>scheduler needs.</h2>
+    <h2>The controls you need.<br>Nothing hidden behind jargon.</h2>
     <div class="feat-grid">
       <div class="feat-card feat-card-wide">
         <div class="fc-icon">📋</div>
-        <h3>Full execution logs</h3>
-        <p>Every run is logged with timestamp, HTTP status code, response body (first 1 KB) and duration. Filter by status, export to CSV. Know exactly what happened and when.</p>
+        <h3>Useful execution history</h3>
+        <p>Every attempt records its timestamp, HTTP status, duration, error and a bounded response preview. Filter the global log by job or outcome.</p>
       </div>
       <div class="feat-card">
-        <div class="fc-icon">🔁</div>
-        <h3>Auto-retry on failure</h3>
-        <p>Failed? We retry 1–5× with exponential backoff. Configurable on Starter and above.</p>
+        <div class="fc-icon">🗓️</div>
+        <h3>Timezone-aware schedules</h3>
+        <p>Daily and weekly jobs follow the timezone you select, including daylight-saving changes. Interval jobs can run from every minute to every 30 days.</p>
       </div>
       <div class="feat-card">
         <div class="fc-icon">🔔</div>
         <h3>Failure alerts</h3>
-        <p>3 consecutive failures → you get an email. Pause / resume jobs from the alert. No paging you for transient errors.</p>
+        <p>After three consecutive scheduled failures, the account owner receives one email with the job, endpoint and latest error.</p>
       </div>
       <div class="feat-card">
-        <div class="fc-icon">🔑</div>
-        <h3>Secret headers</h3>
-        <p>Store API keys and auth tokens securely. Reference them in request headers. They're encrypted at rest and never shown after save.</p>
+        <div class="fc-icon">{ }</div>
+        <h3>Complete request control</h3>
+        <p>Set the HTTP method, custom headers and a JSON or text body. Submit Later validates unsafe transport headers before saving the job.</p>
       </div>
       <div class="feat-card">
         <div class="fc-icon">⚡</div>
         <h3>Run now</h3>
-        <p>Test any job immediately from the dashboard. See the full response before your real schedule fires.</p>
+        <p>Send a test request from the dashboard without moving the job's next scheduled run. The result appears in the same execution history.</p>
       </div>
       <div class="feat-card">
-        <div class="fc-icon">👥</div>
-        <h3>Team access</h3>
-        <p>Invite teammates to view and manage jobs. Shared visibility, individual logins. On Teams plan.</p>
+        <div class="fc-icon">🛡️</div>
+        <h3>Public endpoints only</h3>
+        <p>Jobs require HTTPS. Private, loopback and link-local destinations are blocked, and response size and request duration are bounded.</p>
       </div>
     </div>
   </div>
@@ -294,9 +302,9 @@
       </div>
       <div class="uc-item">
         <span class="uci-method uci-post">POST</span>
-        <span class="uci-url">api.stripe.com/v1/invoices/finalize</span>
-        <span class="uci-desc">Finalize and send Stripe invoices on the 1st</span>
-        <span class="uci-repeat">Monthly</span>
+        <span class="uci-url">api.myapp.com/billing/reconcile</span>
+        <span class="uci-desc">Reconcile billing records every Monday morning</span>
+        <span class="uci-repeat">Weekly</span>
       </div>
       <div class="uc-item">
         <span class="uci-method uci-post">POST</span>
@@ -311,29 +319,27 @@
         <span class="uci-repeat">Weekly</span>
       </div>
     </div>
-    <p class="uc-note">Any HTTPS endpoint. Any method. Any body. Any header. That's it.</p>
+    <p class="uc-note">Use a scoped, revocable credential when an endpoint requires authentication.</p>
   </div>
 </section>
 
 <!-- COMPARE -->
 <section class="compare">
   <div class="section-inner">
-    <div class="section-label">Compare</div>
-    <h2>Cheaper than EasyCron.<br>Better logs. No ads.</h2>
+    <div class="section-label">Why use a hosted scheduler?</div>
+    <h2>Operate scheduled requests<br>without digging through a server.</h2>
     <div class="compare-table-wrap">
       <table class="compare-table">
         <thead>
-          <tr><th>Plan</th><th>EasyCron</th><th>cron-job.org</th><th class="ct-us">SubmitLater Scheduler</th></tr>
+          <tr><th>Capability</th><th>Shell cron</th><th>Workflow workaround</th><th class="ct-us">Submit Later</th></tr>
         </thead>
         <tbody>
-          <tr><td>Free tier</td><td>1 job, 20 runs/day</td><td>Unlimited (basic)</td><td class="ct-us">5 jobs, 200 runs/mo</td></tr>
-          <tr><td>Paid entry price</td><td>$9.99/mo</td><td>$4.99/mo</td><td class="ct-us"><strong>$9/mo</strong></td></tr>
-          <tr><td>Execution logs</td><td>7 days</td><td>7 days</td><td class="ct-us">30 days (Starter)</td></tr>
-          <tr><td>Retry on failure</td><td><span class="cno">✗</span></td><td><span class="cno">✗</span></td><td class="ct-us"><span class="cyes">✓</span></td></tr>
-          <tr><td>Failure alerts (email)</td><td><span class="cyes-partial">Paid only</span></td><td><span class="cno">✗</span></td><td class="ct-us"><span class="cyes">✓ All plans</span></td></tr>
-          <tr><td>Custom headers / auth</td><td><span class="cyes">✓</span></td><td><span class="cno">✗</span></td><td class="ct-us"><span class="cyes">✓</span></td></tr>
-          <tr><td>Team access</td><td><span class="cno">✗</span></td><td><span class="cno">✗</span></td><td class="ct-us"><span class="cyes">✓ Teams</span></td></tr>
-          <tr><td>No ads</td><td><span class="cno">✗</span></td><td><span class="cno">✗ (free tier has ads)</span></td><td class="ct-us"><span class="cyes">✓</span></td></tr>
+          <tr><td>Infrastructure</td><td>A running machine</td><td>Another automation</td><td class="ct-us">Hosted for you</td></tr>
+          <tr><td>Timezone schedules</td><td>Manual configuration</td><td>Depends on the tool</td><td class="ct-us">Built into each job</td></tr>
+          <tr><td>Headers and request body</td><td>Command-line setup</td><td>Extra workflow steps</td><td class="ct-us">Configured in one form</td></tr>
+          <tr><td>Execution history</td><td>Build your own logging</td><td>Split across runs</td><td class="ct-us">One searchable dashboard</td></tr>
+          <tr><td>Repeated-failure email</td><td>Build your own alert</td><td>Depends on the tool</td><td class="ct-us"><span class="cyes">Included</span></td></tr>
+          <tr><td>Pause or run now</td><td>Edit or run commands</td><td>Edit the workflow</td><td class="ct-us"><span class="cyes">One click</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -344,8 +350,8 @@
 <section class="pricing" id="pricing">
   <div class="section-inner">
     <div class="section-label">Pricing</div>
-    <h2>Less than a coffee.<br>More reliable than your cron.</h2>
-    <p class="section-sub">Start free. Pay only when you need more jobs or longer logs.</p>
+    <h2>Start with five jobs.<br>Upgrade when your workload grows.</h2>
+    <p class="section-sub">Webhook Scheduler is billed separately from the Chrome extension and Timed Forms, so you pay only for the product you use.</p>
 
     <div class="pricing-toggle">
       <span class="pt-label">Monthly</span>
@@ -353,83 +359,45 @@
         <input type="checkbox" id="annual-toggle" onchange="toggleAnnual(this)">
         <span class="pt-slider"></span>
       </label>
-      <span class="pt-label">Annual <span class="pt-save">Save 30%</span></span>
+      <span class="pt-label">Annual <span class="pt-save" id="scheduler-plan-saving">Save ₹589</span></span>
     </div>
 
     <div class="pricing-cards">
       <div class="plan-card">
         <div class="plan-name">Free</div>
-        <div class="plan-price"><span class="plan-amt">$0</span><span class="plan-per">/month</span></div>
-        <div class="plan-tagline">5 jobs. Try everything.</div>
+        <div class="plan-price"><span class="plan-amt">₹0</span><span class="plan-per">forever</span></div>
+        <div class="plan-tagline">For occasional automations and evaluation.</div>
         <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> 5 active jobs</li>
-          <li><span class="pf-yes">✓</span> 200 executions / month</li>
-          <li><span class="pf-yes">✓</span> 7-day log retention</li>
-          <li><span class="pf-yes">✓</span> Failure alerts (email)</li>
-          <li><span class="pf-no">–</span> Retry on failure</li>
-          <li><span class="pf-no">–</span> Secret headers</li>
+          <li><span class="pf-yes">✓</span> 5 saved jobs</li>
+          <li><span class="pf-yes">✓</span> 200 webhook runs each month</li>
+          <li><span class="pf-yes">✓</span> One-time and recurring schedules</li>
+          <li><span class="pf-yes">✓</span> Custom headers and request body</li>
+          <li><span class="pf-yes">✓</span> 90-day execution history</li>
+          <li><span class="pf-yes">✓</span> Repeated-failure email</li>
         </ul>
         <a href="/scheduler/app/?signup=1" class="plan-cta btn-ghost">Start free</a>
       </div>
 
       <div class="plan-card plan-card-featured">
-        <div class="plan-popular">Most popular</div>
-        <div class="plan-name">Starter</div>
+        <div class="plan-popular">More capacity</div>
+        <div class="plan-name">Webhook Scheduler Pro</div>
         <div class="plan-price">
-          <span class="plan-amt" data-monthly="$9" data-annual="$6">$9</span>
-          <span class="plan-per">/month</span>
+          <span class="plan-amt" data-monthly="₹149" data-annual="₹1,199">₹149</span>
+          <span class="plan-per" data-monthly="/30 days" data-annual="/365 days">/30 days</span>
         </div>
-        <div class="plan-tagline">For developers and side projects.</div>
+        <div class="plan-tagline">For production workflows and growing projects.</div>
         <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> 20 active jobs</li>
-          <li><span class="pf-yes">✓</span> 2,000 executions / month</li>
-          <li><span class="pf-yes">✓</span> 30-day log retention</li>
-          <li><span class="pf-yes">✓</span> Failure alerts (email)</li>
-          <li><span class="pf-yes">✓</span> <strong>Retry on failure (1×)</strong></li>
-          <li><span class="pf-yes">✓</span> <strong>Secret headers</strong></li>
+          <li><span class="pf-yes">✓</span> 20 saved jobs</li>
+          <li><span class="pf-yes">✓</span> 5,000 webhook runs each month</li>
+          <li><span class="pf-yes">✓</span> One-time and recurring schedules</li>
+          <li><span class="pf-yes">✓</span> Custom headers and request body</li>
+          <li><span class="pf-yes">✓</span> 90-day execution history</li>
+          <li><span class="pf-yes">✓</span> Repeated-failure email</li>
         </ul>
-        <a href="/scheduler/app/?signup=1&plan=starter" class="plan-cta btn-primary">Get Starter</a>
-      </div>
-
-      <div class="plan-card">
-        <div class="plan-name">Pro</div>
-        <div class="plan-price">
-          <span class="plan-amt" data-monthly="$29" data-annual="$20">$29</span>
-          <span class="plan-per">/month</span>
-        </div>
-        <div class="plan-tagline">For production apps.</div>
-        <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> 100 active jobs</li>
-          <li><span class="pf-yes">✓</span> 20,000 executions / month</li>
-          <li><span class="pf-yes">✓</span> 90-day log retention</li>
-          <li><span class="pf-yes">✓</span> Retry on failure (3×)</li>
-          <li><span class="pf-yes">✓</span> Secret headers</li>
-          <li><span class="pf-yes">✓</span> Slack failure alerts</li>
-          <li><span class="pf-yes">✓</span> CSV log export</li>
-        </ul>
-        <a href="/scheduler/app/?signup=1&plan=pro" class="plan-cta btn-outline">Get Pro</a>
-      </div>
-
-      <div class="plan-card">
-        <div class="plan-name">Teams</div>
-        <div class="plan-price">
-          <span class="plan-amt" data-monthly="$79" data-annual="$55">$79</span>
-          <span class="plan-per">/month</span>
-        </div>
-        <div class="plan-tagline">For engineering teams.</div>
-        <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> Unlimited jobs</li>
-          <li><span class="pf-yes">✓</span> 100,000 executions / month</li>
-          <li><span class="pf-yes">✓</span> 1-year log retention</li>
-          <li><span class="pf-yes">✓</span> Retry on failure (5×)</li>
-          <li><span class="pf-yes">✓</span> All Pro features</li>
-          <li><span class="pf-yes">✓</span> <strong>Team access (5 seats)</strong></li>
-          <li><span class="pf-yes">✓</span> Priority support</li>
-        </ul>
-        <a href="/scheduler/app/?signup=1&plan=teams" class="plan-cta btn-outline">Get Teams</a>
+        <a href="/signup.html?plan=scheduler-monthly" class="plan-cta btn-primary" id="scheduler-plan-cta">Choose Scheduler Pro</a>
       </div>
     </div>
-    <p class="pricing-note">Overage: $1 per 1,000 executions above plan limit. All plans include 30-day money back.</p>
+    <p class="pricing-note" id="scheduler-pricing-note">Prices are in INR. Purchases add 30 or 365 days and do not renew automatically.</p>
   </div>
 </section>
 
@@ -444,27 +412,27 @@
     <div class="faq-right">
       <details class="faq-item" open>
         <summary>How precise is the timing?</summary>
-        <p>Jobs fire within ±2 seconds of the scheduled time. Our worker polls every 30 seconds and fires immediately on pickup. For most use cases (reports, cache invalidation, reminders) this is more than precise enough. If you need sub-second precision, contact us.</p>
+        <p>The scheduler checks for due work every 30 seconds, then starts the request as soon as a worker picks it up. It suits reports, reminders, cache refreshes and routine automations; it is not intended for sub-second or safety-critical timing.</p>
       </details>
       <details class="faq-item">
-        <summary>What happens if the request times out?</summary>
-        <p>We wait up to 30 seconds for a response. If it times out, it's logged as a failure. On Starter and above, the retry logic kicks in automatically.</p>
+        <summary>What happens when a request fails?</summary>
+        <p>A timeout, connection error or non-2xx response is recorded as a failed execution. Requests stop after 30 seconds. After three consecutive scheduled failures, we email the account owner; Submit Later does not automatically retry a failed request.</p>
       </details>
       <details class="faq-item">
         <summary>Can I pass authentication headers?</summary>
-        <p>Yes. Add any headers you need — Authorization, X-API-Key, Content-Type, anything. On Starter and above, you can store them as secrets (encrypted, not visible after saving).</p>
+        <p>Yes. You can add Authorization, X-API-Key, Content-Type and other request headers. They are stored with the job configuration, so use scoped, revocable credentials rather than a primary account secret.</p>
       </details>
       <details class="faq-item">
         <summary>Does my server need to be publicly reachable?</summary>
-        <p>Yes — we fire the request from our servers, so your endpoint needs to be on a public HTTPS URL. Local development URLs (localhost) won't work, but services like ngrok give you a public URL for testing.</p>
+        <p>Yes. The endpoint must use HTTPS and resolve to a public network address. Localhost, private networks and link-local destinations are blocked.</p>
       </details>
       <details class="faq-item">
         <summary>Can I use this instead of Vercel's cron?</summary>
-        <p>Yes. Create a job pointing at your Vercel function URL. We fire it on the schedule you set. No Vercel Pro plan required. You can even fire the same job to multiple environments (staging, production) as separate jobs.</p>
+        <p>Yes. Point a job at the public HTTPS URL for your function. Create separate jobs when staging and production need different endpoints or schedules.</p>
       </details>
       <details class="faq-item">
-        <summary>What counts as an "execution"?</summary>
-        <p>One outgoing HTTP request. A job that runs daily uses 30 executions per month. The free plan's 200 executions/month supports about 6 daily jobs or 1 job running every 3 hours.</p>
+        <summary>How long are execution logs kept?</summary>
+        <p>Execution logs expire after 90 days. Each record includes the job name, request time, HTTP status, duration, any connection error and up to 1 KB of response text.</p>
       </details>
     </div>
   </div>
@@ -476,19 +444,19 @@
     <div class="fc-code-block">
       <span class="fcb-comment"># Your current cron setup</span>
       <span class="fcb-cmd">0 9 * * * curl -s https://api.myapp.com/cron 2&gt;/dev/null</span>
-      <span class="fcb-comment"># (no logs, no retry, no alert if it fails)</span>
+      <span class="fcb-comment"># Logging and alerts still need to be built</span>
     </div>
     <svg class="fc-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12l7 7 7-7" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round"/></svg>
     <div class="fc-code-block fc-code-good">
-      <span class="fcb-comment"># With SubmitLater Scheduler</span>
+      <span class="fcb-comment"># With Submit Later Webhook Scheduler</span>
       <span class="fcb-cmd">Job: POST api.myapp.com/cron · Daily 9:00 AM</span>
-      <span class="fcb-line"><span class="fcb-ok">✓</span> Logged · Retried · Alerts on failure · Dashboard</span>
+      <span class="fcb-line"><span class="fcb-ok">✓</span> Logged · Failure email · Pause or run now · Dashboard</span>
     </div>
     <a href="/scheduler/app/?signup=1" class="btn-primary btn-lg" style="margin-top:32px">
       Schedule your first request free
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
-    <p class="fc-trust">Free plan · No credit card · 5 jobs forever free</p>
+    <p class="fc-trust">Free plan · No credit card · Upgrade only when you need more jobs</p>
   </div>
 </section>
 
@@ -502,9 +470,9 @@
           <circle cx="14" cy="14" r="5" stroke="white" stroke-width="2"/>
           <path d="M14 9V14l3 3" stroke="white" stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <span>SubmitLater Scheduler</span>
+        <span>Submit Later Webhook Scheduler</span>
       </a>
-      <p>HTTP cron-as-a-service. No server needed.</p>
+      <p>Hosted HTTPS webhook scheduling with a clear execution history.</p>
     </div>
     <div class="footer-links">
       <div class="fl-col">
@@ -519,12 +487,12 @@
         <a href="https://submitlater.co.in">Submit Later</a>
         <a href="https://submitlater.co.in/forms/">Forms product</a>
         <a href="https://submitlater.co.in/privacy.html">Privacy</a>
-        <a href="mailto:help@submitlater.co.in">Contact</a>
+        <a href="https://submitlater.co.in/contact.html">Contact</a>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 SubmitLater. All rights reserved.</span>
+    <span>© 2026 Submit Later. All rights reserved.</span>
     <span>A product of <a href="https://submitlater.co.in">Submit Later</a></span>
   </div>
 </footer>

@@ -15,19 +15,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy policy · Submit Later</title>
-<meta name="description" content="How Submit Later handles your data: scheduled jobs stay on your computer; your account stores only your name, email, plan and payment records.">
+<meta name="description" content="How Submit Later handles account, payment, browser schedule, timed form and webhook data, including local extension storage, service providers, retention and user rights.">
 <link rel="canonical" href="https://submitlater.co.in/privacy.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Submit Later">
 <meta property="og:title" content="Privacy policy · Submit Later">
-<meta property="og:description" content="How Submit Later handles your data: scheduled jobs stay on your computer; your account stores only your name, email, plan and payment records.">
+<meta property="og:description" content="How Submit Later handles extension, account, Timed Forms and Webhook Scheduler data.">
 <meta property="og:url" content="https://submitlater.co.in/privacy.html">
 <meta property="og:image" content="https://submitlater.co.in/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="icon32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap">
 <script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -53,7 +53,7 @@
     </div>
   </div>
 </header>
-<section class="page-hero"><div class="wrap"><h1>Privacy policy</h1><span class="updated">Last updated 26 October 2026</span></div></section>
+<section class="page-hero"><div class="wrap"><h1>Privacy policy</h1><span class="updated">Last updated 31 October 2026</span></div></section>
 <main class="wrap page-body">
 
 <section class="prose">
@@ -62,14 +62,14 @@
   <h2>The short version</h2>
   <ul>
     <li>What you schedule (pages, buttons and times), and any contacts, photos and videos you add for WhatsApp, stay in Chrome on your own computer. They're never sent to us.</li>
-    <li>For your account we store your name, email, a securely hashed password (or your Google account ID), your plan and your payment records.</li>
+    <li>For your account we store your name, email, a securely hashed password (or Google account ID), product access, security sessions and payment records.</li>
     <li>We don't sell or share your data for advertising, and this website has no ads. It uses Google Analytics to count visits; the extension has no analytics.</li>
   </ul>
 
   <h2>What we store on our servers</h2>
   <ul>
     <li><b>Account:</b> name, email address, whether it's verified, a hashed password (we can never see the password itself), or your Google account ID and email if you sign in with Google, and when you signed up.</li>
-    <li><b>Plan:</b> your trial end date, plan type and the date your plan runs until.</li>
+    <li><b>Product access:</b> your evaluation end date and, for each product you buy, its plan identifier and access end date.</li>
     <li><b>Payments:</b> amount, plan, date, status, your mobile number (our payment partner requires one for receipts), and the transaction ID and payment method type that our payment partner reports to us. We never receive your card number, UPI PIN or bank login.</li>
     <li><b>Security:</b> sign-in sessions, and the IP address and time of sign-in attempts, kept for up to 30 days to prevent abuse and fraud.</li>
   </ul>
@@ -78,17 +78,17 @@
   <p>When you schedule a button, and about once a day, the extension checks your plan with our server. That request contains only your sign-in token and the extension version. It doesn't include the page, the button, the time or anything you typed.</p>
 
   <h2>What the extension stores on your device</h2>
-  <p>For each button you schedule: the page's address and title, the button's visible text, a technical locator for it, the scheduled time and the result. The last 50 results are kept so you can see them. It also keeps your sign-in token and plan status so it works offline for a while. For reopen-and-press and WhatsApp schedules it stores the page address and, for WhatsApp, the phone numbers, messages and any photos or videos you attach, on your device only (in the extension's own storage), until they've been sent; attached photos and videos are deleted once nothing scheduled uses them. Contacts you import from a .vcf or .csv file (names and phone numbers) are stored on your device only, are never uploaded to us, and can be deleted at any time on the extension's WhatsApp page. Settings, including your colour theme, use Chrome's sync storage, so they follow your Google account if you use Chrome sync. Uninstalling the extension deletes everything it stores.</p>
+  <p>For each button you schedule, the extension stores the page address and title, button text and technical locator, scheduled time and result. The last 50 results are retained locally so you can review them. Reopen-and-press and WhatsApp schedules also store their destination URL; depending on the WhatsApp schedule, that URL may contain a phone number and message text. WhatsApp contacts, messages and attachments remain in the extension's local storage while they are needed by a schedule, and shared media is removed when no scheduled item uses it. You can clear schedules, history and contacts from the extension, and uninstalling it removes its local data. Theme settings may use Chrome sync so they follow your Google account when Chrome sync is enabled.</p>
 
   <h2>What the extension reads on web pages</h2>
-  <p>It runs only on a tab where you start the button picker yourself, and, with Pro's "reopen and press" or WhatsApp scheduling, on the specific sites you allow when you set that up (Chrome asks you each time; you can remove access in <code>chrome://extensions</code>). It reads just enough of that page to let you pick a button, check that required fields are filled, and press the button at the time you chose. It doesn't read or store what you type into forms.</p>
+  <p>It runs only on a tab where you start the button picker yourself and, for reopen-and-press or WhatsApp scheduling, on a specific site for which you grant permission. Chrome asks when that permission has not already been granted; it remains available until you remove it in <code>chrome://extensions</code>. The extension reads enough of the page to identify the chosen button, check basic readiness and attempt the press. It does not upload what you type into forms to Submit Later.</p>
 
   <h2>Reliable clicking</h2>
   <p>When "Reliable clicking" is on (the default), the extension uses Chrome's debugger permission only to send a single mouse click to the button you picked, at the time you scheduled, and then detaches immediately. It isn't used to read page content or network traffic.</p>
 
-  <h2>What Forms Enforcer and Webhook Scheduler store</h2>
-  <p><b>Forms Enforcer:</b> We store the Google Form URL you provide, the title you give the form, and the open and close times you configure. No form responses are stored by us — those go directly to your Google account as usual. We also store an access count: how many times each gated link was opened.</p>
-  <p><b>Webhook Scheduler:</b> We store the URL, HTTP method, headers and body of each scheduled request you create. We keep execution logs — the HTTP status code, response time and up to 1 KB of the response body — per execution for 90 days. We store only what you configure; we never inspect or log the content of your requests beyond what you can see in your own logs. We do not store any data returned by the URLs you call beyond these logs.</p>
+  <h2>What Timed Forms and Webhook Scheduler store</h2>
+  <p><b>Timed Forms:</b> We store the Google Form URL, name, opening and closing times, timezone, short link code, branding choices and access counters you configure. Form responses go to Google Forms rather than Submit Later. The timed link controls only access through that link; it does not change the privacy or availability of the underlying Google Form.</p>
+  <p><b>Webhook Scheduler:</b> We store the URL, HTTP method, headers, request body and schedule for each job, together with its status. Execution logs can contain the response status, duration, timestamps and up to 1 KB of a response preview. Headers, request bodies and response previews may contain secrets or personal data, so include only information needed for the request and rotate any credential you remove from a job.</p>
 
   <h2>Emails</h2>
   <p>We send emails about your account: verification, password resets, payment receipts and reminders before your trial or plan ends. We don't send marketing emails unless you've agreed to them.</p>
@@ -131,7 +131,7 @@
   <div class="wrap foot-grid">
     <div>
       <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-      <p>A Chrome extension that presses any button at exactly the time you choose. Free plan forever; Pro is ₹49 a month or ₹399 a year.</p>
+      <p>Practical scheduling tools for browser actions, timed form links and webhooks—one account, with separate plans for each product.</p>
     </div>
     <div>
       <h4>Product</h4>

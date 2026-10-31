@@ -188,6 +188,13 @@ a.stat:hover .stat-link svg { transform: translateX(4px); }
 .meta dd { margin: 2px 0 0; font-weight: 650; font-size: 14.5px; }
 
 .plan-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.product-plan-groups { display: grid; gap: 18px; }
+.product-plan { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: color-mix(in srgb, var(--card) 82%, transparent); }
+.product-plan-head { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; }
+.product-plan-head h3 { margin: 0 0 4px; font-size: 20px; }
+.product-plan-head p { margin: 0; max-width: 620px; color: var(--muted); font-size: 14px; }
+.product-plan-status { flex: none; padding: 5px 10px; border-radius: 999px; color: var(--muted); background: var(--soft); font-size: 12px; font-weight: 750; }
+.product-plan-status.active { color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, transparent); }
 .pcard { position: relative; display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
 .pcard.best { border: 2px solid var(--accent); box-shadow: 0 20px 50px color-mix(in srgb, var(--accent) 16%, transparent); }
 .pc-tag { position: absolute; top: -12px; left: 22px; padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #10b981, #059669); }
@@ -308,7 +315,8 @@ dialog .acts { justify-content: flex-end; margin-top: 18px; }
   .dash-nav nav::-webkit-scrollbar { display: none; }
   .dash-nav nav a { flex: none; padding: 8px 12px; }
   .nav-label, .nav-plan { display: none; }
-  .grid-3, .grid-2, .plan-cards, .form-grid { grid-template-columns: 1fr; }
+  .grid-3, .grid-2, .plan-cards, .product-plan, .form-grid { grid-template-columns: 1fr; }
+  .product-plan-head { grid-column: 1; }
   .plan-now { flex-direction: column; align-items: flex-start; gap: 20px; }
   .pay-chips { margin-left: 0; }
 }

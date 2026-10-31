@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timed Google Form Access Links | Submit Later</title>
+  <meta name="description" content="Create a timed link for any Google Form. Show a live countdown before opening, redirect during the access window, and display a clear closed page afterward.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://submitlater.co.in/forms/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Timed Google Form Access Links | Submit Later">
+  <meta property="og:description" content="Schedule when a shared link reveals your existing Google Form—with a live countdown and timezone-aware access window.">
+  <meta property="og:url" content="https://submitlater.co.in/forms/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json" id="forms-structured-data">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Submit Later Timed Forms",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "Create timezone-aware timed access links for existing Google Forms.",
+    "url": "https://submitlater.co.in/forms/",
+    "offers": [
+      { "@type": "Offer", "name": "Timed Forms Monthly", "price": "99", "priceCurrency": "INR" },
+      { "@type": "Offer", "name": "Timed Forms Annual", "price": "799", "priceCurrency": "INR" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<!-- ══════════════════════════ NAV ══════════════════════════ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="8" fill="#6366f1"/>
+        <path d="M8 14h4l2-5 3 10 2-5h3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Submit Later <strong>Timed Forms</strong></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#compare">Compare</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="/login.html?next=account.html%23forms" class="btn-ghost">Sign in</a>
+      <a href="/signup.html?next=account.html%23forms" class="btn-primary">Start free</a>
+    </div>
+    <button class="nav-burger" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Timed access links for Google Forms
+    </div>
+    <h1 class="hero-headline">
+      Open your form on schedule.<br>
+      <span class="gradient-text">Close the link automatically.</span>
+    </h1>
+    <p class="hero-sub">
+      Share one link before registration begins. Visitors see a live countdown, reach your existing Google Form during the access window, and see a clear closed page afterward.
+    </p>
+    <div class="hero-ctas">
+      <a href="/signup.html?next=account.html%23forms" class="btn-primary btn-lg">
+        Create your first timed link
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <span class="hero-trust">No new form to build &nbsp;·&nbsp; Timezone-aware &nbsp;·&nbsp; Set up in minutes</span>
+    </div>
+  </div>
+  <div class="hero-demo">
+    <div class="demo-card demo-before">
+        <div class="demo-label demo-label-bad">Before the access window</div>
+      <div class="demo-form-mock">
+        <div class="dfm-header">
+          <div class="dfm-logo-bar"></div>
+          <div class="dfm-title">MBA Admissions 2025</div>
+          <div class="dfm-sub">The original link is not shown yet</div>
+        </div>
+        <div class="dfm-field"></div>
+        <div class="dfm-field dfm-field-sm"></div>
+        <div class="dfm-field"></div>
+        <div class="dfm-submit">Submit Application</div>
+        <div class="dfm-time-bad">Share the timed link in advance</div>
+      </div>
+    </div>
+    <div class="demo-arrow">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 16h20M19 9l7 7-7 7" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="demo-card demo-after">
+      <div class="demo-label demo-label-good">Submit Later Timed Forms</div>
+      <div class="countdown-mock">
+        <div class="cm-org">Masters Union · Admissions</div>
+        <div class="cm-title">MBA Admissions 2025</div>
+        <div class="cm-status">Form opens in</div>
+        <div class="cm-timer" id="hero-timer">
+          <div class="cm-unit"><span class="cm-num" id="t-h">02</span><span class="cm-label">hours</span></div>
+          <div class="cm-sep">:</div>
+          <div class="cm-unit"><span class="cm-num" id="t-m">14</span><span class="cm-label">minutes</span></div>
+          <div class="cm-sep">:</div>
+          <div class="cm-unit"><span class="cm-num" id="t-s">37</span><span class="cm-label">seconds</span></div>
+        </div>
+        <div class="cm-date">Opens 30 Oct 2026, 4:00 PM IST</div>
+        <div class="cm-prequeue"><span class="cm-pq-icon">✓</span> The access window is checked by the server</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ STATS BAR ══════════════════════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <span class="stat-num">Live</span>
+      <span class="stat-label">countdown before opening</span>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <span class="stat-num">Timezone</span>
+      <span class="stat-label">timezone-aware scheduling</span>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <span class="stat-num">Automatic</span>
+      <span class="stat-label">redirect while the link is open</span>
+    </div>
+    <div class="stat-div"></div>
+    <div class="stat-item">
+      <span class="stat-num">Unchanged</span>
+      <span class="stat-label">existing Google Form stays unchanged</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ PROBLEM ══════════════════════════ -->
+<section class="problem">
+  <div class="section-inner">
+    <div class="section-label">A cleaner way to launch forms</div>
+    <h2>Publish the link now.<br>Control when it opens.</h2>
+    <p class="section-sub">
+      Google Forms is excellent for collecting responses, but it does not give you a shareable pre-opening countdown. Submit Later adds that timed entry point without replacing your form.
+    </p>
+    <div class="problem-cards">
+      <div class="prob-card">
+        <div class="prob-icon">🕐</div>
+        <h3>Share before launch</h3>
+        <p>Publish one stable URL in emails, notices, or event pages before registration opens. Visitors see the schedule instead of the form.</p>
+      </div>
+      <div class="prob-card">
+        <div class="prob-icon">🖥️</div>
+        <h3>Server-timed window</h3>
+        <p>The timed link uses server time, so changing a visitor's device clock does not change what the link displays.</p>
+      </div>
+      <div class="prob-card">
+        <div class="prob-icon">⚡</div>
+        <h3>A useful countdown</h3>
+        <p>Before opening, the page shows the form name, organization, scheduled time, and a live countdown that refreshes when access begins.</p>
+      </div>
+      <div class="prob-card">
+        <div class="prob-icon">📨</div>
+        <h3>A clear closing state</h3>
+        <p>After the window ends, the timed link stops redirecting and shows a closed page with the scheduled closing time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ HOW IT WORKS ══════════════════════════ -->
+<section class="how" id="how">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2>Three steps.<br>No new form to build.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Paste your Google Form URL</h3>
+          <p>You keep your existing Google Form exactly as it is. Nothing about the form changes. You don't have to recreate it.</p>
+          <div class="step-visual">
+            <div class="sv-input">
+              <span class="sv-prefix">docs.google.com/forms/</span>
+              <span class="sv-value">d/1FAIpQLSf8...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Set your window</h3>
+          <p>Choose an opening time, a closing time, and the timezone your audience understands. The timed link evaluates that window on the server.</p>
+          <div class="step-visual sv-times">
+            <div class="sv-time-row">
+              <span class="sv-time-label">Opens</span>
+              <span class="sv-time-val">30 Oct 2026, 9:00 AM IST</span>
+            </div>
+            <div class="sv-time-row">
+              <span class="sv-time-label">Closes</span>
+              <span class="sv-time-val">30 Oct 2026, 11:00 AM IST</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Share your new link</h3>
+          <p>Use the Submit Later URL in invitations and announcements. It reveals the original Google Form only while your timed access window is open.</p>
+          <div class="step-visual">
+            <div class="sv-link">
+              <span class="sv-link-url">api.submitlater.co.in/f/<strong>mba25</strong></span>
+              <button class="sv-copy">Copy link</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="compare-note">Important: Submit Later controls the timed link, not the Google Form itself. Anyone who already has the original Google Form URL can open it according to the form owner's Google settings.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════ COMPARE ══════════════════════════ -->
+<section class="compare" id="compare">
+  <div class="section-inner">
+    <div class="section-label">What the product controls</div>
+    <h2>A timed front door<br>for your existing form.</h2>
+    <p class="section-sub">Submit Later manages access through the link it creates. Your Google Form remains separate and continues to follow its own settings.</p>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>Included</th>
+            <th>Visitor experience</th>
+            <th>Scope</th>
+            <th class="compare-us">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Pre-opening countdown</td><td><span class="cyes">✓</span></td><td>Shows the scheduled opening time and a live timer</td><td>Timed link</td><td class="compare-us">Refreshes when the window opens</td></tr>
+          <tr><td>Open-window redirect</td><td><span class="cyes">✓</span></td><td>Sends visitors to your Google Form</td><td>Timed link</td><td class="compare-us">Original URL is revealed during the window</td></tr>
+          <tr><td>Post-closing page</td><td><span class="cyes">✓</span></td><td>Stops redirecting and shows that the link is closed</td><td>Timed link</td><td class="compare-us">Does not change Google Form settings</td></tr>
+          <tr><td>Timezone-aware schedule</td><td><span class="cyes">✓</span></td><td>Displays dates in the timezone you selected</td><td>Timed link</td><td class="compare-us">Server time determines the state</td></tr>
+          <tr><td>Link view count</td><td><span class="cyes">✓</span></td><td>Counts visits to the timed URL</td><td>Dashboard</td><td class="compare-us">A view is not a confirmed submission</td></tr>
+          <tr><td>Original form controls</td><td><span class="cno">Not changed</span></td><td>Google continues to host and process responses</td><td>Google Form</td><td class="compare-us">You manage response settings in Google Forms</td></tr>
+          <tr><td>Direct-URL protection</td><td><span class="cno">Not included</span></td><td>Anyone with the original URL can follow Google's settings</td><td>Google Form</td><td class="compare-us">Share the timed URL, not the original</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="compare-note">Submit Later schedules access to a link. It does not impersonate Google Forms or submit responses on a visitor's behalf.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════ LINK LIFECYCLE ══════════════════════════ -->
+<section class="prequeue-spot">
+  <div class="section-inner pq-inner">
+    <div class="pq-text">
+      <div class="section-label">A predictable visitor journey</div>
+      <h2>One link.<br>Three clear states.</h2>
+      <p>Your audience can use the same URL before, during, and after the registration window. The page changes automatically as the schedule moves forward.</p>
+      <ul class="pq-benefits">
+        <li>
+          <span class="pq-check">✓</span>
+          Share the timed URL before registration opens
+        </li>
+        <li>
+          <span class="pq-check">✓</span>
+          Show the selected timezone and exact opening time
+        </li>
+        <li>
+          <span class="pq-check">✓</span>
+          Redirect to the existing Google Form during the window
+        </li>
+        <li>
+          <span class="pq-check">✓</span>
+          Stop redirecting when the timed link closes
+        </li>
+      </ul>
+      <a href="/signup.html?next=account.html%23forms" class="btn-primary">Create a timed link →</a>
+    </div>
+    <div class="pq-visual">
+      <div class="pq-card">
+        <div class="pq-card-header">
+          <div class="pq-card-title">Timed link lifecycle</div>
+          <div class="pq-card-status"><span class="pq-live">● Server-timed</span></div>
+        </div>
+        <div class="pq-entries">
+          <div class="pq-entry pq-entry-you">
+            <span class="pq-pos">01</span>
+            <span class="pq-name">Before opening</span>
+            <span class="pq-badge pq-badge-ready">Countdown</span>
+          </div>
+          <div class="pq-entry">
+            <span class="pq-pos">02</span>
+            <span class="pq-name">Access window</span>
+            <span class="pq-badge">Redirect</span>
+          </div>
+          <div class="pq-entry">
+            <span class="pq-pos">03</span>
+            <span class="pq-name">After closing</span>
+            <span class="pq-badge">Closed page</span>
+          </div>
+          <div class="pq-entry pq-entry-dim">
+            <span class="pq-pos">—</span>
+            <span class="pq-name">Original Google Form</span>
+            <span class="pq-badge">Unchanged</span>
+          </div>
+        </div>
+        <div class="pq-opens">
+          Schedule shown in <strong>Asia/Kolkata</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ PRICING ══════════════════════════ -->
+<section class="pricing" id="pricing">
+  <div class="section-inner">
+    <div class="section-label">Pricing</div>
+    <h2>Pay for Timed Forms.<br>Nothing you do not need.</h2>
+    <p class="section-sub">Forms is billed separately from the Chrome extension and Webhook Scheduler. Choose monthly or annual access.</p>
+
+    <div class="pricing-toggle">
+      <span class="pt-label">Monthly</span>
+      <label class="pt-switch">
+        <input type="checkbox" id="annual-toggle" onchange="toggleAnnual(this)">
+        <span class="pt-slider"></span>
+      </label>
+      <span class="pt-label">Annual <span class="pt-save" id="forms-plan-saving">Save ₹389</span></span>
+    </div>
+
+    <div class="pricing-cards">
+      <div class="plan-card">
+        <div class="plan-name">Account trial</div>
+        <div class="plan-price"><span class="plan-amt">₹0</span></div>
+        <div class="plan-tagline">Explore the workflow before choosing a Forms plan.</div>
+        <ul class="plan-features">
+          <li><span class="pf-yes">✓</span> Create an account without a card</li>
+          <li><span class="pf-yes">✓</span> Up to 20 timed forms during the account trial</li>
+          <li><span class="pf-yes">✓</span> Keep up to 2 forms on the free tier afterward</li>
+          <li><span class="pf-yes">✓</span> See countdown and closed states</li>
+          <li><span class="pf-yes">✓</span> Choose from supported timezones</li>
+        </ul>
+        <a href="/signup.html?next=account.html%23forms" class="plan-cta btn-ghost">Create free account</a>
+      </div>
+
+      <div class="plan-card plan-card-featured">
+        <div class="plan-popular">Timed Forms</div>
+        <div class="plan-name">Forms plan</div>
+        <div class="plan-price">
+          <span class="plan-amt" id="forms-plan-amt" data-monthly="₹99" data-annual="₹799">₹99</span>
+          <span class="plan-per">/30 days</span>
+        </div>
+        <div class="plan-tagline">A dedicated plan for people who only need timed Google Form links.</div>
+        <ul class="plan-features">
+          <li><span class="pf-yes">✓</span> Up to 20 timed Google Form links</li>
+          <li><span class="pf-yes">✓</span> Live countdown before opening</li>
+          <li><span class="pf-yes">✓</span> Automatic redirect during the window</li>
+          <li><span class="pf-yes">✓</span> Clear closed page afterward</li>
+          <li><span class="pf-yes">✓</span> Timezone-aware scheduling</li>
+          <li><span class="pf-yes">✓</span> Edit, delete, copy, and view-count tools</li>
+        </ul>
+        <a href="/signup.html?plan=forms-monthly" class="plan-cta btn-primary" id="forms-plan-cta">Choose Timed Forms</a>
+      </div>
+    </div>
+    <p class="pricing-note" id="forms-pricing-note">Prices are in INR. Monthly access is ₹99 for 30 days; annual access is ₹799 for 365 days. Checkout shows the final amount before payment.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════ USE CASES ══════════════════════════ -->
+<section class="usecases">
+  <div class="section-inner">
+    <div class="section-label">Who uses it</div>
+    <h2>Useful wherever one form<br>needs a clear access window.</h2>
+    <div class="uc-grid">
+      <div class="uc-card">
+        <div class="uc-icon">🎓</div>
+        <h3>University Admissions</h3>
+        <p>Publish application links before admissions open and give applicants one clear place to check the schedule.</p>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">🏆</div>
+        <h3>Hackathons & Competitions</h3>
+        <p>Share registration details early, then reveal the Google Form automatically when entries open.</p>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">📚</div>
+        <h3>Coaching & Courses</h3>
+        <p>Give learners a countdown before enrollment and a clear message when the timed link is no longer available.</p>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">🏛️</div>
+        <h3>Government & NGO Schemes</h3>
+        <p>Coordinate public application windows while keeping the original Google Form and its response data in Google.</p>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">🎪</div>
+        <h3>Events & Workshops</h3>
+        <p>Use a single URL for workshop registration, conference interest forms, and scheduled event sign-ups.</p>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">💼</div>
+        <h3>HR & Internal Processes</h3>
+        <p>Schedule access to internal surveys, benefit enrollment, and review forms without rebuilding them in another platform.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FAQ ══════════════════════════ -->
+<section class="faq">
+  <div class="section-inner faq-inner">
+    <div class="faq-left">
+      <div class="section-label">FAQ</div>
+      <h2>What to know<br>before you publish.</h2>
+      <a href="/signup.html?next=account.html%23forms" class="btn-primary">Create a timed link →</a>
+    </div>
+    <div class="faq-right">
+      <details class="faq-item" open>
+        <summary>Does changing a device clock affect the timed link?</summary>
+        <p>No. Submit Later uses server time to decide whether its link shows a countdown, redirects, or displays the closed page. Device time does not change that link state.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Do I need to rebuild my Google Form?</summary>
+        <p>No. Paste the URL of an existing Google Form, choose the window, and share the new timed URL. The form itself stays hosted by Google.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What does a visitor see at each stage?</summary>
+        <p>Before opening, they see a live countdown and scheduled time. During the window, the link redirects to your Google Form. After closing, it shows a closed message and stops redirecting.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What happens if I update my Google Form URL?</summary>
+        <p>Edit the form in your dashboard and save the new destination. The Submit Later short link stays the same, so previously published copies continue to work.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can someone use the original Google Form URL directly?</summary>
+        <p>Yes. Submit Later controls only the timed URL it creates. If someone already has the original Google Form URL, access follows the settings you configured in Google Forms. Share the timed URL and keep the original private until you are ready.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Does closing the timed link stop Google Form responses?</summary>
+        <p>No. The timed link stops redirecting, but it does not switch off response collection inside Google Forms. If you require the underlying form itself to stop accepting responses, change that setting in Google Forms as well.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What does the view count measure?</summary>
+        <p>It counts visits to the timed URL across countdown, open, and closed states. A view is not proof that a visitor submitted the Google Form.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FINAL CTA ══════════════════════════ -->
+<section class="final-cta">
+  <div class="section-inner fc-inner">
+    <h2>Give your next Google Form<br>a better opening page.</h2>
+    <p>Publish the schedule early, keep one shareable URL, and let the timed link handle each stage of the window.</p>
+    <a href="/signup.html?next=account.html%23forms" class="btn-primary btn-lg">
+      Create your first timed link
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <p class="fc-trust">No credit card to create an account · Separate Forms-only monthly and annual plans</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="nav-logo">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="8" fill="#6366f1"/>
+          <path d="M8 14h4l2-5 3 10 2-5h3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Submit Later Timed Forms</span>
+      </a>
+      <p>Timezone-aware timed access links for the Google Forms you already use.</p>
+    </div>
+    <div class="footer-links">
+      <div class="fl-col">
+        <div class="fl-head">Product</div>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#compare">Product scope</a>
+        <a href="/account.html#forms">Dashboard</a>
+      </div>
+      <div class="fl-col">
+        <div class="fl-head">Company</div>
+        <a href="https://submitlater.co.in">Submit Later</a>
+        <a href="https://submitlater.co.in/privacy.html">Privacy</a>
+        <a href="https://submitlater.co.in/terms.html">Terms</a>
+        <a href="mailto:submitlater.review@gmail.com">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Submit Later. All rights reserved.</span>
+    <span>A product of <a href="https://submitlater.co.in">Submit Later</a></span>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

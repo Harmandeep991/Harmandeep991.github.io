@@ -59,6 +59,7 @@
     <nav aria-label="Admin sections">
       <a href="#overview" data-view="overview"><svg><use href="#i-home"/></svg>Overview</a>
       <a href="#users" data-view="users"><svg><use href="#i-user"/></svg>Users</a>
+      <a href="#plans" data-view="plans"><svg><use href="#i-card"/></svg>Plans &amp; pricing</a>
       <a href="#payments" data-view="payments"><svg><use href="#i-receipt"/></svg>Payments</a>
       <a href="#requests" data-view="requests"><svg><use href="#i-mail"/></svg>Requests<span class="adm-badge" id="req-badge" hidden></span></a>
       <div class="nav-label">Extension</div>
@@ -102,7 +103,8 @@
           <div class="card-head"><div><h2>Give more time</h2><p>Adds days after whatever time is left. Recorded in the audit log.</p></div></div>
           <form id="ud-extend" class="adm-form">
             <label>Days <input name="days" type="number" min="1" max="730" value="30" required></label>
-            <label>To <select name="target"><option value="plan">Pro plan (complimentary)</option><option value="trial">Trial</option></select></label>
+            <label>To <select name="target"><option value="plan">Product access (complimentary)</option><option value="trial">All-product trial</option></select></label>
+            <label>Product <select name="product"><option value="extension">Button Scheduler</option><option value="forms">Timed Forms</option><option value="scheduler">Webhook Scheduler</option></select></label>
             <label class="wide">Note <input name="note" maxlength="300" placeholder="Why (e.g. request #12, outage)"></label>
             <button class="btn sm primary" type="submit">Extend</button>
           </form>
@@ -118,11 +120,12 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-head"><div><h2>Custom plan</h2><p>Offer this person Pro for any number of days at a price you set. They get an email and pay it from their account page; Pro turns on by itself. Open offers expire after 30 days.</p></div></div>
+        <div class="card-head"><div><h2>Custom plan</h2><p>Choose one product, an access period and a price. The customer receives an email and can pay from their account; that product activates automatically. Open offers expire after 30 days.</p></div></div>
         <form id="ud-offer" class="adm-form">
+          <label>Product <select name="product"><option value="extension">Button Scheduler</option><option value="forms">Timed Forms</option><option value="scheduler">Webhook Scheduler</option></select></label>
           <label>Amount (₹) <input name="amount" type="number" min="1" max="200000" step="1" required placeholder="999"></label>
           <label>Days <input name="days" type="number" min="1" max="1095" value="365" required></label>
-          <label class="wide">Note for the customer <input name="note" maxlength="300" placeholder="e.g. 20 seats for the lab, 2 years"></label>
+          <label class="wide">Note for the customer <input name="note" maxlength="300" placeholder="e.g. Admissions office access for 2 years"></label>
           <button class="btn sm primary" type="submit">Send offer</button>
         </form>
         <div class="table-wrap"><table id="ud-offers"></table></div>
@@ -135,10 +138,16 @@
       <div class="card"><div class="card-head"><div><h2>Sign-ins</h2></div></div><div class="table-wrap"><table id="ud-sess"></table></div></div>
     </section>
 
+    <section class="view" data-view="plans" hidden>
+      <div class="view-head"><h1>Plans &amp; pricing</h1><p>Manage each product independently. Checkout, account pages and public pricing read this same catalogue.</p></div>
+      <div class="notice info">Amounts are in INR and are charged exactly as shown at checkout. Disabling a plan only prevents new purchases; existing access remains valid.</div>
+      <div id="plan-editor" class="adm-plan-grid"></div>
+    </section>
+
     <section class="view" data-view="payments" hidden>
       <div class="view-head"><h1>Payments</h1><p>Every checkout (Cashfree or PayU). Re-check a pending or failed one if a customer says they paid.</p></div>
       <div class="adm-bar">
-        <select id="p-status" aria-label="Status"><option value="">All</option><option value="success">Paid</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="cancelled">Cancelled</option><option value="abandoned">Abandoned</option></select>
+        <select id="p-status" aria-label="Status"><option value="">All</option><option value="success">Paid</option><option value="applying">Applying</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="cancelled">Cancelled</option><option value="abandoned">Abandoned</option></select>
         <label>From <input id="p-from" type="date"></label><label>To <input id="p-to" type="date"></label>
         <button type="button" class="btn sm soft" id="p-csv">Export CSV</button>
         <span class="muted" id="p-total"></span>

@@ -17,11 +17,22 @@ const ACCOUNT = {
   EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba', 'bhgeefkodfophbongdghjgmjkceoaimi'],
 };
 
-// Display only; the server decides the real prices.
-const PLANS = {
-  monthly: { name: 'Monthly', price: 49, period: '30 days' },
-  annual: { name: 'Annual', price: 399, period: '365 days' },
+// Fast, offline-safe defaults. `/plans` replaces these before a price is
+// displayed or checkout starts, so the admin catalogue remains authoritative.
+let PLANS = {
+  monthly: { id: 'monthly', product: 'extension', interval: 'monthly', name: 'Monthly', price: 49, days: 30, period: '30 days' },
+  annual: { id: 'annual', product: 'extension', interval: 'annual', name: 'Annual', price: 399, days: 365, period: '365 days' },
+  'forms-monthly': { id: 'forms-monthly', product: 'forms', interval: 'monthly', name: 'Timed Forms Monthly', price: 99, days: 30, period: '30 days' },
+  'forms-annual': { id: 'forms-annual', product: 'forms', interval: 'annual', name: 'Timed Forms Annual', price: 799, days: 365, period: '365 days' },
+  'scheduler-monthly': { id: 'scheduler-monthly', product: 'scheduler', interval: 'monthly', name: 'Webhook Scheduler Monthly', price: 149, days: 30, period: '30 days' },
+  'scheduler-annual': { id: 'scheduler-annual', product: 'scheduler', interval: 'annual', name: 'Webhook Scheduler Annual', price: 1199, days: 365, period: '365 days' },
 };
+let PRODUCTS = {
+  extension: { id: 'extension', name: 'Button Scheduler', description: 'Schedule button presses, repeating actions and WhatsApp Web messages from Chrome.' },
+  forms: { id: 'forms', name: 'Timed Forms', description: 'Share a Google Form through a link that opens and closes on your schedule.' },
+  scheduler: { id: 'scheduler', name: 'Webhook Scheduler', description: 'Run HTTPS requests once or on a recurring schedule, with a clear execution history.' },
+};
+let planCatalogPromise;
 // A custom plan an admin offered one person (amount and days vary).
 const CUSTOM = { name: 'Custom' };
 
@@ -94,6 +105,21 @@ async function request(path, { method = 'GET', body, auth = false } = {}) {
     });
   }
   return data;
+}
+
+async function loadPlanCatalog() {
+  planCatalogPromise ||= request('/plans')
+    .then((catalog) => {
+      PRODUCTS = Object.fromEntries((catalog.products || []).map((p) => [p.id, p]));
+      PLANS = Object.fromEntries(
+        (catalog.plans || [])
+          .filter((p) => p.active !== false)
+          .map((p) => [p.id, { ...p, price: Number(p.amount), period: `${p.days} days` }])
+      );
+      return catalog;
+    })
+    .catch(() => ({ currency: 'INR', products: Object.values(PRODUCTS), plans: Object.values(PLANS) }));
+  return planCatalogPromise;
 }
 
 // Authenticated request that renews an expired access token once.
@@ -262,7 +288,8 @@ function initGoogle(box) {
 
 // ---- Pages -----------------------------------------------------------------
 
-function initSignup() {
+async function initSignup() {
+  await loadPlanCatalog();
   const form = $('#signup-form');
   const box = $('#form-notice');
   const plan = params.get('plan');
@@ -406,7 +433,6 @@ async function initVerify() {
 
 const fmtDate = (ms) => new Date(ms).toLocaleDateString([], { day: 'numeric', month: 'short', year: 'numeric' });
 const daysLeft = (ms) => Math.max(0, Math.ceil((ms - Date.now()) / 86_400_000));
-const PLAN_DAYS = { monthly: 30, annual: 365 };
 const RING = 2 * Math.PI * 52;
 
 const acct = { user: null, plan: null, ext: 'checking', extEmail: null };
@@ -461,7 +487,7 @@ function planInfo(plan) {
       value: `${left} ${left === 1 ? 'day' : 'days'} left`,
       sub: `Active until ${fmtDate(plan.paidUntil)}`,
       left,
-      pct: Math.min(1, left / (plan.periodDays || PLAN_DAYS[plan.plan] || 365)),
+      pct: Math.min(1, left / (plan.periodDays || PLANS[plan.plan]?.days || 365)),
       planName: PLANS[plan.plan] ? `${name} · ₹${PLANS[plan.plan].price}` : plan.plan === 'custom' ? 'Pro (custom plan)' : 'Pro (complimentary)',
       endLabel: 'Active until',
       end: fmtDate(plan.paidUntil),
@@ -494,7 +520,7 @@ function renderPlan() {
   $('#np-title').textContent = p.value;
   $('#np-bar').style.width = `${p.pct * 100}%`;
   $('#np-sub').textContent =
-    p.status === 'trial' ? 'Then the free plan, or Pro from ₹49 a month.' : p.status === 'active' ? "Doesn't renew automatically." : 'Go Pro for unlimited, repeats and WhatsApp.';
+    p.status === 'trial' ? 'Try every product, then keep only the ones you need.' : p.status === 'active' ? "Doesn't renew automatically." : 'Upgrade Button Scheduler for repeats, reopen mode and WhatsApp.';
   $('#np-cta').textContent = p.status === 'active' ? 'Add more time' : p.status === 'trial' ? 'See Pro plans' : 'Go Pro';
 
   // Overview card
@@ -523,11 +549,93 @@ function renderPlan() {
   $('#pn-plan').textContent = p.planName;
   $('#pn-end-label').textContent = p.endLabel;
   $('#pn-end').textContent = p.end;
-  $('#buy-title').textContent = p.status === 'active' ? 'Add more Pro time' : 'Go Pro';
-  $('#buy-sub').textContent =
-    p.status === 'free'
-      ? 'Unlimited schedules, reopen-and-press, repeats and WhatsApp messages. Pro starts as soon as you pay.'
-      : 'Time you buy is added after your current trial or plan, so nothing is wasted.';
+  $('#buy-title').textContent = 'Choose what you need';
+  $('#buy-sub').textContent = 'Button Scheduler, Timed Forms and Webhook Scheduler are billed separately. Annual plans offer the best value.';
+}
+
+const PRODUCT_FEATURES = {
+  extension: ['Unlimited button schedules', 'Reopen-and-press and repeating schedules', 'WhatsApp Web scheduling'],
+  forms: ['Up to 20 saved timed form links', 'Countdown, opening and closing pages', 'Access statistics'],
+  scheduler: ['More scheduled webhook jobs', 'Recurring HTTPS requests', 'Execution history and failure alerts'],
+};
+
+function renderProductPlans() {
+  const root = $('#plan-cards');
+  if (!root) return;
+  root.replaceChildren(
+    ...Object.values(PRODUCTS).map((product) => {
+      const section = document.createElement('section');
+      section.className = 'product-plan';
+      const head = document.createElement('header');
+      head.className = 'product-plan-head';
+      const copy = document.createElement('div');
+      const title = document.createElement('h3');
+      title.textContent = product.name;
+      const desc = document.createElement('p');
+      desc.textContent = product.description;
+      copy.append(title, desc);
+      const access = acct.plan?.products?.[product.id] || (product.id === 'extension' ? acct.plan : null);
+      const chip = document.createElement('span');
+      chip.className = `product-plan-status${access?.status === 'active' ? ' active' : ''}`;
+      chip.textContent =
+        access?.status === 'active'
+          ? `Active until ${fmtDate(access.paidUntil)}`
+          : access?.status === 'trial'
+            ? `Trial until ${fmtDate(access.trialEndsAt)}`
+            : 'Free limits active';
+      head.append(copy, chip);
+      section.append(head);
+      const plans = Object.values(PLANS).filter((p) => p.product === product.id).sort((a, b) => a.days - b.days);
+      if (!plans.length) {
+        const unavailable = document.createElement('p');
+        unavailable.className = 'muted';
+        unavailable.textContent = 'Purchases for this product are temporarily unavailable. Your existing access is unchanged.';
+        section.append(unavailable);
+      }
+      for (const plan of plans) {
+        const card = document.createElement('article');
+        card.className = `pcard${plan.interval === 'annual' ? ' best' : ''}`;
+        if (plan.interval === 'annual') {
+          const tag = document.createElement('span');
+          tag.className = 'pc-tag';
+          tag.textContent = 'Best value';
+          card.append(tag);
+        }
+        const top = document.createElement('div');
+        top.className = 'pc-top';
+        const name = document.createElement('b');
+        name.textContent = plan.interval === 'annual' ? 'Annual' : 'Monthly';
+        const period = document.createElement('span');
+        period.className = 'muted';
+        period.textContent = `${plan.days} days of ${product.name}`;
+        top.append(name, period);
+        const price = document.createElement('div');
+        price.className = 'pc-price';
+        price.append(`₹${Number(plan.price).toLocaleString('en-IN')}`, Object.assign(document.createElement('small'), { textContent: ` for ${plan.days} days` }));
+        const list = document.createElement('ul');
+        list.className = 'pc-list';
+        for (const feature of PRODUCT_FEATURES[product.id] || []) {
+          const li = document.createElement('li');
+          li.textContent = `✓ ${feature}`;
+          list.append(li);
+        }
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = plan.interval === 'annual' ? 'btn btn-block' : 'btn alt';
+        button.dataset.buy = plan.id;
+        const spinner = document.createElement('span');
+        spinner.className = 'spin';
+        spinner.setAttribute('aria-hidden', 'true');
+        const label = document.createElement('span');
+        label.textContent = `Buy ${plan.interval === 'annual' ? 'annual' : 'monthly'} · ₹${Number(plan.price).toLocaleString('en-IN')}`;
+        button.append(spinner, label);
+        button.onclick = () => buy(plan.id, button);
+        card.append(top, price, list, button);
+        section.append(card);
+      }
+      return section;
+    })
+  );
 }
 
 function renderUser() {
@@ -663,7 +771,7 @@ function renderPayments(list) {
       const tr = document.createElement('tr');
       const cells = [
         fmtDate(p.createdAt),
-        p.plan === 'custom' ? `${CUSTOM.name} · ${p.days} days` : `${PLANS[p.plan]?.name || p.plan} · ${PLANS[p.plan]?.period || ''}`,
+        p.planName || (p.plan === 'custom' ? `${CUSTOM.name} · ${p.days} days` : `${PLANS[p.plan]?.name || p.plan} · ${PLANS[p.plan]?.period || ''}`),
         `₹${p.amount}`,
         p.status === 'success' ? 'Paid' : p.status === 'pending' ? 'Pending' : 'Failed',
         p.txnId || '-',
@@ -799,7 +907,7 @@ async function loadOffers() {
       const main = document.createElement('div');
       main.className = 'o-main';
       const title = document.createElement('b');
-      title.textContent = `Your custom plan: Pro for ${o.days} days`;
+      title.textContent = `Your custom ${PRODUCTS[o.product]?.name || 'product'} plan for ${o.days} days`;
       const sub = document.createElement('div');
       sub.className = 'muted';
       sub.textContent = `₹${o.amount} · prepaid, never renews · pay by ${fmtDate(o.expiresAt)}`;
@@ -1039,6 +1147,7 @@ async function initAccount() {
     location.replace(`login.html?next=${encodeURIComponent('account.html' + location.search + location.hash)}`);
     return;
   }
+  await loadPlanCatalog();
   initAccountUi();
   const box = $('#page-notice');
   const pay = params.get('payment');
@@ -1080,6 +1189,7 @@ async function initAccount() {
   }
   renderUser();
   renderPlan();
+  renderProductPlans();
   renderExt();
 
   if (PLANS[params.get('buy')] && pay !== 'success') {

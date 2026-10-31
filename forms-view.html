@@ -7,10 +7,10 @@
   <div id="fm-list-view">
     <div class="view-head">
       <div>
-        <h1>Forms Enforcer</h1>
-        <p>Server-gated Google Forms — tamper-proof deadlines.</p>
+        <h1>Timed Forms</h1>
+        <p>Give a Google Form link a clear opening and closing window.</p>
       </div>
-      <button class="btn" id="fm-new-btn" type="button">+ New gated form</button>
+      <div><span class="muted" id="fm-usage"></span> <button class="btn" id="fm-new-btn" type="button">+ New timed link</button></div>
     </div>
 
     <!-- Empty state -->
@@ -24,10 +24,10 @@
           <path d="M44 48l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
         </svg>
       </div>
-      <h2>No gated forms yet</h2>
-      <p>Wrap your first Google Form with a server-enforced deadline. Clock spoofing impossible.</p>
+      <h2>No timed links yet</h2>
+      <p>Create a shareable link that shows a countdown, redirects while the window is open, and closes on server time.</p>
       <button class="btn" id="fm-empty-new-btn" type="button" onclick="formsModule.showCreate()">
-        Wrap your first form &rarr;
+        Create your first timed link &rarr;
       </button>
     </div>
 
@@ -58,6 +58,7 @@
             <label for="fm-c-url">Google Form URL</label>
             <input type="url" id="fm-c-url" name="googleFormUrl" placeholder="https://docs.google.com/forms/d/…" required autocomplete="off">
             <span class="fm-field-hint">Paste the full URL — we wrap it without touching the original form</span>
+            <span class="fm-field-hint">Anyone who already has the original Google Forms URL can still open it directly. Use this timed link as the address you publish.</span>
           </div>
         </div>
 
@@ -120,7 +121,7 @@
         <div class="fm-stats-row">
           <div class="fm-stat-tile">
             <div class="fm-stat-num" id="fm-detail-access">—</div>
-            <div class="fm-stat-label">Accesses</div>
+            <div class="fm-stat-label">Link views</div>
           </div>
           <div class="fm-stat-tile fm-stat-status">
             <div id="fm-detail-status-chip" class="fm-status-chip chip-draft">—</div>

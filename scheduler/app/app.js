@@ -1,7 +1,9 @@
 /* Scheduler dashboard SPA */
 'use strict';
 
-const API = '/api';
+const API = ['localhost', '127.0.0.1'].includes(location.hostname)
+  ? 'http://localhost:8080'
+  : 'https://api.submitlater.co.in';
 let token = null;
 let currentUser = null;
 let currentJobId = null;
@@ -37,7 +39,13 @@ async function refreshToken() {
     });
     if (!res.ok) return false;
     const d = await res.json();
-    token = d.token;
+    token = d.accessToken;
+    if (!token) return false;
+    try {
+      localStorage.setItem('sched_refresh', d.refreshToken);
+      const main = JSON.parse(localStorage.getItem('sl-session'));
+      if (main) localStorage.setItem('sl-session', JSON.stringify({ ...main, ...d }));
+    } catch {}
     return true;
   } catch {
     return false;
@@ -55,7 +63,7 @@ async function submitLogin() {
   });
   const d = await res.json();
   if (!res.ok) return toast(d.error || 'Login failed', 'err');
-  token = d.token;
+  token = d.accessToken;
   currentUser = d.user;
   try { localStorage.setItem('sched_refresh', d.refreshToken); } catch {}
   showApp();
@@ -74,7 +82,7 @@ async function submitSignup() {
   });
   const d = await res.json();
   if (!res.ok) return toast(d.error || 'Signup failed', 'err');
-  token = d.token;
+  token = d.accessToken;
   currentUser = d.user;
   try { localStorage.setItem('sched_refresh', d.refreshToken); } catch {}
   showApp();
@@ -106,6 +114,12 @@ function showApp() {
     document.getElementById('sb-avatar').textContent = (currentUser.name || 'U')[0].toUpperCase();
     document.getElementById('sb-plan').textContent = (currentUser.plan || 'Free') + ' plan';
   }
+  api('GET', '/scheduler/usage').then(async res => {
+    if (!res?.ok) return;
+    const usage = await res.json();
+    const name = usage.plan?.name || 'free';
+    document.getElementById('sb-plan').textContent = (name === 'trial' ? 'Trial' : name.replace(/^scheduler-/, 'Scheduler ')) + ' plan';
+  }).catch(() => {});
   switchView('jobs');
 }
 
@@ -219,7 +233,7 @@ function buildSchedule() {
     const time = document.getElementById('c-once-time').value;
     const tz = document.getElementById('c-once-tz').value;
     if (!date || !time) return null;
-    return { type: 'once', runAt: new Date(`${date}T${time}`).toISOString(), timezone: tz };
+    return { type: 'once', localDate: date, clockTime: time, timezone: tz };
   }
   if (currentSchedType === 'daily') {
     const time = document.getElementById('c-daily-time').value;
@@ -238,7 +252,7 @@ function buildSchedule() {
     const val = parseInt(document.getElementById('c-interval-val').value, 10);
     const unit = document.getElementById('c-interval-unit').value;
     if (!val || val < 1) return null;
-    const mins = unit === 'hours' ? val * 60 : val;
+    const mins = unit === 'days' ? val * 1440 : (unit === 'hours' ? val * 60 : val);
     return { type: 'interval', intervalMinutes: mins };
   }
   return null;
@@ -445,7 +459,7 @@ async function loadSettings() {
 async function saveProfile() {
   const name = document.getElementById('s-name').value.trim();
   if (!name) return toast('Enter a name', 'err');
-  const res = await api('PATCH', '/account', { name });
+  const res = await api('PATCH', '/me', { name });
   if (!res) return;
   if (!res.ok) { const d = await res.json(); return toast(d.error || 'Failed', 'err'); }
   if (currentUser) currentUser.name = name;
@@ -503,7 +517,7 @@ function toast(msg, type = 'ok') {
   if (token || storedRefresh) {
     refreshToken().then(ok => {
       if (ok && token) {
-        api('GET', '/account').then(async res => {
+        api('GET', '/me').then(async res => {
           if (res && res.ok) {
             const d = await res.json();
             currentUser = d.user || d;

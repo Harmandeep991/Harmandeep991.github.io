@@ -14,20 +14,20 @@
 </script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pricing · Submit Later</title>
-<meta name="description" content="Submit Later pricing: one account covers Button Scheduler, Forms Enforcer and Webhook Scheduler. Free forever, or Pro for $7 a month or $49 a year. 30 days of Pro free, no card.">
+<title>Submit Later Pricing | Choose Button, Form or Webhook Scheduling</title>
+<meta name="description" content="Compare separate INR plans for Submit Later Button Scheduler, Timed Forms and Webhook Scheduler. Pay only for the product you need, with no automatic renewal.">
 <link rel="canonical" href="https://submitlater.co.in/pricing.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Submit Later">
-<meta property="og:title" content="Pricing · Submit Later">
-<meta property="og:description" content="Submit Later pricing: one account covers Button Scheduler, Forms Enforcer and Webhook Scheduler. Free forever, or Pro for $7 a month or $49 a year. 30 days of Pro free, no card.">
+<meta property="og:title" content="Submit Later Pricing | Pay Only for the Tool You Need">
+<meta property="og:description" content="Separate INR plans for browser button scheduling, timed Google Form links and scheduled webhooks.">
 <meta property="og:url" content="https://submitlater.co.in/pricing.html">
 <meta property="og:image" content="https://submitlater.co.in/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="icon32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap">
 <script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="auth.css">
@@ -207,6 +207,34 @@ body[data-billing="annual"]  .price-annual  { display: block; }
   text-align: center;
   line-height: 1.6;
 }
+
+/* Product-specific pricing */
+.product-price-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch;margin:48px 0 20px}
+.product-plan{position:relative;display:flex;flex-direction:column;padding:28px;border:1px solid var(--line);border-radius:22px;background:var(--card);box-shadow:var(--shadow-sm);transition:transform .2s var(--ease-spring),box-shadow .2s,border-color .2s}
+.product-plan:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--accent) 34%,var(--line))}
+.product-plan.featured{border:2px solid var(--accent);box-shadow:0 22px 55px color-mix(in srgb,var(--accent) 14%,transparent)}
+.product-plan-head{display:flex;align-items:center;gap:13px;margin-bottom:20px}
+.product-plan-icon{width:48px;height:48px;display:grid;place-items:center;flex:none;border-radius:14px;color:#fff;background:linear-gradient(135deg,var(--brand-1),var(--brand-2));box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 25%,transparent)}
+.product-plan-icon.forms{background:linear-gradient(135deg,#8b5cf6,#6366f1)}
+.product-plan-icon.webhooks{background:linear-gradient(135deg,#10b981,#0f766e)}
+.product-plan-icon svg{width:22px;height:22px}
+.product-plan h2{margin:0;font-size:20px;line-height:1.25;letter-spacing:-.025em}
+.product-plan-head p{margin:2px 0 0;color:var(--muted);font-size:12.5px}
+.product-plan .amount{margin:0 0 6px;font-size:42px;font-weight:850;line-height:1;letter-spacing:-.045em}
+.product-plan .amount small{color:var(--muted);font-size:15px;font-weight:600;letter-spacing:0}
+.product-plan .price-detail{min-height:22px;margin:0 0 22px;color:var(--muted);font-size:13px}
+.plan-divider{height:1px;margin:0 0 20px;background:var(--line)}
+.product-plan .ticks{margin-bottom:24px}
+.product-plan .ticks li{font-size:14.5px}
+.product-plan .btn{width:100%;margin-top:auto}
+.free-note{margin-top:18px;padding:12px 14px;border-radius:12px;background:var(--soft);color:var(--muted);font-size:12.5px;line-height:1.5}
+.free-note strong{color:var(--fg)}
+.pricing-assurance{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:66px 0 0}
+.assurance-item{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.assurance-item strong{display:block;margin-bottom:4px;font-size:15px}
+.assurance-item span{color:var(--muted);font-size:13.5px;line-height:1.55}
+@media(max-width:920px){.product-price-grid{grid-template-columns:1fr;max-width:560px;margin-left:auto;margin-right:auto}.pricing-assurance{grid-template-columns:1fr}}
+@media(max-width:560px){.price-hero{padding:58px 0 32px}.product-plan{padding:23px 20px}.product-plan .amount{font-size:38px}.billing-toggle button{padding:8px 13px}}
 </style>
 </head>
 <body>
@@ -235,130 +263,103 @@ body[data-billing="annual"]  .price-annual  { display: block; }
 <section class="price-hero">
   <div class="wrap">
     <span class="eyebrow">Simple pricing</span>
-    <h1>Three tools. One account.</h1>
-    <p>Button Scheduler, Timed Forms and Webhook Scheduler all under one plan. Every new account gets <b>30 days of Pro free</b>, no card needed.</p>
+    <h1>Pay for the scheduler you need.</h1>
+    <p>Button presses, timed form links and webhooks solve different jobs. Choose one product today and add another only when your work calls for it.</p>
     <div class="billing-toggle" id="billing-toggle">
       <button data-billing="monthly" type="button">Monthly</button>
-      <button data-billing="annual" type="button" class="active">Annual <span class="save-badge">Save 42%</span></button>
+      <button data-billing="annual" type="button" class="active">Annual <span class="save-badge" data-plan-saving="max">Save up to 33%</span></button>
     </div>
   </div>
 </section>
 
 <main class="wrap">
+<section class="product-price-grid" aria-label="Submit Later product plans">
+  <article class="product-plan featured">
+    <span class="ribbon">Chrome extension</span>
+    <div class="product-plan-head">
+      <span class="product-plan-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+      <div><h2>Button Scheduler</h2><p>For browser actions and WhatsApp Web</p></div>
+    </div>
+    <div class="amount price-annual"><span data-plan-price="annual">₹399</span> <small>/ year</small></div>
+    <div class="amount price-monthly"><span data-plan-price="monthly">₹49</span> <small>/ month</small></div>
+    <p class="price-detail price-annual" data-plan-effective="annual">₹33/month when paid yearly</p>
+    <p class="price-detail price-monthly">30 days of Button Scheduler access</p>
+    <div class="plan-divider"></div>
+    <ul class="ticks">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Reopen a page and press the chosen button</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Daily, weekday and weekly repeats</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>WhatsApp Web messages, contacts and media</span></li>
+    </ul>
+    <a class="btn primary pricing-cta" href="signup.html?plan=annual" data-plan-link data-plan-annual="annual" data-plan-monthly="monthly">Choose Button Scheduler</a>
+    <div class="free-note"><strong>Free option:</strong> schedule up to 5 new button presses each month in a tab you keep open.</div>
+  </article>
 
-<div class="tiers">
+  <article class="product-plan">
+    <div class="product-plan-head">
+      <span class="product-plan-icon forms" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span>
+      <div><h2>Timed Forms</h2><p>For scheduled Google Form access links</p></div>
+    </div>
+    <div class="amount price-annual"><span data-plan-price="forms-annual">₹799</span> <small>/ year</small></div>
+    <div class="amount price-monthly"><span data-plan-price="forms-monthly">₹99</span> <small>/ month</small></div>
+    <p class="price-detail price-annual" data-plan-effective="forms-annual">₹67/month when paid yearly</p>
+    <p class="price-detail price-monthly">30 days of Timed Forms access</p>
+    <div class="plan-divider"></div>
+    <ul class="ticks">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Up to 20 saved timed form links</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Open and close windows in your timezone</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Countdown page before the link opens</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Link status, access count and simple branding</span></li>
+    </ul>
+    <a class="btn alt pricing-cta" href="signup.html?plan=forms-annual" data-plan-link data-plan-annual="forms-annual" data-plan-monthly="forms-monthly">Choose Timed Forms</a>
+    <div class="free-note"><strong>Important:</strong> the timed link controls access through Submit Later; it does not close the underlying Google Form.</div>
+  </article>
 
-  <!-- Free -->
-  <div class="tier">
-    <h3>Free</h3>
-    <p class="for">For the occasional deadline</p>
-    <div class="amount price-annual">$0 <small>forever</small></div>
-    <div class="amount price-monthly">$0 <small>forever</small></div>
-    <p class="price-detail price-annual">Limited access across all tools</p>
-    <p class="price-detail price-monthly">Limited access across all tools</p>
-    <a class="btn alt" href="signup.html" data-plan-link>Create free account</a>
-  </div>
-
-  <!-- Pro -->
-  <div class="tier pro">
-    <span class="ribbon">Most popular</span>
-    <h3>Pro</h3>
-    <p class="for">For regular use across all tools</p>
-    <div class="amount price-annual">$49 <small>/ year</small></div>
-    <div class="amount price-monthly">$7 <small>/ month</small></div>
-    <p class="price-detail price-annual">$4.08 / month · <b>save 42%</b></p>
-    <p class="price-detail price-monthly">Billed $7 every 30 days</p>
-    <a class="btn primary" id="pro-cta" href="signup.html?plan=annual" data-plan-link>Start free 30-day trial</a>
-  </div>
-
-  <!-- Business -->
-  <div class="tier teams">
-    <h3>Business</h3>
-    <p class="for">Teams, agencies &amp; power users</p>
-    <div class="amount price-annual">$149 <small>/ year</small></div>
-    <div class="amount price-monthly">$19 <small>/ month</small></div>
-    <p class="price-detail price-annual">$12.42 / month · save 34%</p>
-    <p class="price-detail price-monthly">Billed $19 every 30 days</p>
-    <a class="btn outline" href="contact.html">Contact us</a>
-  </div>
-
-</div>
-
-<p class="tier-note">Prices are in USD. Plans are prepaid and don't renew automatically — we email you 3 days before expiry. Secure checkout: cards, UPI and more. <a href="contact.html">Questions? We reply same day.</a></p>
-
-<section class="block">
-  <h2 class="center">What's included in each plan</h2>
-  <div class="card-like" style="overflow-x:auto">
-    <table class="feat-table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Free</th>
-          <th>Pro</th>
-          <th>Teams</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        <tr class="section-row">
-          <td colspan="4">Button Scheduler (Chrome extension)</td>
-        </tr>
-        <tr><td>Scheduled button presses</td><td>5 / month</td><td class="yes">Unlimited</td><td class="yes">Unlimited</td></tr>
-        <tr><td>Press any button to the second</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><td>Reopen &amp; press (no tab left open)</td><td class="dash">–</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><td>Repeating schedules (daily, weekday, weekly)</td><td class="dash">–</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><td>WhatsApp Web batch messages</td><td class="dash">–</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><td>Action Flows (multi-step sequences)</td><td class="dash">–</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><td>Team sharing of schedules</td><td class="dash">–</td><td class="dash">–</td><td class="yes">✓</td></tr>
-
-        <tr class="section-row">
-          <td colspan="4">Timed Forms</td>
-        </tr>
-        <tr><td>Active gated forms</td><td>2 forms</td><td class="yes">20 forms</td><td class="yes">Unlimited</td></tr>
-        <tr><td>Live countdown + open gate</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><td>Access count tracking</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><td>Custom branding (remove "Powered by")</td><td class="dash">–</td><td class="dash">–</td><td class="yes">✓</td></tr>
-
-        <tr class="section-row">
-          <td colspan="4">Webhook Scheduler</td>
-        </tr>
-        <tr><td>Scheduled HTTP jobs</td><td>3 jobs</td><td class="yes">20 jobs</td><td class="yes">Unlimited</td></tr>
-        <tr><td>Minimum interval</td><td>60 min</td><td class="yes">5 min</td><td class="yes">1 min</td></tr>
-        <tr><td>Runs per month</td><td>200 / mo</td><td class="yes">5,000 / mo</td><td class="yes">Unlimited</td></tr>
-        <tr><td>Email alerts on failure</td><td class="dash">–</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><td>Retry on failure</td><td class="dash">–</td><td class="yes">✓</td><td class="yes">✓</td></tr>
-        <tr><td>Execution log retention</td><td>7 days</td><td class="yes">90 days</td><td class="yes">1 year</td></tr>
-
-        <tr class="section-row">
-          <td colspan="4">Account &amp; support</td>
-        </tr>
-        <tr><td>Support</td><td>Email</td><td class="yes">Email (2 working days)</td><td class="yes">Priority (same day)</td></tr>
-        <tr><td>Team seats</td><td class="dash">–</td><td class="dash">1 user</td><td class="yes">Up to 5 users</td></tr>
-        <tr><td>30-day Pro trial, no card</td><td class="dash">–</td><td class="yes">✓ (new accounts)</td><td class="dash">–</td></tr>
-
-      </tbody>
-    </table>
-  </div>
+  <article class="product-plan">
+    <div class="product-plan-head">
+      <span class="product-plan-icon webhooks" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6M3 12A9 9 0 0 1 18 5.3L21 8M3 22v-6h6M21 12A9 9 0 0 1 6 18.7L3 16"/></svg></span>
+      <div><h2>Webhook Scheduler</h2><p>For scheduled HTTPS requests</p></div>
+    </div>
+    <div class="amount price-annual"><span data-plan-price="scheduler-annual">₹1,199</span> <small>/ year</small></div>
+    <div class="amount price-monthly"><span data-plan-price="scheduler-monthly">₹149</span> <small>/ month</small></div>
+    <p class="price-detail price-annual" data-plan-effective="scheduler-annual">₹100/month when paid yearly</p>
+    <p class="price-detail price-monthly">30 days of Webhook Scheduler access</p>
+    <div class="plan-divider"></div>
+    <ul class="ticks">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Up to 20 jobs and 5,000 runs per month</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Once, daily, weekly or interval schedules</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>GET, POST, PUT, PATCH and DELETE requests</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg><span>Run history with status and response timing</span></li>
+    </ul>
+    <a class="btn alt pricing-cta" href="signup.html?plan=scheduler-annual" data-plan-link data-plan-annual="scheduler-annual" data-plan-monthly="scheduler-monthly">Choose Webhook Scheduler</a>
+    <div class="free-note"><strong>Free allowance:</strong> up to 5 saved jobs and 200 webhook runs per month.</div>
+  </article>
 </section>
+
+<p class="tier-note">All prices are in INR. Plans are prepaid for 30 or 365 days and do not renew automatically. Checkout supports the methods shown by Cashfree. <a href="contact.html">Ask a pricing question</a>.</p>
+
+<div class="pricing-assurance">
+  <div class="assurance-item"><strong>One account, separate access</strong><span>Use the same sign-in across all products while paying only for the product plans you choose.</span></div>
+  <div class="assurance-item"><strong>30-day evaluation period</strong><span>New accounts can explore paid product features without entering payment details.</span></div>
+  <div class="assurance-item"><strong>No surprise renewal</strong><span>Your prepaid access ends on the date shown in your account unless you choose to extend it.</span></div>
+</div>
 
 <section class="block">
   <h2 class="center">Questions about pricing</h2>
   <div class="faq">
-    <details open><summary>Is it really free?</summary><p>Yes. The free plan gives you access to all three tools at limited quotas — forever, with no card. New accounts also get 30 days of Pro free to try everything.</p></details>
-    <details><summary>What does one Pro plan cover?</summary><p>Pro covers all three tools — Button Scheduler, Timed Forms and Webhook Scheduler — under your single account. No separate subscriptions.</p></details>
-    <details><summary>What's in the Business plan?</summary><p>Everything in Pro, plus up to 5 team seats, unlimited timed forms with custom branding, 1-minute webhook intervals, 1-year log retention, and priority support. Contact us to buy — Business billing is manual until the self-serve checkout is live.</p></details>
-    <details><summary>What happens when my Pro trial ends?</summary><p>You move to the free plan automatically. Anything already scheduled is still run. Repeating schedules and active webhook jobs pause until you go Pro again.</p></details>
-    <details><summary>Will I be charged automatically?</summary><p>Never. Pro is prepaid for 30 or 365 days. We email you 3 days before it ends, and you can renew in two clicks. If you buy while Pro is still active, the new time is added on top.</p></details>
+    <details open><summary>Do I need to buy all three products?</summary><p>No. Button Scheduler, Timed Forms and Webhook Scheduler have separate plans. Buy the one that fits your workflow and add another later from the same account.</p></details>
+    <details><summary>What happens after the new-account trial?</summary><p>No charge is made automatically. Each product returns to its free allowance or pauses paid-only capabilities until you purchase that product's plan.</p></details>
+    <details><summary>Can I mix monthly and annual plans?</summary><p>Yes. For example, you can keep Button Scheduler on an annual plan and use Webhook Scheduler for one month. Each product has its own access end date.</p></details>
+    <details><summary>Will I be charged automatically?</summary><p>No. Every plan is prepaid for 30 or 365 days. You decide whether to buy more time.</p></details>
     <details><summary>How can I pay?</summary><p>Checkout is handled securely. You can pay by debit or credit card, UPI, net banking or wallet. We never see your card or bank details.</p></details>
-    <details><summary>Can I get a refund?</summary><p>Yes. If Pro isn't right for you, ask within 7 days of your first payment for a full refund. See the <a href="refund.html">refund and cancellation policy</a>.</p></details>
+    <details><summary>Can I get a refund?</summary><p>Refund eligibility and processing details are explained in the <a href="refund.html">refund and cancellation policy</a>.</p></details>
     <details><summary>Do I get a receipt?</summary><p>Every payment is emailed to you and listed on your <a href="account.html#invoices">account page</a>. Need a company name on it? Email us.</p></details>
   </div>
 </section>
 
 <section class="block install-band">
   <div>
-    <h2>Try Pro free for 30 days</h2>
-    <p>All three tools. No card, no commitment. The free plan stays after the trial.</p>
+    <h2>Start with the workflow in front of you</h2>
+    <p>Create an account, explore the products, then pay only for the scheduler that earns a place in your routine.</p>
   </div>
   <a class="btn install" href="signup.html">Create free account</a>
 </section>
@@ -368,7 +369,7 @@ body[data-billing="annual"]  .price-annual  { display: block; }
   <div class="wrap foot-grid">
     <div>
       <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-      <p>A Chrome extension that presses any button at exactly the time you choose. Free plan forever; Pro is $7 a month or $49 a year.</p>
+      <p>Practical scheduling tools for browser actions, timed form links and webhooks—one account, with separate plans for each product.</p>
     </div>
     <div>
       <h4>Product</h4>
@@ -390,7 +391,6 @@ body[data-billing="annual"]  .price-annual  { display: block; }
 (function() {
   var body = document.body;
   var toggle = document.getElementById('billing-toggle');
-  var proCta = document.getElementById('pro-cta');
   var billing = 'annual';
   body.setAttribute('data-billing', billing);
 
@@ -402,9 +402,16 @@ body[data-billing="annual"]  .price-annual  { display: block; }
     toggle.querySelectorAll('button').forEach(function(b) {
       b.classList.toggle('active', b.dataset.billing === billing);
     });
-    if (proCta) {
-      proCta.href = billing === 'annual' ? 'signup.html?plan=annual' : 'signup.html?plan=monthly';
-    }
+    document.querySelectorAll('.pricing-cta').forEach(function(link) {
+      var plan = billing === 'annual' ? link.dataset.planAnnual : link.dataset.planMonthly;
+      if (globalThis.SLPlanCatalogue) {
+        globalThis.SLPlanCatalogue.syncPlanLink(link, plan);
+      } else {
+        var signedIn = false;
+        try { signedIn = !!JSON.parse(localStorage.getItem('sl-session'))?.refreshToken; } catch (_) {}
+        link.href = (signedIn ? 'account.html?buy=' : 'signup.html?plan=') + encodeURIComponent(plan);
+      }
+    });
   });
 })();
 </script>
