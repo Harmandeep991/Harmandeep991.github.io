@@ -20,16 +20,17 @@ const ACCOUNT = {
 // Fast, offline-safe defaults. `/plans` replaces these before a price is
 // displayed or checkout starts, so the admin catalogue remains authoritative.
 let PLANS = {
-  monthly: { id: 'monthly', product: 'extension', interval: 'monthly', name: 'Monthly', price: 49, days: 30, period: '30 days' },
-  annual: { id: 'annual', product: 'extension', interval: 'annual', name: 'Annual', price: 399, days: 365, period: '365 days' },
-  'forms-monthly': { id: 'forms-monthly', product: 'forms', interval: 'monthly', name: 'Timed Forms Monthly', price: 99, days: 30, period: '30 days' },
-  'forms-annual': { id: 'forms-annual', product: 'forms', interval: 'annual', name: 'Timed Forms Annual', price: 799, days: 365, period: '365 days' },
-  'scheduler-monthly': { id: 'scheduler-monthly', product: 'scheduler', interval: 'monthly', name: 'Webhook Scheduler Monthly', price: 149, days: 30, period: '30 days' },
-  'scheduler-annual': { id: 'scheduler-annual', product: 'scheduler', interval: 'annual', name: 'Webhook Scheduler Annual', price: 1199, days: 365, period: '365 days' },
+  monthly: { id: 'monthly', product: 'extension', interval: 'monthly', name: 'Monthly', price: 3, days: 30, period: '30 days' },
+  annual: { id: 'annual', product: 'extension', interval: 'annual', name: 'Annual', price: 29, days: 365, period: '365 days' },
+  'forms-monthly': { id: 'forms-monthly', product: 'forms', interval: 'monthly', name: 'Timed Forms Monthly', price: 5, days: 30, period: '30 days' },
+  'forms-annual': { id: 'forms-annual', product: 'forms', interval: 'annual', name: 'Timed Forms Annual', price: 49, days: 365, period: '365 days' },
+  'scheduler-monthly': { id: 'scheduler-monthly', product: 'scheduler', interval: 'monthly', name: 'Webhook Scheduler Monthly', price: 7, days: 30, period: '30 days' },
+  'scheduler-annual': { id: 'scheduler-annual', product: 'scheduler', interval: 'annual', name: 'Webhook Scheduler Annual', price: 69, days: 365, period: '365 days' },
 };
+let PLAN_CURRENCY = 'USD';
 let PRODUCTS = {
   extension: { id: 'extension', name: 'Button Scheduler', description: 'Schedule button presses, repeating actions and WhatsApp Web messages from Chrome.' },
-  forms: { id: 'forms', name: 'Timed Forms', description: 'Share a Google Form through a link that opens and closes on your schedule.' },
+  forms: { id: 'forms', name: 'Timed Forms', description: 'Connect a Google Form, manage its response window and present it in a branded page or website embed.' },
   scheduler: { id: 'scheduler', name: 'Webhook Scheduler', description: 'Run HTTPS requests once or on a recurring schedule, with a clear execution history.' },
 };
 let planCatalogPromise;
@@ -110,6 +111,7 @@ async function request(path, { method = 'GET', body, auth = false } = {}) {
 async function loadPlanCatalog() {
   planCatalogPromise ||= request('/plans')
     .then((catalog) => {
+      PLAN_CURRENCY = catalog.currency || PLAN_CURRENCY;
       PRODUCTS = Object.fromEntries((catalog.products || []).map((p) => [p.id, p]));
       PLANS = Object.fromEntries(
         (catalog.plans || [])
@@ -118,7 +120,7 @@ async function loadPlanCatalog() {
       );
       return catalog;
     })
-    .catch(() => ({ currency: 'INR', products: Object.values(PRODUCTS), plans: Object.values(PLANS) }));
+    .catch(() => ({ currency: PLAN_CURRENCY, products: Object.values(PRODUCTS), plans: Object.values(PLANS) }));
   return planCatalogPromise;
 }
 
@@ -145,6 +147,24 @@ async function api(path, opts = {}) {
 
 const $ = (s, root = document) => root.querySelector(s);
 const params = new URLSearchParams(location.search);
+
+function formatMoney(amount, currency = PLAN_CURRENCY) {
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency,
+      currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(Number(amount));
+  } catch {
+    return `$${Number(amount).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+  }
+}
+
+function isInternationalPhone(value) {
+  return /^\+[1-9]\d{6,14}$/.test(String(value || '').replace(/[\s().-]/g, ''));
+}
 
 const NOT_READY = 'Accounts are opening in the next few days. You can already install the extension from the Chrome Web Store.';
 
@@ -295,7 +315,7 @@ async function initSignup() {
   const plan = params.get('plan');
   if (PLANS[plan]) {
     $('#plan-note').hidden = false;
-    $('#plan-note b').textContent = `${PLANS[plan].name} plan (₹${PLANS[plan].price})`;
+    $('#plan-note b').textContent = `${PLANS[plan].name} plan (${formatMoney(PLANS[plan].price)})`;
   }
   $('#to-login').href = carry('login.html');
   initStrength(form.password, $('.pw-meter'));
@@ -488,7 +508,7 @@ function planInfo(plan) {
       sub: `Active until ${fmtDate(plan.paidUntil)}`,
       left,
       pct: Math.min(1, left / (plan.periodDays || PLANS[plan.plan]?.days || 365)),
-      planName: PLANS[plan.plan] ? `${name} · ₹${PLANS[plan.plan].price}` : plan.plan === 'custom' ? 'Pro (custom plan)' : 'Pro (complimentary)',
+      planName: PLANS[plan.plan] ? `${name} · ${formatMoney(PLANS[plan.plan].price)}` : plan.plan === 'custom' ? 'Pro (custom plan)' : 'Pro (complimentary)',
       endLabel: 'Active until',
       end: fmtDate(plan.paidUntil),
     };
@@ -555,7 +575,7 @@ function renderPlan() {
 
 const PRODUCT_FEATURES = {
   extension: ['Unlimited button schedules', 'Reopen-and-press and repeating schedules', 'WhatsApp Web scheduling'],
-  forms: ['Up to 20 saved timed form links', 'Countdown, opening and closing pages', 'Access statistics'],
+  forms: ['Up to 20 timed forms', 'Common question editing and managed response windows', 'Branded hosted pages and website embeds'],
   scheduler: ['More scheduled webhook jobs', 'Recurring HTTPS requests', 'Execution history and failure alerts'],
 };
 
@@ -611,7 +631,7 @@ function renderProductPlans() {
         top.append(name, period);
         const price = document.createElement('div');
         price.className = 'pc-price';
-        price.append(`₹${Number(plan.price).toLocaleString('en-IN')}`, Object.assign(document.createElement('small'), { textContent: ` for ${plan.days} days` }));
+        price.append(formatMoney(plan.price), Object.assign(document.createElement('small'), { textContent: ` for ${plan.days} days` }));
         const list = document.createElement('ul');
         list.className = 'pc-list';
         for (const feature of PRODUCT_FEATURES[product.id] || []) {
@@ -627,7 +647,7 @@ function renderProductPlans() {
         spinner.className = 'spin';
         spinner.setAttribute('aria-hidden', 'true');
         const label = document.createElement('span');
-        label.textContent = `Buy ${plan.interval === 'annual' ? 'annual' : 'monthly'} · ₹${Number(plan.price).toLocaleString('en-IN')}`;
+        label.textContent = `Buy ${plan.interval === 'annual' ? 'annual' : 'monthly'} · ${formatMoney(plan.price)}`;
         button.append(spinner, label);
         button.onclick = () => buy(plan.id, button);
         card.append(top, price, list, button);
@@ -772,7 +792,7 @@ function renderPayments(list) {
       const cells = [
         fmtDate(p.createdAt),
         p.planName || (p.plan === 'custom' ? `${CUSTOM.name} · ${p.days} days` : `${PLANS[p.plan]?.name || p.plan} · ${PLANS[p.plan]?.period || ''}`),
-        `₹${p.amount}`,
+        formatMoney(p.amount, p.currency || PLAN_CURRENCY),
         p.status === 'success' ? 'Paid' : p.status === 'pending' ? 'Pending' : 'Failed',
         p.txnId || '-',
       ];
@@ -844,7 +864,7 @@ const startCheckout = (what, phone) => {
   if (phone) body.phone = phone;
   return api('/checkout', { method: 'POST', body });
 };
-const whatLabel = (what) => (typeof what === 'string' ? `${PLANS[what].name} plan · ₹${PLANS[what].price}` : `Custom plan · ₹${what.amount} for ${what.days} days`);
+const whatLabel = (what) => (typeof what === 'string' ? `${PLANS[what].name} plan · ${formatMoney(PLANS[what].price)}` : `Custom plan · ${formatMoney(what.amount)} for ${what.days} days`);
 
 async function buy(what, btn) {
   const box = $('#buy-notice');
@@ -860,7 +880,7 @@ async function buy(what, btn) {
   }
 }
 
-// The payment partner needs a mobile number for the receipt; asked once, then remembered.
+// The payment partner needs a phone number for the receipt; asked once, then remembered.
 function askPhone(what) {
   const dialog = $('#phone-dialog');
   const form = $('#phone-form');
@@ -870,8 +890,8 @@ function askPhone(what) {
     e.preventDefault();
     clearErrors(form);
     const phone = form.phone.value.trim();
-    if (!/^(?:\+?91|0)?[6-9]\d{9}$/.test(phone.replace(/[\s-]/g, ''))) {
-      fieldError(form, 'phone', 'Enter a valid 10-digit mobile number.');
+    if (!isInternationalPhone(phone)) {
+      fieldError(form, 'phone', 'Enter a valid phone number with country code, such as +1 415 555 0123.');
       return form.phone.focus();
     }
     const btn = form.querySelector('button[type=submit]');
@@ -910,7 +930,7 @@ async function loadOffers() {
       title.textContent = `Your custom ${PRODUCTS[o.product]?.name || 'product'} plan for ${o.days} days`;
       const sub = document.createElement('div');
       sub.className = 'muted';
-      sub.textContent = `₹${o.amount} · prepaid, never renews · pay by ${fmtDate(o.expiresAt)}`;
+      sub.textContent = `${formatMoney(o.amount, o.currency || PLAN_CURRENCY)} · prepaid, never renews · pay by ${fmtDate(o.expiresAt)}`;
       main.append(title, sub);
       if (o.note) {
         const note = document.createElement('p');
@@ -923,7 +943,7 @@ async function loadOffers() {
       btn.className = 'btn btn-block';
       btn.style.width = 'auto';
       btn.innerHTML = '<span class="spin" aria-hidden="true"></span><span></span>';
-      btn.lastChild.textContent = `Pay ₹${o.amount}`;
+      btn.lastChild.textContent = `Pay ${formatMoney(o.amount, o.currency || PLAN_CURRENCY)}`;
       btn.onclick = () => buy({ offer: o.id, amount: o.amount, days: o.days }, btn);
       if (o.paying) {
         // A payment for it is still being confirmed: don't invite a second one.
@@ -1098,7 +1118,7 @@ function initAccountUi() {
     const phone = form.phone.value.trim();
     const ok = [
       fieldError(form, 'name', name ? '' : 'Enter your name.'),
-      fieldError(form, 'phone', !phone || /^(?:\+?91|0)?[6-9]\d{9}$/.test(phone.replace(/[\s-]/g, '')) ? '' : 'Enter a valid 10-digit mobile number.'),
+      fieldError(form, 'phone', !phone || isInternationalPhone(phone) ? '' : 'Include the country code, such as +1 415 555 0123.'),
     ].every(Boolean);
     if (!ok) return form.querySelector('.invalid input')?.focus();
     const b = form.querySelector('button[type=submit]');

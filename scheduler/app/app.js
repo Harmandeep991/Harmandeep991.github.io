@@ -10,6 +10,19 @@ let currentJobId = null;
 let newJobId = null;
 let currentSchedType = 'once';
 
+function useBrowserTimezone() {
+  let timezone = 'UTC';
+  try { timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch {}
+  ['c-once-tz', 'c-daily-tz', 'c-weekly-tz'].forEach(id => {
+    const select = document.getElementById(id);
+    if (!select) return;
+    if (![...select.options].some(option => option.value === timezone)) {
+      select.add(new Option(timezone, timezone));
+    }
+    select.value = timezone;
+  });
+}
+
 // ── Auth ──────────────────────────────────────────────────────────────────────
 
 async function api(method, path, body, retry = true) {
@@ -496,6 +509,7 @@ function toast(msg, type = 'ok') {
 // ── Init ──────────────────────────────────────────────────────────────────────
 
 (function init() {
+  useBrowserTimezone();
   const params = new URLSearchParams(location.search);
   if (params.get('signup')) showForm('signup');
 

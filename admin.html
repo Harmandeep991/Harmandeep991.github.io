@@ -80,7 +80,7 @@
       <div class="adm-stats" id="ov-stats"></div>
       <div class="adm-grid2">
         <div class="card"><div class="card-head"><div><h2>Sign-ups</h2><p>Last 30 days</p></div></div><div class="adm-chart" id="ov-signups"></div></div>
-        <div class="card"><div class="card-head"><div><h2>Revenue (₹)</h2><p>Last 30 days</p></div></div><div class="adm-chart" id="ov-revenue"></div></div>
+        <div class="card"><div class="card-head"><div><h2>Revenue (<span data-plan-currency>USD</span>)</h2><p>Last 30 days</p></div></div><div class="adm-chart" id="ov-revenue"></div></div>
       </div>
       <div class="card"><div class="card-head"><div><h2>Ending soon</h2><p>Plans in the next 7 days, trials in the next 3</p></div></div><div class="table-wrap"><table id="ov-expiring"></table></div></div>
     </section>
@@ -123,7 +123,7 @@
         <div class="card-head"><div><h2>Custom plan</h2><p>Choose one product, an access period and a price. The customer receives an email and can pay from their account; that product activates automatically. Open offers expire after 30 days.</p></div></div>
         <form id="ud-offer" class="adm-form">
           <label>Product <select name="product"><option value="extension">Button Scheduler</option><option value="forms">Timed Forms</option><option value="scheduler">Webhook Scheduler</option></select></label>
-          <label>Amount (₹) <input name="amount" type="number" min="1" max="200000" step="1" required placeholder="999"></label>
+          <label>Amount (<span data-plan-currency>USD</span>) <input name="amount" type="number" min="0.01" max="200000" step="0.01" required placeholder="49"></label>
           <label>Days <input name="days" type="number" min="1" max="1095" value="365" required></label>
           <label class="wide">Note for the customer <input name="note" maxlength="300" placeholder="e.g. Admissions office access for 2 years"></label>
           <button class="btn sm primary" type="submit">Send offer</button>
@@ -140,7 +140,7 @@
 
     <section class="view" data-view="plans" hidden>
       <div class="view-head"><h1>Plans &amp; pricing</h1><p>Manage each product independently. Checkout, account pages and public pricing read this same catalogue.</p></div>
-      <div class="notice info">Amounts are in INR and are charged exactly as shown at checkout. Disabling a plan only prevents new purchases; existing access remains valid.</div>
+      <div class="notice info">Amounts are in <span data-plan-currency>USD</span> and are charged exactly as shown at checkout. Disabling a plan only prevents new purchases; existing access remains valid.</div>
       <div id="plan-editor" class="adm-plan-grid"></div>
     </section>
 

@@ -19,12 +19,27 @@ if (STORE_URL) {
 // Prices in the HTML are useful fallbacks for visitors on a slow or offline
 // connection. Once loaded, the public catalogue replaces those values with
 // the same admin-managed prices used by checkout.
-const formatInr = new Intl.NumberFormat('en-IN', {
-  style: 'currency',
-  currency: 'INR',
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 2,
-});
+const DEFAULT_CURRENCY = 'USD';
+
+function moneyFormatter(currency = DEFAULT_CURRENCY) {
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency,
+      currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+  } catch {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: DEFAULT_CURRENCY,
+      currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+  }
+}
 
 async function hydratePlanCatalogue() {
   if (!document.querySelector('[data-plan-price], [data-plan-saving], [data-plan-effective]')) return;
@@ -33,6 +48,11 @@ async function hydratePlanCatalogue() {
     if (!response.ok) return;
     const data = await response.json();
     const plans = new Map((data.plans || []).map((plan) => [plan.id, plan]));
+    const currency = data.currency || DEFAULT_CURRENCY;
+    const formatMoney = moneyFormatter(currency);
+    document.querySelectorAll('[data-plan-currency-code]').forEach((element) => {
+      element.textContent = currency;
+    });
     const signedIn = (() => {
       try { return !!JSON.parse(localStorage.getItem('sl-session'))?.refreshToken; } catch { return false; }
     })();
@@ -61,7 +81,7 @@ async function hydratePlanCatalogue() {
     document.querySelectorAll('[data-plan-price]').forEach((element) => {
       const plan = plans.get(element.dataset.planPrice);
       if (!plan) return;
-      element.textContent = plan.active === false ? 'Unavailable' : Number.isFinite(Number(plan.amount)) ? formatInr.format(Number(plan.amount)) : element.textContent;
+      element.textContent = plan.active === false ? 'Unavailable' : Number.isFinite(Number(plan.amount)) ? formatMoney.format(Number(plan.amount)) : element.textContent;
     });
 
     document.querySelectorAll('[data-plan-effective]').forEach((element) => {
@@ -69,7 +89,7 @@ async function hydratePlanCatalogue() {
       if (plan?.active === false) {
         element.textContent = 'Not currently offered';
       } else if (plan && Number.isFinite(Number(plan.amount))) {
-        element.textContent = `${formatInr.format(Math.round(Number(plan.amount) / 12))}/month when paid yearly`;
+        element.textContent = `${formatMoney.format(Number(plan.amount) / 12)}/month when paid yearly`;
       }
     });
 
@@ -109,7 +129,7 @@ async function hydratePlanCatalogue() {
             '@type': 'Offer',
             name: plan.name,
             price: String(plan.amount),
-            priceCurrency: data.currency || 'INR',
+            priceCurrency: currency,
           }));
         structured.textContent = JSON.stringify(schema);
       } catch {}

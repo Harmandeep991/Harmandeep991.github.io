@@ -156,7 +156,7 @@
           <div class="hc-body">
             <div class="hc-tag hc-tag-new">New · Server-side</div>
             <h2>Timed Forms</h2>
-            <p>Share the link now — students see a countdown until your form opens. Hides the real URL until go-time.</p>
+            <p>Import questions, manage Google’s response window and publish a branded form page or website embed.</p>
           </div>
           <svg class="hc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
@@ -271,8 +271,8 @@
       </div>
       <div class="pay-note">
         <svg><use href="#i-shield"/></svg>
-        <span>Secure checkout by <b>Cashfree Payments</b>. Prices are in INR; checkout shows the final amount before payment.</span>
-        <span class="pay-chips"><span>UPI</span><span>Cards</span><span>Net banking</span><span>Wallets</span></span>
+        <span>Secure hosted checkout. The plan currency and final amount are shown before you pay.</span>
+        <span class="pay-chips"><span>Cards</span><span>Online banking</span><span>Local methods</span></span>
       </div>
 
       <div class="card faq-mini">
@@ -369,8 +369,8 @@
             <div class="f-err" role="alert"></div>
           </div>
           <div class="field" data-field="phone">
-            <label for="pf-phone">Mobile number <span class="muted">(optional)</span></label>
-            <div class="input"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></g></svg><input id="pf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" maxlength="16"></div>
+            <label for="pf-phone">Phone number <span class="muted">(optional, include country code)</span></label>
+            <div class="input"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></g></svg><input id="pf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+1 415 555 0123" maxlength="24"></div>
             <div class="f-help">Our payment partner needs it for receipts.</div>
             <div class="f-err" role="alert"></div>
           </div>
@@ -421,45 +421,111 @@
     <section class="view" data-view="forms" hidden>
       <div id="fm-list-view">
         <div class="view-head">
-          <div><h1>Timed Forms</h1><p>Give every participant one timed link for your existing Google Form.</p></div>
-          <button class="btn" id="fm-new-btn" type="button">+ New timed form</button>
+          <div><h1>Timed Forms</h1><p>Import a Google Form, control its response window and present it in your own branded page.</p></div>
+          <div class="fm-head-actions"><span class="muted" id="fm-usage"></span><button class="btn" id="fm-new-btn" type="button">+ New timed form</button></div>
         </div>
+
+        <div class="card fm-google-card" id="fm-google-card">
+          <div class="fm-google-copy">
+            <span class="fm-google-mark" aria-hidden="true">G</span>
+            <div><b>Google Forms connection</b><span id="fm-google-status" role="status" aria-live="polite">Checking connection…</span></div>
+          </div>
+          <div class="fm-google-actions"><button class="btn soft sm" id="fm-google-connect" type="button">Connect Google Forms</button><button class="btn line sm" id="fm-google-disconnect" type="button" hidden>Disconnect</button></div>
+        </div>
+        <p class="fm-security-note">Embedding does not make a Google Form URL secret. For imported forms, Submit Later enforces the deadline by synchronizing Google’s own “accepting responses” setting.</p>
+
         <div id="fm-empty" class="fm-empty-state" hidden>
           <div class="fm-empty-icon" aria-hidden="true"><svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="8" y="4" width="36" height="48" rx="4" stroke="currentColor" stroke-width="2" opacity="0.3"/><rect x="16" y="4" width="36" height="48" rx="4" fill="var(--card)" stroke="currentColor" stroke-width="2"/><path d="M24 20h16M24 28h16M24 36h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/><circle cx="48" cy="48" r="12" fill="var(--card)" stroke="currentColor" stroke-width="2"/><path d="M44 48l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/></svg></div>
           <h2>No timed forms yet</h2>
-          <p>Create a timed access link that shows a countdown, opens your Google Form on schedule, and closes at the time you choose.</p>
+          <p>Import a Google Form to manage its questions and response deadline, or create a legacy timed link without Google access.</p>
           <button class="btn" id="fm-empty-new-btn" type="button" onclick="formsModule.showCreate()">Create your first form →</button>
         </div>
         <div id="fm-list" class="fm-grid"></div>
       </div>
+
       <div id="fm-create-view" hidden>
-        <div class="view-head"><div><button class="fm-back-btn" type="button" id="fm-wizard-cancel">← Back to forms</button><h1 id="fm-wizard-title">New timed form</h1></div></div>
-        <div class="fm-wizard"><form id="fm-wizard-form" class="fm-wizard-form" novalidate>
-          <div class="fm-wizard-section">
-            <div class="fm-field-group"><label for="fm-c-title">Form name <span class="fm-field-hint">(for your reference)</span></label><input type="text" id="fm-c-title" name="name" placeholder="e.g. MBA Admissions 2026" maxlength="100" required autocomplete="off"></div>
-            <div class="fm-field-group"><label for="fm-c-url">Google Form URL</label><input type="url" id="fm-c-url" name="googleFormUrl" placeholder="https://docs.google.com/forms/d/…" required autocomplete="off"><span class="fm-field-hint">We time access to this link; your original Google Form and its own response settings stay unchanged.</span></div>
-          </div>
-          <div class="fm-wizard-section">
-            <div class="fm-field-row">
-              <div class="fm-field-group"><label for="fm-c-open">Opens on</label><input type="datetime-local" id="fm-c-open" name="openAt"></div>
-              <div class="fm-field-group"><label for="fm-c-close">Closes on</label><input type="datetime-local" id="fm-c-close" name="closeAt"></div>
-            </div>
-            <div class="fm-field-group"><label for="fm-c-tz">Timezone</label><select id="fm-c-tz" name="timezone"><option value="Asia/Kolkata">Asia/Kolkata (IST, UTC+5:30)</option><option value="America/New_York">America/New_York (EST/EDT)</option><option value="America/Los_Angeles">America/Los_Angeles (PST/PDT)</option><option value="Europe/London">Europe/London (GMT/BST)</option><option value="Europe/Paris">Europe/Paris (CET/CEST)</option><option value="Asia/Singapore">Asia/Singapore (SGT, UTC+8)</option><option value="UTC">UTC</option></select></div>
-          </div>
-          <div id="fm-wizard-error" class="fm-form-error" hidden></div>
-          <div class="fm-wizard-actions"><button type="button" class="btn soft" onclick="document.getElementById('fm-wizard-cancel').click()">Cancel</button><button type="submit" class="btn" id="fm-wizard-submit">Create form</button></div>
-        </form></div>
+        <div class="view-head"><div><button class="fm-back-btn" type="button" id="fm-wizard-cancel">← Back to forms</button><h1 id="fm-wizard-title">New timed form</h1><p>Import, schedule and style the hosted form experience.</p></div></div>
+        <div class="fm-builder-layout">
+          <form id="fm-wizard-form" class="fm-wizard-form" novalidate>
+            <section class="fm-wizard-section" aria-labelledby="fm-source-heading">
+              <div class="fm-section-heading"><span>1</span><div><h2 id="fm-source-heading">Import your Google Form</h2><p id="fm-wizard-google-status">Connect Google Forms to manage questions and enforce the response deadline at Google.</p></div><button class="btn soft sm" type="button" id="fm-wizard-connect">Connect Google Forms</button></div>
+              <div class="fm-field-group"><label for="fm-c-url">Google Form URL</label><div class="fm-import-row"><input type="url" id="fm-c-url" name="googleFormUrl" placeholder="https://docs.google.com/forms/d/…/edit" required autocomplete="off"><button class="btn soft" type="button" id="fm-import-btn">Import</button></div><span class="fm-field-hint">Use the owner edit URL ending in <code>/edit</code> to import. A public <code>forms.gle</code> or <code>/d/e/</code> link can only create a legacy timed link, so Submit Later cannot close direct Google responses.</span></div>
+              <input type="hidden" id="fm-c-google-id" name="googleFormId">
+              <div id="fm-import-result" class="fm-import-result" role="status" aria-live="polite" hidden></div>
+              <div id="fm-import-questions" class="fm-import-questions" hidden></div>
+              <div class="fm-field-group"><label for="fm-c-title">Display name <span class="fm-field-hint">Shown on your dashboard and hosted page</span></label><input type="text" id="fm-c-title" name="name" placeholder="e.g. MBA Admissions 2026" maxlength="100" required autocomplete="off"></div>
+            </section>
+
+            <section class="fm-wizard-section" aria-labelledby="fm-schedule-heading">
+              <div class="fm-section-heading"><span>2</span><div><h2 id="fm-schedule-heading">Response window</h2><p>Times are converted from the selected timezone and enforced by the server.</p></div></div>
+              <div class="fm-field-row"><div class="fm-field-group"><label for="fm-c-open">Opens on</label><input type="datetime-local" id="fm-c-open" name="openAt"></div><div class="fm-field-group"><label for="fm-c-close">Closes on</label><input type="datetime-local" id="fm-c-close" name="closeAt"></div></div>
+              <div class="fm-field-group"><label for="fm-c-tz">Timezone</label><select id="fm-c-tz" name="timezone"><option value="UTC">UTC</option><option value="America/New_York">America/New_York (EST/EDT)</option><option value="America/Los_Angeles">America/Los_Angeles (PST/PDT)</option><option value="America/Chicago">America/Chicago (CST/CDT)</option><option value="Europe/London">Europe/London (GMT/BST)</option><option value="Europe/Paris">Europe/Paris (CET/CEST)</option><option value="Asia/Kolkata">Asia/Kolkata (IST, UTC+5:30)</option><option value="Asia/Singapore">Asia/Singapore (SGT, UTC+8)</option><option value="Asia/Dubai">Asia/Dubai (GST, UTC+4)</option><option value="Australia/Sydney">Australia/Sydney (AEST/AEDT)</option></select></div>
+            </section>
+
+            <section class="fm-wizard-section" aria-labelledby="fm-appearance-heading">
+              <div class="fm-section-heading"><span>3</span><div><h2 id="fm-appearance-heading">Hosted page design</h2><p>These choices style the wrapper, countdown and closed page. Google controls the fields inside its embedded form.</p></div></div>
+              <div class="fm-field-group"><label for="fm-c-org">Organization name</label><input type="text" id="fm-c-org" maxlength="100" placeholder="Your organization"></div>
+              <div class="fm-field-group"><label for="fm-c-intro">Introduction <span class="fm-field-hint">Optional</span></label><textarea id="fm-c-intro" rows="3" maxlength="500" placeholder="Add instructions or a welcome message."></textarea></div>
+              <div class="fm-color-grid">
+                <div class="fm-field-group"><label for="fm-c-color">Accent</label><div class="fm-color-control"><input type="color" id="fm-c-color" value="#6366f1"><input type="text" id="fm-c-color-text" value="#6366f1" maxlength="7" aria-label="Accent color hex value"></div></div>
+                <div class="fm-field-group"><label for="fm-c-background">Background</label><div class="fm-color-control"><input type="color" id="fm-c-background" value="#f5f7fb"><input type="text" id="fm-c-background-text" value="#f5f7fb" maxlength="7" aria-label="Background color hex value"></div></div>
+                <div class="fm-field-group"><label for="fm-c-surface">Wrapper card</label><div class="fm-color-control"><input type="color" id="fm-c-surface" value="#ffffff"><input type="text" id="fm-c-surface-text" value="#ffffff" maxlength="7" aria-label="Wrapper card color hex value"></div></div>
+                <div class="fm-field-group"><label for="fm-c-text">Text</label><div class="fm-color-control"><input type="color" id="fm-c-text" value="#111827"><input type="text" id="fm-c-text-text" value="#111827" maxlength="7" aria-label="Text color hex value"></div></div>
+              </div>
+              <div class="fm-field-group"><label for="fm-c-radius">Corner radius <output id="fm-c-radius-output" for="fm-c-radius">16 px</output></label><input type="range" id="fm-c-radius" min="0" max="32" step="2" value="16"></div>
+              <div id="fm-contrast-warning" class="fm-contrast-warning" role="status" hidden>Text contrast is low. Choose colors with stronger contrast for easier reading.</div>
+            </section>
+
+            <section class="fm-wizard-section" aria-labelledby="fm-embed-heading">
+              <div class="fm-section-heading"><span>4</span><div><h2 id="fm-embed-heading">Website embed</h2><p>Let approved websites place your complete timed page inside an iframe.</p></div></div>
+              <label class="fm-check"><input type="checkbox" id="fm-c-embed-enabled"> Enable website embedding</label>
+              <div id="fm-embed-fields" hidden>
+                <div class="fm-field-group"><label for="fm-c-origins">Approved website origins</label><textarea id="fm-c-origins" rows="3" placeholder="https://www.example.org&#10;https://apply.example.org"></textarea><span class="fm-field-hint">One HTTPS origin per line. Paths are not accepted.</span></div>
+                <div class="fm-field-group"><label for="fm-c-embed-height">Embed height (pixels)</label><input type="number" id="fm-c-embed-height" min="480" max="2000" step="10" value="820"></div>
+              </div>
+            </section>
+
+            <div id="fm-wizard-error" class="fm-form-error" role="alert" hidden></div>
+            <div class="fm-wizard-actions"><button type="button" class="btn soft" id="fm-wizard-cancel-bottom">Cancel</button><button type="submit" class="btn" id="fm-wizard-submit">Create form</button></div>
+          </form>
+
+          <aside class="fm-live-preview" aria-labelledby="fm-preview-heading"><div class="fm-preview-toolbar"><b id="fm-preview-heading">Live wrapper preview</b><span>Google fields keep their Google theme</span></div><div class="fm-preview-canvas" id="fm-preview-canvas"><div class="fm-preview-card" id="fm-preview-card"><i id="fm-preview-accent"></i><small id="fm-preview-org">YOUR ORGANIZATION</small><h3 id="fm-preview-title">Your timed form</h3><p id="fm-preview-intro">Your introduction appears here.</p><div class="fm-preview-google"><b>Google Form</b><span>Your questions load here while responses are open.</span></div></div></div></aside>
+        </div>
       </div>
+
       <div id="fm-detail-view" hidden>
-        <div class="view-head"><div><button class="fm-back-btn" type="button" id="fm-detail-back">← Back to forms</button><h1 id="fm-detail-title">Form</h1></div><div class="fm-detail-head-actions"><button class="btn soft" type="button" id="fm-detail-edit">Edit</button><button class="btn fm-btn-danger" type="button" id="fm-detail-delete">Delete</button></div></div>
-        <div class="fm-detail"><div class="card fm-detail-main">
-          <div class="fm-stats-row"><div class="fm-stat-tile"><div class="fm-stat-num" id="fm-detail-access">—</div><div class="fm-stat-label">Link views</div></div><div class="fm-stat-tile fm-stat-status"><div id="fm-detail-status-chip" class="fm-status-chip chip-draft">—</div><div class="fm-stat-label">Status</div></div></div>
-          <div class="fm-detail-row"><span class="fm-detail-row-label">Public link</span><div class="fm-detail-link-group"><code class="fm-detail-link" id="fm-detail-link-text"></code><button class="fm-copy-btn" type="button" id="fm-detail-copy">Copy link</button></div></div>
-          <div class="fm-detail-row"><span class="fm-detail-row-label">Opens</span><span class="fm-detail-row-val" id="fm-detail-open">—</span></div>
-          <div class="fm-detail-row"><span class="fm-detail-row-label">Closes</span><span class="fm-detail-row-val" id="fm-detail-close">—</span></div>
-          <div class="fm-detail-row"><span class="fm-detail-row-label">Timezone</span><span class="fm-detail-row-val" id="fm-detail-tz">—</span></div>
-          <div class="fm-detail-row"><span class="fm-detail-row-label">Google Form</span><a class="fm-detail-row-link" id="fm-detail-gform" href="#" target="_blank" rel="noopener">Open original form ↗</a></div>
-        </div></div>
+        <div class="view-head"><div><button class="fm-back-btn" type="button" id="fm-detail-back">← Back to forms</button><h1 id="fm-detail-title">Form</h1></div><div class="fm-detail-head-actions"><button class="btn soft" type="button" id="fm-detail-sync" hidden>Sync Google</button><button class="btn soft" type="button" id="fm-detail-edit">Edit design &amp; timing</button><button class="btn fm-btn-danger" type="button" id="fm-detail-delete">Delete</button></div></div>
+        <div class="fm-detail-layout">
+          <div class="card fm-detail-main">
+            <div class="fm-stats-row"><div class="fm-stat-tile"><div class="fm-stat-num" id="fm-detail-access">—</div><div class="fm-stat-label">Link views</div></div><div class="fm-stat-tile fm-stat-status"><div id="fm-detail-status-chip" class="fm-status-chip chip-draft">—</div><div class="fm-stat-label">Window</div></div><div class="fm-stat-tile fm-stat-status"><div id="fm-detail-sync-chip" class="fm-status-chip chip-draft">Legacy link</div><div class="fm-stat-label">Google response control</div></div></div>
+            <div id="fm-detail-sync-note" class="fm-sync-note"></div>
+            <div class="fm-detail-row"><span class="fm-detail-row-label">Hosted page</span><div class="fm-detail-link-group"><code class="fm-detail-link" id="fm-detail-link-text"></code><button class="fm-copy-btn" type="button" id="fm-detail-copy">Copy</button><a class="fm-copy-btn fm-link-button" id="fm-detail-preview" href="#" target="_blank" rel="noopener">Preview</a></div></div>
+            <div class="fm-detail-row"><span class="fm-detail-row-label">Opens</span><span class="fm-detail-row-val" id="fm-detail-open">—</span></div>
+            <div class="fm-detail-row"><span class="fm-detail-row-label">Closes</span><span class="fm-detail-row-val" id="fm-detail-close">—</span></div>
+            <div class="fm-detail-row"><span class="fm-detail-row-label">Timezone</span><span class="fm-detail-row-val" id="fm-detail-tz">—</span></div>
+            <div class="fm-detail-row"><span class="fm-detail-row-label">Google Form</span><a class="fm-detail-row-link" id="fm-detail-gform" href="#" target="_blank" rel="noopener">Open in Google Forms ↗</a></div>
+          </div>
+
+          <div class="card fm-embed-card" id="fm-detail-embed-card">
+            <div class="fm-card-heading"><div><h2>Embed on your website</h2><p id="fm-embed-summary">Enable embedding in Edit design &amp; timing, then approve your website origin.</p></div></div>
+            <label class="fm-field-group" for="fm-embed-code">Iframe code</label><textarea id="fm-embed-code" class="fm-code-area" rows="5" readonly spellcheck="false"></textarea>
+            <button class="btn soft sm" id="fm-copy-embed" type="button">Copy embed code</button>
+          </div>
+        </div>
+
+        <section class="card fm-question-card" id="fm-question-card">
+          <div class="fm-card-heading"><div><h2>Questions</h2><p id="fm-question-summary">Connect and import this form to manage supported Google Form questions here.</p></div><button class="btn sm" id="fm-question-add" type="button" hidden>+ Add question</button></div>
+          <div id="fm-question-status" class="fm-question-status" role="status" aria-live="polite"></div>
+          <div id="fm-question-list" class="fm-question-list"></div>
+          <form id="fm-question-form" class="fm-question-editor" hidden novalidate>
+            <input type="hidden" id="fm-q-id">
+            <div class="fm-field-row"><div class="fm-field-group"><label for="fm-q-type">Question type</label><select id="fm-q-type"><option value="shortText">Short answer</option><option value="paragraph">Paragraph</option><option value="multipleChoice">Multiple choice</option><option value="checkboxes">Checkboxes</option><option value="dropdown">Dropdown</option></select><span class="fm-field-hint" id="fm-q-type-hint" hidden>Google does not safely change a question’s type here. Delete it and add a new question to use another type.</span></div><label class="fm-check fm-q-required"><input type="checkbox" id="fm-q-required"> Required</label></div>
+            <div class="fm-field-group"><label for="fm-q-title">Question</label><input type="text" id="fm-q-title" maxlength="300" autocomplete="off"></div>
+            <div class="fm-field-group" id="fm-q-options-group" hidden><label for="fm-q-options">Options</label><textarea id="fm-q-options" rows="5" placeholder="One option per line"></textarea></div>
+            <div id="fm-question-error" class="fm-form-error" role="alert" hidden></div>
+            <div class="fm-wizard-actions"><button class="btn soft" id="fm-question-cancel" type="button">Cancel</button><button class="btn" id="fm-question-save" type="submit">Add question</button></div>
+          </form>
+        </section>
       </div>
     </section>
 
@@ -499,9 +565,9 @@
                   <button class="sc-stt-btn" data-type="interval" onclick="schedulerModule._pickSchedType('interval')" type="button"><svg class="sc-stt-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h4l3 6 4-12 3 6h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sc-stt-label">Interval</span><span class="sc-stt-desc">Every N minutes/hours</span></button>
                 </div>
               </div>
-              <div id="sc-sched-once" class="sc-sched-fields sc-fg-full"><div class="sc-form-grid" style="margin:0"><div class="sc-form-group"><label for="sc-c-once-date">Date</label><input type="date" id="sc-c-once-date"></div><div class="sc-form-group"><label for="sc-c-once-time">Time</label><input type="time" id="sc-c-once-time"></div><div class="sc-form-group"><label for="sc-c-once-tz">Timezone</label><select id="sc-c-once-tz"><option value="Asia/Kolkata">Asia/Kolkata (IST)</option><option value="UTC">UTC</option><option value="America/New_York">America/New_York (ET)</option><option value="America/Los_Angeles">America/Los_Angeles (PT)</option><option value="Europe/London">Europe/London (GMT/BST)</option><option value="Asia/Singapore">Asia/Singapore (SGT)</option></select></div></div></div>
-              <div id="sc-sched-daily" class="sc-sched-fields sc-fg-full" hidden><div class="sc-form-grid" style="margin:0"><div class="sc-form-group"><label for="sc-c-daily-time">Time each day</label><input type="time" id="sc-c-daily-time"></div><div class="sc-form-group"><label for="sc-c-daily-tz">Timezone</label><select id="sc-c-daily-tz"><option value="Asia/Kolkata">Asia/Kolkata (IST)</option><option value="UTC">UTC</option><option value="America/New_York">America/New_York (ET)</option><option value="America/Los_Angeles">America/Los_Angeles (PT)</option><option value="Europe/London">Europe/London (GMT/BST)</option><option value="Asia/Singapore">Asia/Singapore (SGT)</option></select></div></div></div>
-              <div id="sc-sched-weekly" class="sc-sched-fields sc-fg-full" hidden><div class="sc-form-grid" style="margin:0"><div class="sc-form-group"><label for="sc-c-weekly-day">Day of week</label><select id="sc-c-weekly-day"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option></select></div><div class="sc-form-group"><label for="sc-c-weekly-time">At time</label><input type="time" id="sc-c-weekly-time"></div><div class="sc-form-group"><label for="sc-c-weekly-tz">Timezone</label><select id="sc-c-weekly-tz"><option value="Asia/Kolkata">Asia/Kolkata (IST)</option><option value="UTC">UTC</option><option value="America/New_York">America/New_York (ET)</option><option value="America/Los_Angeles">America/Los_Angeles (PT)</option><option value="Europe/London">Europe/London (GMT/BST)</option><option value="Asia/Singapore">Asia/Singapore (SGT)</option></select></div></div></div>
+              <div id="sc-sched-once" class="sc-sched-fields sc-fg-full"><div class="sc-form-grid" style="margin:0"><div class="sc-form-group"><label for="sc-c-once-date">Date</label><input type="date" id="sc-c-once-date"></div><div class="sc-form-group"><label for="sc-c-once-time">Time</label><input type="time" id="sc-c-once-time"></div><div class="sc-form-group"><label for="sc-c-once-tz">Timezone</label><select id="sc-c-once-tz"><option value="UTC">UTC</option><option value="America/New_York">America/New_York (ET)</option><option value="America/Los_Angeles">America/Los_Angeles (PT)</option><option value="Europe/London">Europe/London (GMT/BST)</option><option value="Asia/Kolkata">Asia/Kolkata (IST)</option><option value="Asia/Singapore">Asia/Singapore (SGT)</option></select></div></div></div>
+              <div id="sc-sched-daily" class="sc-sched-fields sc-fg-full" hidden><div class="sc-form-grid" style="margin:0"><div class="sc-form-group"><label for="sc-c-daily-time">Time each day</label><input type="time" id="sc-c-daily-time"></div><div class="sc-form-group"><label for="sc-c-daily-tz">Timezone</label><select id="sc-c-daily-tz"><option value="UTC">UTC</option><option value="America/New_York">America/New_York (ET)</option><option value="America/Los_Angeles">America/Los_Angeles (PT)</option><option value="Europe/London">Europe/London (GMT/BST)</option><option value="Asia/Kolkata">Asia/Kolkata (IST)</option><option value="Asia/Singapore">Asia/Singapore (SGT)</option></select></div></div></div>
+              <div id="sc-sched-weekly" class="sc-sched-fields sc-fg-full" hidden><div class="sc-form-grid" style="margin:0"><div class="sc-form-group"><label for="sc-c-weekly-day">Day of week</label><select id="sc-c-weekly-day"><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option></select></div><div class="sc-form-group"><label for="sc-c-weekly-time">At time</label><input type="time" id="sc-c-weekly-time"></div><div class="sc-form-group"><label for="sc-c-weekly-tz">Timezone</label><select id="sc-c-weekly-tz"><option value="UTC">UTC</option><option value="America/New_York">America/New_York (ET)</option><option value="America/Los_Angeles">America/Los_Angeles (PT)</option><option value="Europe/London">Europe/London (GMT/BST)</option><option value="Asia/Kolkata">Asia/Kolkata (IST)</option><option value="Asia/Singapore">Asia/Singapore (SGT)</option></select></div></div></div>
               <div id="sc-sched-interval" class="sc-sched-fields sc-fg-full" hidden><div class="sc-form-grid" style="margin:0"><div class="sc-form-group"><label for="sc-c-interval-val">Every</label><input type="number" id="sc-c-interval-val" min="1" max="9999" value="1" style="max-width:120px"></div><div class="sc-form-group"><label for="sc-c-interval-unit">Unit</label><select id="sc-c-interval-unit"><option value="minutes">Minutes</option><option value="hours" selected>Hours</option><option value="days">Days</option></select></div></div></div>
             </div>
             <div class="sc-wiz-footer"><button class="sc-ghost-btn" onclick="schedulerModule._wizBack()" type="button">← Back</button><button class="btn sc-new-top-btn" id="sc-wiz-submit-btn" onclick="schedulerModule._wizStep2Submit()" type="button">Create job</button></div>
@@ -530,10 +596,10 @@
 
 <dialog id="phone-dialog">
   <form id="phone-form" novalidate>
-    <h2>Your mobile number</h2>
-    <p>Our payment partner (Cashfree Payments) needs a mobile number for your receipt. We only use it for payments and won't call or message you. <b id="phone-plan"></b></p>
+    <h2>Your phone number</h2>
+    <p>Our payment partner needs a phone number for the receipt. Include the international country code; we only use it for payment processing. <b id="phone-plan"></b></p>
     <div class="field" data-field="phone">
-      <div class="input"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></g></svg><input name="phone" aria-label="Mobile number" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" maxlength="16"></div>
+      <div class="input"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></g></svg><input name="phone" aria-label="Phone number with country code" type="tel" inputmode="tel" autocomplete="tel" placeholder="+1 415 555 0123" maxlength="24"></div>
       <div class="f-err" role="alert"></div>
     </div>
     <div class="acts"><button type="button" class="btn line" id="phone-cancel">Cancel</button><button type="submit" class="btn btn-block" style="width:auto"><span class="spin" aria-hidden="true"></span><span>Continue to payment</span></button></div>

@@ -15,12 +15,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy policy · Submit Later</title>
-<meta name="description" content="How Submit Later handles account, payment, browser schedule, timed form and webhook data, including local extension storage, service providers, retention and user rights.">
+<meta name="description" content="How Submit Later handles account, payment, Google Forms authorization, embedded form, browser schedule and webhook data, including storage, providers, retention and user rights.">
 <link rel="canonical" href="https://submitlater.co.in/privacy.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Submit Later">
 <meta property="og:title" content="Privacy policy · Submit Later">
-<meta property="og:description" content="How Submit Later handles extension, account, Timed Forms and Webhook Scheduler data.">
+<meta property="og:description" content="How Submit Later handles extension, account, Google Forms connection, Timed Forms and Webhook Scheduler data.">
 <meta property="og:url" content="https://submitlater.co.in/privacy.html">
 <meta property="og:image" content="https://submitlater.co.in/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -53,7 +53,7 @@
     </div>
   </div>
 </header>
-<section class="page-hero"><div class="wrap"><h1>Privacy policy</h1><span class="updated">Last updated 31 October 2026</span></div></section>
+<section class="page-hero"><div class="wrap"><h1>Privacy policy</h1><span class="updated">Last updated 2 November 2026</span></div></section>
 <main class="wrap page-body">
 
 <section class="prose">
@@ -63,6 +63,7 @@
   <ul>
     <li>What you schedule (pages, buttons and times), and any contacts, photos and videos you add for WhatsApp, stay in Chrome on your own computer. They're never sent to us.</li>
     <li>For your account we store your name, email, a securely hashed password (or Google account ID), product access, security sessions and payment records.</li>
+    <li>If you connect Google Forms, we use the permission you approve to manage only the forms you choose in Timed Forms. Google continues to receive and store every submitted response.</li>
     <li>We don't sell or share your data for advertising, and this website has no ads. It uses Google Analytics to count visits; the extension has no analytics.</li>
   </ul>
 
@@ -70,8 +71,9 @@
   <ul>
     <li><b>Account:</b> name, email address, whether it's verified, a hashed password (we can never see the password itself), or your Google account ID and email if you sign in with Google, and when you signed up.</li>
     <li><b>Product access:</b> your evaluation end date and, for each product you buy, its plan identifier and access end date.</li>
-    <li><b>Payments:</b> amount, plan, date, status, your mobile number (our payment partner requires one for receipts), and the transaction ID and payment method type that our payment partner reports to us. We never receive your card number, UPI PIN or bank login.</li>
+    <li><b>Payments:</b> amount, plan, date, status, your phone number (our payment partner requires one for receipts), and the transaction ID and payment method type that our payment partner reports to us. We never receive your card number or banking credentials.</li>
     <li><b>Security:</b> sign-in sessions, and the IP address and time of sign-in attempts, kept for up to 30 days to prevent abuse and fraud.</li>
+    <li><b>Google Forms connection:</b> the Google identity and scopes returned during authorization, an encrypted refresh token, connection status and synchronization errors. This connection is separate from “Continue with Google”.</li>
   </ul>
 
   <h2>What the extension sends us</h2>
@@ -87,7 +89,8 @@
   <p>When "Reliable clicking" is on (the default), the extension uses Chrome's debugger permission only to send a single mouse click to the button you picked, at the time you scheduled, and then detaches immediately. It isn't used to read page content or network traffic.</p>
 
   <h2>What Timed Forms and Webhook Scheduler store</h2>
-  <p><b>Timed Forms:</b> We store the Google Form URL, name, opening and closing times, timezone, short link code, branding choices and access counters you configure. Form responses go to Google Forms rather than Submit Later. The timed link controls only access through that link; it does not change the privacy or availability of the underlying Google Form.</p>
+  <p><b>Timed Forms:</b> We store the connected Google Form identifier and responder address, page name, opening and closing times, timezone, short-link code, wrapper design, embed settings, access counters and Google synchronization state. While you use the editor, we process the form title, question text, options and item types returned by the Google Forms API. Supported edits are sent back to Google. We do not receive or store respondent answers; the embedded Google Form sends them directly to Google.</p>
+  <p>Managed timing uses the Google Forms API to change whether a connected form accepts responses. The form's responder address is visible to a visitor who inspects the iframe, so we do not treat that address as a secret. Disconnecting Google stops future API access from Submit Later; it does not delete the Google Form or the responses already held by Google.</p>
   <p><b>Webhook Scheduler:</b> We store the URL, HTTP method, headers, request body and schedule for each job, together with its status. Execution logs can contain the response status, duration, timestamps and up to 1 KB of a response preview. Headers, request bodies and response previews may contain secrets or personal data, so include only information needed for the request and rotate any credential you remove from a job.</p>
 
   <h2>Emails</h2>
@@ -95,15 +98,16 @@
 
   <h2>Who processes your data for us</h2>
   <ul>
-    <li><b>Cashfree Payments</b> processes payments under its own privacy policy. We never see or store your card, UPI or bank details.</li>
+    <li><b>Cashfree Payments</b> processes payments under its own privacy policy. We never see or store your card or bank details.</li>
     <li><b>MongoDB Atlas</b> hosts our database, and a cloud hosting provider runs our server.</li>
     <li>An email delivery service sends our account emails.</li>
-    <li><b>Google</b> handles "Continue with Google" if you use it.</li>
+    <li><b>Google</b> handles “Continue with Google”, the separate Google Forms authorization, the embedded form and every form response. Google's consent screen shows the requested permission before you connect it.</li>
   </ul>
-  <p>These providers may process data outside India, under contracts that require them to protect it.</p>
+  <p>These providers may process data in countries other than your own, under contracts that require them to protect it.</p>
 
   <h2>This website</h2>
   <p>When you log in, the website keeps your sign-in session in your browser's local storage. It uses Google Analytics, which sets cookies to count visits and see which pages are used (pages visited, rough location, device and browser type). Only the page address without any link codes is sent, and no account details. You can block it with your browser's privacy settings or Google's opt-out add-on (tools.google.com/dlpage/gaoptout). It doesn't use advertising cookies. The sign-up and login pages load Google's sign-in script from Google.</p>
+  <p>When a live Timed Form is shown—on a Submit Later page or embedded on another website—the page loads a Google Forms iframe. Google receives the visitor's IP address, browser information, the form request and any cookies or account information the browser sends to Google under Google's own privacy policy. Forms that require a Google login can be affected by browser restrictions on third-party cookies.</p>
 
   <h2>Problem reports and reviews</h2>
   <p>A problem report is sent only when you press "Submit problem" in the extension, and you can see everything in it first: your description, any links and email you add, and optional technical details (extension version, browser, language, time zone, settings and the site's name, never the full page address or form contents). If you share a review, your rating, comment and name (or "Anonymous") are stored, and shown publicly only if you allowed it and we approved it. Reports and reviews are stored in Google Workspace tools we operate.</p>
@@ -112,7 +116,7 @@
   <p>If you send a request from your account page ("Need help?"), we keep your message, our reply and your name and email with it, to answer you. These are deleted with your account. We also keep a log of the emails we send you (the address, the subject and whether it was delivered) for 90 days, so we can help if an email doesn't arrive. Changes we make to your account, such as extending a plan, are recorded in an internal log.</p>
 
   <h2>How long we keep it</h2>
-  <p>Account data is kept while your account exists. When you delete your account, we delete your personal data within 30 days. Payment records are kept as long as Indian tax and accounting laws require. To allow one free trial per person, we keep a one-way fingerprint of your email address (it can't be turned back into the address) and the date your trial ended.</p>
+  <p>Account data is kept while your account exists. When you disconnect Google Forms, we attempt to revoke the grant and delete our stored token. When you delete your account, we delete its Google connection, Timed Forms configuration and other personal data within 30 days; deleting Submit Later does not delete forms or responses held in your Google account. Payment records are kept as long as applicable tax and accounting laws require. To allow one free trial per person, we keep a one-way fingerprint of your email address (it can't be turned back into the address) and the date your trial ended.</p>
 
   <h2>Your rights</h2>
   <p>Under India's Digital Personal Data Protection Act, 2023, you can ask to access, correct or delete your personal data, and withdraw consent. You can delete your account yourself from the <a href="account.html">account page</a>, or email us. We respond within 30 days. Grievance officer: Harmandeep Singh, <a href="mailto:submitlater.review@gmail.com">submitlater.review@gmail.com</a>.</p>
@@ -131,7 +135,7 @@
   <div class="wrap foot-grid">
     <div>
       <a class="brand" href="index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
-      <p>Practical scheduling tools for browser actions, timed form links and webhooks—one account, with separate plans for each product.</p>
+      <p>Practical scheduling tools for browser actions, managed form response windows and webhooks—one account, with separate plans for each product.</p>
     </div>
     <div>
       <h4>Product</h4>
@@ -148,6 +152,6 @@
   </div>
   <div class="wrap copy"><span>© 2026 Submit Later. All rights reserved.</span><span>Fill it now. Send it later.</span></div>
 </footer>
-<script src="site.js"></script>
+<script src="site.js?v=20261102-usd"></script>
 </body>
 </html>

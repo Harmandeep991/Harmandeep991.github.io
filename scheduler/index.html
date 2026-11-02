@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="style.css">
   <script type="application/ld+json" id="scheduler-schema">
-  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later Webhook Scheduler","applicationCategory":"DeveloperApplication","operatingSystem":"Web","description":"A hosted scheduler for one-time and recurring HTTPS webhook requests.","offers":[{"@type":"Offer","price":"0","priceCurrency":"INR","name":"Free"},{"@type":"Offer","price":"149","priceCurrency":"INR","name":"Monthly"}]}
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later Webhook Scheduler","applicationCategory":"DeveloperApplication","operatingSystem":"Web","description":"A hosted scheduler for one-time and recurring HTTPS webhook requests.","offers":[{"@type":"Offer","price":"0","priceCurrency":"USD","name":"Free"},{"@type":"Offer","price":"7","priceCurrency":"USD","name":"Monthly"},{"@type":"Offer","price":"69","priceCurrency":"USD","name":"Annual"}]}
   </script>
 </head>
 <body>
@@ -212,7 +212,7 @@
           <h3>Set the schedule</h3>
           <p>Run once at a local date and time, every day, every week, or at a minute, hour or day interval. The selected IANA timezone is respected.</p>
           <div class="step-visual sv-schedule">
-            <div class="svs-row svs-active"><span class="svs-icon">◉</span> Every day at 9:00 AM IST</div>
+            <div class="svs-row svs-active"><span class="svs-icon">◉</span> Every day at 9:00 AM · America/New_York</div>
             <div class="svs-row"><span class="svs-icon">○</span> Every Monday</div>
             <div class="svs-row"><span class="svs-icon">○</span> Once — pick a date</div>
             <div class="svs-row"><span class="svs-icon">○</span> Every N minutes</div>
@@ -359,13 +359,13 @@
         <input type="checkbox" id="annual-toggle" onchange="toggleAnnual(this)">
         <span class="pt-slider"></span>
       </label>
-      <span class="pt-label">Annual <span class="pt-save" id="scheduler-plan-saving">Save ₹589</span></span>
+      <span class="pt-label">Annual <span class="pt-save" id="scheduler-plan-saving">Save $15</span></span>
     </div>
 
     <div class="pricing-cards">
       <div class="plan-card">
         <div class="plan-name">Free</div>
-        <div class="plan-price"><span class="plan-amt">₹0</span><span class="plan-per">forever</span></div>
+        <div class="plan-price"><span class="plan-amt">$0</span><span class="plan-per">forever</span></div>
         <div class="plan-tagline">For occasional automations and evaluation.</div>
         <ul class="plan-features">
           <li><span class="pf-yes">✓</span> 5 saved jobs</li>
@@ -382,7 +382,7 @@
         <div class="plan-popular">More capacity</div>
         <div class="plan-name">Webhook Scheduler Pro</div>
         <div class="plan-price">
-          <span class="plan-amt" data-monthly="₹149" data-annual="₹1,199">₹149</span>
+          <span class="plan-amt" data-monthly="$7" data-annual="$69">$7</span>
           <span class="plan-per" data-monthly="/30 days" data-annual="/365 days">/30 days</span>
         </div>
         <div class="plan-tagline">For production workflows and growing projects.</div>
@@ -397,7 +397,7 @@
         <a href="/signup.html?plan=scheduler-monthly" class="plan-cta btn-primary" id="scheduler-plan-cta">Choose Scheduler Pro</a>
       </div>
     </div>
-    <p class="pricing-note" id="scheduler-pricing-note">Prices are in INR. Purchases add 30 or 365 days and do not renew automatically.</p>
+    <p class="pricing-note" id="scheduler-pricing-note">Prices are in USD. Purchases add 30 or 365 days and do not renew automatically.</p>
   </div>
 </section>
 

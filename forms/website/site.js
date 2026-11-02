@@ -25,6 +25,7 @@
 // Annual pricing toggle. The API can disable either offer; in that case the
 // page selects the remaining offer or removes the purchase action entirely.
 let formsCatalogPlans = null;
+let formsCatalogCurrency = 'USD';
 function toggleAnnual(checkbox) {
   let annual = !!checkbox?.checked;
   if (formsCatalogPlans) {
@@ -72,7 +73,12 @@ function toggleAnnual(checkbox) {
     const annual = catalog.plans?.find(plan => plan.id === 'forms-annual');
     if (!monthly || !annual) return;
     formsCatalogPlans = { monthly, annual };
-    const money = amount => `₹${new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(amount)}`;
+    formsCatalogCurrency = String(catalog.currency || 'USD').toUpperCase();
+    const money = amount => new Intl.NumberFormat('en', {
+      style: 'currency',
+      currency: formsCatalogCurrency,
+      maximumFractionDigits: Number(amount) % 1 ? 2 : 0,
+    }).format(amount);
     const amount = document.getElementById('forms-plan-amt');
     if (amount) {
       amount.dataset.monthly = money(monthly.amount);
@@ -84,7 +90,7 @@ function toggleAnnual(checkbox) {
         .filter(plan => plan.active !== false)
         .map(plan => `${plan.interval === 'annual' ? 'Annual' : 'Monthly'} access is ${money(plan.amount)} for ${plan.days} days`);
       note.textContent = offers.length
-        ? `Prices are in INR. ${offers.join('; ')}. Checkout shows the final amount before payment.`
+        ? `Prices are in ${formsCatalogCurrency}. ${offers.join('; ')}. Checkout shows the final amount before payment.`
         : 'Timed Forms purchases are temporarily unavailable. Existing access is unchanged.';
     }
     const saving = document.getElementById('forms-plan-saving');
@@ -94,8 +100,8 @@ function toggleAnnual(checkbox) {
     if (structured) {
       const data = JSON.parse(structured.textContent);
       data.offers = [
-        { '@type': 'Offer', name: monthly.name, price: String(monthly.amount), priceCurrency: catalog.currency || 'INR' },
-        { '@type': 'Offer', name: annual.name, price: String(annual.amount), priceCurrency: catalog.currency || 'INR' },
+        { '@type': 'Offer', name: monthly.name, price: String(monthly.amount), priceCurrency: formsCatalogCurrency },
+        { '@type': 'Offer', name: annual.name, price: String(annual.amount), priceCurrency: formsCatalogCurrency },
       ].filter((_, index) => [monthly, annual][index].active !== false);
       structured.textContent = JSON.stringify(data);
     }
