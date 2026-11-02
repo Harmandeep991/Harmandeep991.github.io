@@ -45,6 +45,10 @@ window.formsModule = (function () {
 
   const $ = id => document.getElementById(id);
 
+  function publishFormCount() {
+    document.dispatchEvent(new CustomEvent('sl:product-count', { detail: { product: 'forms', count: forms.length } }));
+  }
+
   function detectedTimezone() {
     try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; }
     catch { return 'UTC'; }
@@ -259,6 +263,7 @@ window.formsModule = (function () {
     try {
       const data = await api('/forms');
       forms = data.forms || [];
+      publishFormCount();
       usage = data.usage || null;
       if ($('fm-usage') && usage) $('fm-usage').textContent = `${usage.used} of ${usage.limit} forms used`;
       if ($('fm-new-btn') && usage) {
@@ -687,6 +692,7 @@ window.formsModule = (function () {
     try {
       await api(`/forms/${id}`, { method: 'DELETE' });
       forms = forms.filter(item => formId(item) !== id);
+      publishFormCount();
       renderList();
       showSub('list');
       toast('Timed form deleted.');

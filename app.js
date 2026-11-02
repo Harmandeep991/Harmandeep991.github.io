@@ -729,6 +729,61 @@ const EXT_TEXT = {
   },
 };
 
+function renderHubState(product, { value, label, state = 'neutral', ariaLabel = '' }) {
+  const tile = $(`#hub-kpi-${product}`);
+  const valueNode = $(`#hub-kpi-${product}-val`);
+  const labelNode = $(`#hub-kpi-${product}-label`);
+  const icon = $(`#hub-kpi-${product}-ic`);
+  if (!tile || !valueNode || !labelNode || !icon) return;
+
+  valueNode.textContent = value;
+  labelNode.textContent = label;
+  tile.dataset.state = state;
+  tile.classList.toggle('is-ok', state === 'ok');
+  tile.classList.toggle('is-warn', state === 'warn');
+  tile.classList.toggle('is-action', state === 'action');
+  icon.className = `hub-kpi-ic${state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : ''}`;
+  tile.setAttribute('aria-label', ariaLabel || `${value}. ${label}`);
+}
+
+function renderHubProductCount(product, count) {
+  const forms = product === 'forms';
+  if (!Number.isInteger(count) || count < 0) {
+    renderHubState(product, {
+      value: forms ? 'Open Timed Forms' : 'Open Webhooks',
+      label: 'Count unavailable · open the tool',
+      state: 'action',
+    });
+    return;
+  }
+  if (count === 0) {
+    renderHubState(product, {
+      value: forms ? 'Create a form' : 'Create a job',
+      label: forms ? 'No timed forms yet' : 'No webhook jobs yet',
+      state: 'action',
+    });
+    return;
+  }
+  renderHubState(product, {
+    value: forms
+      ? `${count} timed ${count === 1 ? 'form' : 'forms'}`
+      : `${count} scheduled ${count === 1 ? 'job' : 'jobs'}`,
+    label: forms ? 'Open Timed Forms' : 'Open Webhook Scheduler',
+    state: 'ok',
+  });
+}
+
+async function loadHubStats() {
+  const [formsResult, jobsResult] = await Promise.allSettled([
+    api('/forms'),
+    api('/scheduler/jobs'),
+  ]);
+  const forms = formsResult.status === 'fulfilled' ? formsResult.value?.forms : null;
+  const jobs = jobsResult.status === 'fulfilled' ? jobsResult.value?.jobs : null;
+  renderHubProductCount('forms', Array.isArray(forms) ? forms.length : null);
+  renderHubProductCount('jobs', Array.isArray(jobs) ? jobs.length : null);
+}
+
 function renderExt() {
   const s = acct.ext;
   const t = { ...EXT_TEXT[s] };
@@ -754,6 +809,14 @@ function renderExt() {
   $('#s-ext-sub').textContent = t.sub;
   $('#s-ext-ic').className = `stat-ic${s === 'connected' ? ' ok' : s === 'missing' || s === 'other' ? ' warn' : ''}`;
   $('#nav-ext-dot').hidden = s === 'connected' || s === 'checking';
+  const hubState = {
+    checking: { value: 'Checking…', label: 'Looking for Button Scheduler', state: 'neutral' },
+    missing: { value: 'Install extension', label: 'Add Button Scheduler to Chrome', state: 'warn' },
+    ready: { value: 'Connect extension', label: 'Installed · connect this account', state: 'action' },
+    other: { value: 'Switch account', label: 'Connected to another account', state: 'warn' },
+    connected: { value: 'Connected', label: 'Open Button Scheduler settings', state: 'ok' },
+  }[s];
+  if (hubState) renderHubState('ext', hubState);
   renderChecklist();
 }
 
@@ -1005,7 +1068,7 @@ async function checkExtension() {
   renderExt();
   const ping = await toExtension({ type: 'ping' });
   if (!ping) acct.ext = 'missing';
-  else if (ping.email === acct.user.email) acct.ext = 'connected';
+  else if (String(ping.email || '').trim().toLowerCase() === String(acct.user.email || '').trim().toLowerCase()) acct.ext = 'connected';
   else if (ping.email) {
     acct.ext = 'other';
     acct.extEmail = ping.email;
@@ -1037,6 +1100,11 @@ async function logout() {
 }
 
 function initAccountUi() {
+  document.addEventListener('sl:product-count', (event) => {
+    const product = event.detail?.product;
+    if (product === 'forms' || product === 'jobs') renderHubProductCount(product, event.detail?.count);
+  });
+
   // Views
   addEventListener('hashchange', () => {
     const view = location.hash.slice(1);
@@ -1211,6 +1279,7 @@ async function initAccount() {
   renderPlan();
   renderProductPlans();
   renderExt();
+  loadHubStats();
 
   if (PLANS[params.get('buy')] && pay !== 'success') {
     location.hash = 'billing';

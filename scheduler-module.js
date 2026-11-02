@@ -16,6 +16,10 @@ window.schedulerModule = (function () {
 
   function $id(id) { return document.getElementById(id); }
 
+  function _publishJobCount(count) {
+    document.dispatchEvent(new CustomEvent('sl:product-count', { detail: { product: 'jobs', count: count } }));
+  }
+
   function esc(s) {
     return String(s ?? '')
       .replace(/&/g, '&amp;')
@@ -153,6 +157,7 @@ window.schedulerModule = (function () {
     try {
       var data = await api('/scheduler/jobs');
       var jobs = data.jobs || [];
+      _publishJobCount(jobs.length);
       if (!list) return;
       if (jobs.length === 0) {
         list.innerHTML = '';
@@ -366,6 +371,7 @@ window.schedulerModule = (function () {
       var p3 = $id('sc-wiz-pane-3'); if (p3) p3.hidden = false;
       _setWizStep(3);
       toast(_currentJobId ? 'Job updated' : 'Job created');
+      _loadJobs();
     } catch (e) {
       toast(e.message || 'Failed to save job');
       if (btn) { btn.disabled = false; btn.textContent = 'Create job'; }
