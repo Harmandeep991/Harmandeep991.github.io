@@ -265,7 +265,7 @@
       <div id="offers" class="offers" hidden></div>
 
       <div class="section-title"><h2 id="buy-title">Choose what you need</h2><p id="buy-sub">Each product has its own plan, so you only pay for the tools you use.</p></div>
-      <div id="buy-notice" class="notice" hidden></div>
+      <div id="buy-notice" class="notice" role="alert" tabindex="-1" hidden></div>
       <div id="plan-cards" class="product-plan-groups" aria-live="polite"></div>
       <div class="pcard custom">
         <div class="pc-top"><b>Need a custom arrangement?</b><span class="muted">Colleges, events and non-standard access periods</span></div>
@@ -643,7 +643,7 @@
     if (el && e.detail?.name) el.textContent = 'Welcome back, ' + e.detail.name.split(' ')[0];
   });
 </script>
-<script src="app.js?v=20261102-dashboard-status"></script>
+<script src="app.js?v=20261102-checkout-errors"></script>
 <script src="forms-module.js?v=20261102-dashboard-status"></script>
 <script src="scheduler-module.js?v=20261102-dashboard-status"></script>
 </body>

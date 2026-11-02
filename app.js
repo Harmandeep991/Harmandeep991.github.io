@@ -899,12 +899,20 @@ let cashfreeSdk;
 function loadCashfree() {
   cashfreeSdk ||= new Promise((resolve, reject) => {
     const s = document.createElement('script');
-    s.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
-    s.onload = () => (globalThis.Cashfree ? resolve(globalThis.Cashfree) : reject(new Error('Cashfree did not load')));
-    s.onerror = () => {
+    const fail = () => {
+      clearTimeout(timer);
+      s.remove();
       cashfreeSdk = null;
       reject(Object.assign(new Error("The payment page couldn't load. Check your connection and try again."), { code: 'SDK' }));
     };
+    const timer = setTimeout(fail, 15000);
+    s.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
+    s.onload = () => {
+      clearTimeout(timer);
+      if (globalThis.Cashfree) resolve(globalThis.Cashfree);
+      else fail();
+    };
+    s.onerror = fail;
     document.head.append(s);
   });
   return cashfreeSdk;
@@ -929,6 +937,13 @@ const startCheckout = (what, phone) => {
 };
 const whatLabel = (what) => (typeof what === 'string' ? `${PLANS[what].name} plan · ${formatMoney(PLANS[what].price)}` : `Custom plan · ${formatMoney(what.amount)} for ${what.days} days`);
 
+function showCheckoutError(err) {
+  const box = $('#buy-notice');
+  notice(box, err.code === 'PAYMENTS_OFF' ? 'info' : 'bad', messageFor(err));
+  box.scrollIntoView({ block: 'center' });
+  box.focus({ preventScroll: true });
+}
+
 async function buy(what, btn) {
   const box = $('#buy-notice');
   notice(box, '', '');
@@ -936,18 +951,22 @@ async function buy(what, btn) {
   try {
     await goToCheckout(await startCheckout(what));
   } catch (err) {
-    setBusy(btn, false);
-    if (err.code === 'PHONE_REQUIRED') return askPhone(what);
-    notice(box, err.code === 'PAYMENTS_OFF' ? 'info' : 'bad', messageFor(err));
+    if (err.code === 'PHONE_REQUIRED' || err.field === 'phone') return askPhone(what, err);
+    showCheckoutError(err);
     if (err.code === 'OFFER_GONE' || err.code === 'OFFER_PAYING') loadOffers();
+  } finally {
+    setBusy(btn, false);
   }
 }
 
 // The payment partner needs a phone number for the receipt; asked once, then remembered.
-function askPhone(what) {
+function askPhone(what, error) {
   const dialog = $('#phone-dialog');
   const form = $('#phone-form');
   clearErrors(form);
+  setBusy(form.querySelector('button[type=submit]'), false);
+  if (!form.phone.value) form.phone.value = acct.user?.phone || '';
+  if (error?.field === 'phone' && error.code !== 'PHONE_REQUIRED') fieldError(form, 'phone', messageFor(error));
   $('#phone-plan').textContent = whatLabel(what);
   form.onsubmit = async (e) => {
     e.preventDefault();
@@ -962,12 +981,13 @@ function askPhone(what) {
     try {
       await goToCheckout(await startCheckout(what, phone));
     } catch (err) {
-      setBusy(btn, false);
       if (err.field === 'phone') return fieldError(form, 'phone', messageFor(err));
       // Anything else isn't about the number: show it on the page.
       dialog.close();
-      notice($('#buy-notice'), err.code === 'PAYMENTS_OFF' ? 'info' : 'bad', messageFor(err));
+      showCheckoutError(err);
       if (err.code === 'OFFER_GONE' || err.code === 'OFFER_PAYING') loadOffers();
+    } finally {
+      setBusy(btn, false);
     }
   };
   $('#phone-cancel').onclick = () => dialog.close();
