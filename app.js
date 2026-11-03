@@ -568,7 +568,7 @@ function renderPlan() {
   $('#pn-end-label').textContent = p.endLabel;
   $('#pn-end').textContent = p.end;
   $('#buy-title').textContent = 'Choose what you need';
-  $('#buy-sub').textContent = 'Button Scheduler, Timed Forms and Webhook Scheduler are billed separately. Annual plans offer the best value.';
+  $('#buy-sub').textContent = 'Button Scheduler, Timed Forms and Webhook Scheduler are billed separately. Choose monthly or annual access for each product.';
 }
 
 const PRODUCT_FEATURES = {
@@ -611,9 +611,10 @@ function renderProductPlans() {
         section.append(unavailable);
       }
       for (const plan of plans) {
+        const annualSaving = plan.interval === 'annual' && plans.some(p => p.interval === 'monthly' && plan.price < p.price * 12);
         const card = document.createElement('article');
-        card.className = `pcard${plan.interval === 'annual' ? ' best' : ''}`;
-        if (plan.interval === 'annual') {
+        card.className = `pcard${annualSaving ? ' best' : ''}`;
+        if (annualSaving) {
           const tag = document.createElement('span');
           tag.className = 'pc-tag';
           tag.textContent = 'Best value';
