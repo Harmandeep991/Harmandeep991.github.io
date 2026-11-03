@@ -433,7 +433,7 @@
             <span class="fm-google-mark" aria-hidden="true">G</span>
             <div><b>Google Forms connection</b><span id="fm-google-status" role="status" aria-live="polite">Checking connection…</span></div>
           </div>
-          <div class="fm-google-actions"><button class="btn soft sm" id="fm-google-connect" type="button">Connect Google Forms</button><button class="btn line sm" id="fm-google-disconnect" type="button" hidden>Disconnect</button></div>
+          <div class="fm-google-actions"><button class="btn soft sm" id="fm-google-connect" type="button" disabled>Checking…</button><button class="btn line sm" id="fm-google-disconnect" type="button" hidden>Disconnect</button></div>
         </div>
         <p class="fm-security-note">Embedding does not make a Google Form URL secret. For imported forms, Submit Later enforces the deadline by synchronizing Google’s own “accepting responses” setting.</p>
 
@@ -644,7 +644,7 @@
   });
 </script>
 <script src="app.js?v=20261102-checkout-errors"></script>
-<script src="forms-module.js?v=20261102-dashboard-status"></script>
+<script src="forms-module.js?v=20261103-google-status"></script>
 <script src="scheduler-module.js?v=20261102-dashboard-status"></script>
 </body>
 </html>

@@ -33,7 +33,7 @@ window.formsModule = (function () {
   let usage = null;
   let editingId = null;
   let currentId = null;
-  let googleStatus = { connected: false };
+  let googleStatus = { connected: false, configured: null, loading: true };
   let importedGoogleForm = null;
   let importedUrl = '';
   let questions = [];
@@ -179,20 +179,23 @@ window.formsModule = (function () {
 
   function normalizeGoogleStatus(data) {
     const value = data?.connection || data || {};
+    if (typeof value.configured !== 'boolean' || typeof value.connected !== 'boolean') {
+      throw new Error('Invalid Google Forms connection status.');
+    }
     return {
-      connected: !!(value.connected ?? value.email ?? value.accountEmail),
-      configured: value.configured !== false,
+      connected: value.configured && value.connected,
+      configured: value.configured,
       email: value.email || value.accountEmail || value.googleEmail || '',
-      expiresAt: value.expiresAt || null,
-      error: value.error || '',
     };
   }
 
   async function loadGoogleStatus() {
+    googleStatus = { connected: false, configured: null, loading: true };
+    renderGoogleStatus();
     try {
       googleStatus = normalizeGoogleStatus(await api('/forms/google/status'));
-    } catch (error) {
-      googleStatus = { connected: false, configured: false, error: error.message || 'Connection unavailable.' };
+    } catch {
+      googleStatus = { connected: false, configured: null, error: true };
     }
     renderGoogleStatus();
     return googleStatus;
@@ -204,29 +207,40 @@ window.formsModule = (function () {
     const disconnect = $('fm-google-disconnect');
     const wizardStatus = $('fm-wizard-google-status');
     const wizardConnect = $('fm-wizard-connect');
-    if (status) {
-      status.textContent = googleStatus.connected
-        ? `Connected as ${googleStatus.email || 'your Google account'}. Imported forms can be edited and closed at Google.`
+    const unavailableMessage = googleStatus.loading
+      ? 'Checking your Google Forms connection…'
+      : googleStatus.error
+        ? 'We couldn’t check your Google Forms connection. Try again.'
         : googleStatus.configured === false
-          ? 'Google Forms connection is not configured on this server.'
-          : 'Not connected. Connect the Google account that owns or edits the form.';
+          ? 'Google Forms import is not available yet. Contact support for help with setup.'
+          : '';
+    if (status) {
+      status.textContent = unavailableMessage || (googleStatus.connected
+        ? `Connected as ${googleStatus.email || 'your Google account'}. Imported forms can be edited and closed at Google.`
+        : 'Not connected. Connect the Google account that owns or edits the form.');
     }
-    if (connect) connect.hidden = googleStatus.connected || googleStatus.configured === false;
     if (disconnect) disconnect.hidden = !googleStatus.connected;
     if (wizardStatus) {
-      wizardStatus.textContent = googleStatus.connected
+      wizardStatus.textContent = unavailableMessage || (googleStatus.connected
         ? `Connected as ${googleStatus.email || 'your Google account'}. Paste a form you can edit, then import it.`
-        : 'Connect Google Forms to import questions and enforce the response deadline at Google.';
+        : 'Connect Google Forms to import questions and enforce the response deadline at Google.');
     }
-    if (wizardConnect) {
-      wizardConnect.hidden = googleStatus.connected || googleStatus.configured === false;
-      wizardConnect.disabled = googleStatus.configured === false;
+    for (const button of [connect, wizardConnect]) {
+      if (!button) continue;
+      button.hidden = googleStatus.connected;
+      button.disabled = !!googleStatus.loading;
+      button.textContent = googleStatus.loading ? 'Checking…'
+        : googleStatus.error ? 'Try again'
+        : googleStatus.configured === false ? 'Check again'
+        : 'Connect Google Forms';
     }
     const importButton = $('fm-import-btn');
     if (importButton) importButton.disabled = !googleStatus.connected;
   }
 
   async function connectGoogle(button) {
+    // A status failure or missing setup must be rechecked before starting OAuth.
+    if (googleStatus.configured !== true || googleStatus.error) return loadGoogleStatus();
     if (button) button.disabled = true;
     try {
       const result = await api('/forms/google/connect', { method: 'POST' });
