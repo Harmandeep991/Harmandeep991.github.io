@@ -177,7 +177,7 @@ function safeNext(fallback = 'account.html') {
 // Links between sign-up and login keep where the user is headed.
 function carry(page) {
   const keep = new URLSearchParams();
-  for (const k of ['next', 'from', 'plan']) if (params.get(k)) keep.set(k, params.get(k));
+  for (const k of ['next', 'from', 'plan', 'extension']) if (params.get(k)) keep.set(k, params.get(k));
   return keep.size ? `${page}?${keep}` : page;
 }
 
@@ -258,12 +258,28 @@ function initStrength(input, meter) {
   });
 }
 
+function afterSignInUrl() {
+  const plan = PLANS[params.get('plan')] ? `?buy=${params.get('plan')}` : '';
+  const target = new URL(safeNext(`account.html${plan}`), location.href);
+  if (target.pathname === '/account.html') {
+    if (params.get('from') === 'extension') target.searchParams.set('connect', '1');
+    else if (!target.searchParams.has('connect')) target.searchParams.set('connect', 'auto');
+    if (/^[a-p]{32}$/.test(params.get('extension') || '')) target.searchParams.set('extension', params.get('extension'));
+  }
+  return target.pathname + target.search + target.hash;
+}
+
+function reuseExtensionSession() {
+  if (params.get('from') !== 'extension' || !session.get() || params.get('expired') === '1') return false;
+  location.replace(afterSignInUrl());
+  return true;
+}
+
 function signedIn(result) {
   session.set({ accessToken: result.accessToken, refreshToken: result.refreshToken, user: result.user });
   // The theme saved on the account follows you to this browser.
   if (result.user?.prefs) globalThis.SLTheme?.adopt(result.user.prefs);
-  const plan = PLANS[params.get('plan')] ? `?buy=${params.get('plan')}` : '';
-  location.href = safeNext(params.get('from') === 'extension' ? 'account.html?connect=1' : `account.html${plan}`);
+  location.href = afterSignInUrl();
 }
 
 // ---- Google sign-in --------------------------------------------------------
@@ -305,6 +321,7 @@ function initGoogle(box) {
 // ---- Pages -----------------------------------------------------------------
 
 async function initSignup() {
+  if (reuseExtensionSession()) return;
   await loadPlanCatalog();
   const form = $('#signup-form');
   const box = $('#form-notice');
@@ -345,6 +362,7 @@ async function initSignup() {
 }
 
 function initLogin() {
+  if (reuseExtensionSession()) return;
   const form = $('#login-form');
   const box = $('#form-notice');
   if (params.get('reset') === '1') notice(box, 'ok', 'Your password has been changed. Log in with the new one.');
@@ -1088,6 +1106,7 @@ function sendTo(id, msg, timeout = msg.type === 'signin' ? 35000 : 2500) {
 }
 
 let extensionId = null;
+const requestedExtensionId = /^[a-p]{32}$/.test(params.get('extension') || '') ? params.get('extension') : null;
 const sameEmail = (a, b) => !!a && !!b && String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
 async function findExtension() {
   window.dispatchEvent(new Event('submit-later:discover'));
@@ -1096,8 +1115,11 @@ async function findExtension() {
   const installed = replies.filter(({ ping }) => ping?.ok === true && ping.enabled !== false);
   // If more than one copy is installed, prefer the one already using this
   // account. Otherwise keep the chosen copy, then prefer a discovered build.
-  const selected = installed.find(({ ping }) => sameEmail(ping.email, acct.user?.email))
-    || installed.find(({ id }) => id === extensionId) || installed[0];
+  // An extension-initiated login must return to that same installation. A URL
+  // alone cannot add a recipient: it must also be discovered or a legacy ID.
+  const selected = requestedExtensionId ? installed.find(({ id }) => id === requestedExtensionId)
+    : installed.find(({ ping }) => sameEmail(ping.email, acct.user?.email))
+      || installed.find(({ id }) => id === extensionId) || installed[0];
   extensionId = selected?.id || null;
   return selected?.ping || null;
 }
@@ -1361,9 +1383,16 @@ async function initAccount() {
   if (params.get('custom') === '1') askCustom();
 
   await checkExtension();
-  if (params.get('connect') === '1' && (acct.ext === 'ready' || acct.ext === 'other')) {
-    showView('extension');
-    connectExtension($('#ext-connect'));
+  const connect = params.get('connect');
+  if (connect === '1' || connect === 'auto') {
+    // A refresh must not silently reconnect after the user signs out later.
+    const clean = new URL(location.href);
+    clean.searchParams.delete('connect');
+    history.replaceState(null, '', clean.pathname + clean.search + clean.hash);
+    if (acct.ext === 'ready' || (connect === '1' && acct.ext === 'other')) {
+      if (connect === '1') showView('extension');
+      await connectExtension($('#ext-connect'));
+    }
   }
 }
 
