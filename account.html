@@ -344,7 +344,7 @@
       </div>
       <div class="card faq-mini">
         <h2>Troubleshooting</h2>
-        <details><summary>It says the extension isn't installed, but it is</summary><p>Make sure it's turned on in <code>chrome://extensions</code>, then click <b>Check again</b>. This page only detects the extension in Google Chrome on a computer.</p></details>
+        <details><summary>The extension is installed but isn't detected</summary><p>Open <code>chrome://extensions</code> in this Chrome profile and enable Submit Later. Allow site access to <b>submitlater.co.in</b>, then reload this page after installing or updating the extension. Click <b>Connect extension</b> if it isn't signed in yet.</p></details>
         <details><summary>It's signed in to a different account</summary><p>Click <b>Connect extension</b> here to switch it to this account.</p></details>
         <details><summary>I paid but the extension still says my trial ended</summary><p>Open the extension's popup and click <b>Already paid? Check again</b>. It refreshes your plan from our server.</p></details>
       </div>
@@ -643,7 +643,7 @@
     if (el && e.detail?.name) el.textContent = 'Welcome back, ' + e.detail.name.split(' ')[0];
   });
 </script>
-<script src="app.js?v=20261103-currency2"></script>
+<script src="app.js?v=20261103-connection"></script>
 <script src="forms-module.js?v=20261103-google-status"></script>
 <script src="scheduler-module.js?v=20261102-dashboard-status"></script>
 </body>

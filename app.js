@@ -11,9 +11,7 @@ const ACCOUNT = {
   // Google Identity Services web client ID. While empty, the Google button
   // is hidden and email sign-up still works.
   GOOGLE_CLIENT_ID: '405030855535-69f2jifupvrf3hfostssc590brk7ji2l.apps.googleusercontent.com',
-  // Extension IDs that may receive the sign-in: the Chrome Web Store one,
-  // and the unpacked copy loaded from ~/submit-later for testing.
-  // Store copy, a local unpacked copy of this repo, and the test build (tools/build-test.sh).
+  // Fallbacks for older store/dev builds without website discovery.
   EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba', 'bhgeefkodfophbongdghjgmjkceoaimi'],
 };
 
@@ -699,11 +697,11 @@ function renderUser() {
 const EXT_TEXT = {
   checking: { chip: 'Checking', title: 'Looking for the extension…', text: '', value: 'Checking…', sub: '' },
   missing: {
-    chip: 'Not installed',
-    title: "The extension isn't installed in this browser",
-    text: 'Add Submit Later from the Chrome Web Store, then come back here to connect it. (This page can only detect it in Google Chrome on a computer.)',
-    value: 'Not installed',
-    sub: 'Install it from the Chrome Web Store',
+    chip: 'Not detected',
+    title: "We couldn't find the extension in this browser",
+    text: 'Already installed? Enable Submit Later in this Chrome profile, allow it on submitlater.co.in, then reload this page. Otherwise, add it from the Chrome Web Store.',
+    value: 'Not detected',
+    sub: 'Enable the extension or add it to Chrome',
   },
   ready: {
     chip: 'Installed',
@@ -810,7 +808,7 @@ function renderExt() {
   $('#nav-ext-dot').hidden = s === 'connected' || s === 'checking';
   const hubState = {
     checking: { value: 'Checking…', label: 'Looking for Button Scheduler', state: 'neutral' },
-    missing: { value: 'Install extension', label: 'Add Button Scheduler to Chrome', state: 'warn' },
+    missing: { value: 'Set up extension', label: 'Connect Button Scheduler in Chrome', state: 'warn' },
     ready: { value: 'Connect extension', label: 'Installed · connect this account', state: 'action' },
     other: { value: 'Switch account', label: 'Connected to another account', state: 'warn' },
     connected: { value: 'Connected', label: 'Open Button Scheduler settings', state: 'ok' },
@@ -1063,11 +1061,20 @@ function askCustom() {
   form.message.setSelectionRange(form.message.value.length, form.message.value.length);
 }
 
-// The extension accepts messages from this site (externally_connectable).
-function sendTo(id, msg) {
+// Only the public ID crosses the DOM. Session tokens go directly to the
+// selected extension through Chrome, never through discovery events or URLs.
+const discoveredExtensions = new Set();
+window.addEventListener('submit-later:extension', (event) => {
+  if (typeof event.detail === 'string' && /^[a-p]{32}$/.test(event.detail)) {
+    discoveredExtensions.add(event.detail);
+  }
+});
+
+// Sign-in can involve two 15-second API calls; a ping just reads local storage.
+function sendTo(id, msg, timeout = msg.type === 'signin' ? 35000 : 2500) {
   return new Promise((resolve) => {
     if (!globalThis.chrome?.runtime?.sendMessage) return resolve(null);
-    const timer = setTimeout(() => resolve(null), 1500);
+    const timer = setTimeout(() => resolve(null), timeout);
     try {
       chrome.runtime.sendMessage(id, msg, (res) => {
         clearTimeout(timer);
@@ -1080,26 +1087,33 @@ function sendTo(id, msg) {
   });
 }
 
-// The first installed copy that answers (store or testing) gets the messages.
 let extensionId = null;
-async function toExtension(msg) {
-  if (extensionId) return sendTo(extensionId, msg);
-  for (const id of ACCOUNT.EXTENSION_IDS) {
-    const res = await sendTo(id, msg);
-    if (res) {
-      extensionId = id;
-      return res;
-    }
-  }
-  return null;
+const sameEmail = (a, b) => !!a && !!b && String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
+async function findExtension() {
+  window.dispatchEvent(new Event('submit-later:discover'));
+  const ids = [...new Set([...discoveredExtensions, ...ACCOUNT.EXTENSION_IDS])];
+  const replies = await Promise.all(ids.map(async (id) => ({ id, ping: await sendTo(id, { type: 'ping' }) })));
+  const installed = replies.filter(({ ping }) => ping?.ok === true && ping.enabled !== false);
+  // If more than one copy is installed, prefer the one already using this
+  // account. Otherwise keep the chosen copy, then prefer a discovered build.
+  const selected = installed.find(({ ping }) => sameEmail(ping.email, acct.user?.email))
+    || installed.find(({ id }) => id === extensionId) || installed[0];
+  extensionId = selected?.id || null;
+  return selected?.ping || null;
 }
 
-async function checkExtension() {
-  acct.ext = 'checking';
-  renderExt();
-  const ping = await toExtension({ type: 'ping' });
+async function toExtension(msg) {
+  if (!extensionId) await findExtension();
+  if (!extensionId) return null;
+  // Never retry a sign-in token against another installation.
+  const reply = await sendTo(extensionId, msg);
+  if (!reply) extensionId = null;
+  return reply;
+}
+
+function updateExtensionState(ping) {
   if (!ping) acct.ext = 'missing';
-  else if (String(ping.email || '').trim().toLowerCase() === String(acct.user.email || '').trim().toLowerCase()) acct.ext = 'connected';
+  else if (sameEmail(ping.email, acct.user?.email)) acct.ext = 'connected';
   else if (ping.email) {
     acct.ext = 'other';
     acct.extEmail = ping.email;
@@ -1107,18 +1121,36 @@ async function checkExtension() {
   renderExt();
 }
 
+let extensionCheck = null;
+let extensionConnecting = false;
+function checkExtension({ quiet = false } = {}) {
+  if (!acct.user || extensionConnecting) return Promise.resolve();
+  if (extensionCheck) return extensionCheck;
+  if (!quiet) {
+    acct.ext = 'checking';
+    renderExt();
+  }
+  extensionCheck = findExtension().then(updateExtensionState).finally(() => { extensionCheck = null; });
+  return extensionCheck;
+}
+
 async function connectExtension(btn) {
+  if (extensionConnecting) return;
+  extensionConnecting = true;
   if (btn) setBusy(btn, true);
   try {
+    if (extensionCheck) await extensionCheck;
+    if (!await findExtension()) throw new Error('Extension not found');
     const { refreshToken } = await api('/auth/extension-session', { method: 'POST' });
     const res = await toExtension({ type: 'signin', refreshToken, user: acct.user });
-    if (!res?.ok) throw new Error();
-    acct.ext = 'connected';
-    renderExt();
+    if (!res?.ok || !sameEmail(res.email, acct.user.email)) throw new Error('Sign-in not confirmed');
+    updateExtensionState(res);
     toast('Extension connected. You can close this tab.');
   } catch (err) {
+    updateExtensionState(await findExtension());
     toast(err instanceof ApiError ? messageFor(err) : "Couldn't reach the extension. Make sure it's installed and turned on.");
   } finally {
+    extensionConnecting = false;
     if (btn) setBusy(btn, false);
   }
 }
@@ -1181,6 +1213,10 @@ function initAccountUi() {
   $('#ask-custom')?.addEventListener('click', askCustom);
   document.querySelectorAll('[data-connect]').forEach((b) => (b.onclick = () => connectExtension(b)));
   $('#ext-recheck').onclick = checkExtension;
+  window.addEventListener('focus', () => checkExtension({ quiet: true }));
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) checkExtension({ quiet: true });
+  });
 
   const resend = async (b) => {
     try {
