@@ -16,39 +16,24 @@ if (STORE_URL) {
   });
 }
 
-// Prices in the HTML are useful fallbacks for visitors on a slow or offline
-// connection. Once loaded, the public catalogue replaces those values with
-// the same admin-managed prices used by checkout.
-const DEFAULT_CURRENCY = 'USD';
-
-function moneyFormatter(currency = DEFAULT_CURRENCY) {
-  try {
-    return new Intl.NumberFormat(undefined, {
-      style: 'currency',
-      currency,
-      currencyDisplay: 'narrowSymbol',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    });
-  } catch {
-    return new Intl.NumberFormat(undefined, {
-      style: 'currency',
-      currency: DEFAULT_CURRENCY,
-      currencyDisplay: 'narrowSymbol',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    });
-  }
+// Load prices from the checkout catalogue. HTML never embeds a currency or
+// paid amount, so an unavailable API cannot display an outdated offer.
+function moneyFormatter(currency) {
+  return new Intl.NumberFormat(undefined, {
+    style: 'currency', currency, currencyDisplay: 'narrowSymbol',
+    minimumFractionDigits: 0, maximumFractionDigits: 2,
+  });
 }
 
 async function hydratePlanCatalogue() {
   if (!document.querySelector('[data-plan-price], [data-plan-saving], [data-plan-effective]')) return;
   try {
     const response = await fetch(PLAN_CATALOG_URL, { headers: { Accept: 'application/json' } });
-    if (!response.ok) return;
+    if (!response.ok) throw new Error('Catalogue unavailable');
     const data = await response.json();
     const plans = new Map((data.plans || []).map((plan) => [plan.id, plan]));
-    const currency = data.currency || DEFAULT_CURRENCY;
+    const currency = data.currency;
+    if (!/^[A-Z]{3}$/.test(currency || '')) throw new Error('Invalid catalogue currency');
     const formatMoney = moneyFormatter(currency);
     document.querySelectorAll('[data-plan-currency-code]').forEach((element) => {
       element.textContent = currency;
@@ -137,7 +122,7 @@ async function hydratePlanCatalogue() {
 
     document.dispatchEvent(new CustomEvent('sl:plans-loaded', { detail: data }));
   } catch {
-    // Keep the truthful fallback prices rendered in the page.
+    document.querySelectorAll('[data-plan-price]').forEach(el => { el.textContent = 'See plans'; });
   }
 }
 

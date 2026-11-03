@@ -25,7 +25,7 @@
 // Annual pricing toggle. The API can disable either offer; in that case the
 // page selects the remaining offer or removes the purchase action entirely.
 let formsCatalogPlans = null;
-let formsCatalogCurrency = 'USD';
+let formsCatalogCurrency = '';
 function toggleAnnual(checkbox) {
   let annual = !!checkbox?.checked;
   if (formsCatalogPlans) {
@@ -63,17 +63,17 @@ function toggleAnnual(checkbox) {
 }
 
 // Keep this static page aligned with the admin-managed checkout catalogue.
-// The HTML values remain as a safe fallback when the API is unavailable.
+// Paid amounts appear only after the catalogue loads.
 (async function loadFormsPricing() {
   try {
     const response = await fetch('https://api.submitlater.co.in/plans', { headers: { Accept: 'application/json' } });
-    if (!response.ok) return;
+    if (!response.ok) throw new Error('Catalogue unavailable');
     const catalog = await response.json();
     const monthly = catalog.plans?.find(plan => plan.id === 'forms-monthly');
     const annual = catalog.plans?.find(plan => plan.id === 'forms-annual');
     if (!monthly || !annual) return;
     formsCatalogPlans = { monthly, annual };
-    formsCatalogCurrency = String(catalog.currency || 'USD').toUpperCase();
+    formsCatalogCurrency = String(catalog.currency || '').toUpperCase();
     const money = amount => new Intl.NumberFormat('en', {
       style: 'currency',
       currency: formsCatalogCurrency,
@@ -90,7 +90,7 @@ function toggleAnnual(checkbox) {
         .filter(plan => plan.active !== false)
         .map(plan => `${plan.interval === 'annual' ? 'Annual' : 'Monthly'} access is ${money(plan.amount)} for ${plan.days} days`);
       note.textContent = offers.length
-        ? `Prices are in ${formsCatalogCurrency}. ${offers.join('; ')}. Checkout shows the final amount before payment.`
+        ? `${offers.join('; ')}. Checkout shows the final amount before payment.`
         : 'Timed Forms purchases are temporarily unavailable. Existing access is unchanged.';
     }
     const saving = document.getElementById('forms-plan-saving');
@@ -106,7 +106,11 @@ function toggleAnnual(checkbox) {
       structured.textContent = JSON.stringify(data);
     }
     toggleAnnual(document.getElementById('annual-toggle'));
-  } catch {}
+  } catch {
+    document.querySelectorAll('.plan-amt[data-monthly]').forEach(el => {
+      el.dataset.monthly = el.dataset.annual = el.textContent = 'See plans';
+    });
+  }
 })();
 
 // "Copy link" demo button

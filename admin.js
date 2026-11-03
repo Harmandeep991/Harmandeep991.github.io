@@ -6,6 +6,10 @@
   const VIEWS = ['overview', 'users', 'user', 'plans', 'payments', 'requests', 'installs', 'errors', 'emails', 'audit', 'settings'];
   const PRODUCT = { extension: 'Button Scheduler', forms: 'Timed Forms', scheduler: 'Webhook Scheduler' };
   const money = (n, currency = PLAN_CURRENCY) => formatMoney(n, currency);
+  const syncCurrency = (currency) => {
+    PLAN_CURRENCY = currency;
+    qa('[data-plan-currency]').forEach(el => { el.textContent = currency; });
+  };
   const d = (ms) => (ms ? new Date(ms).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '–');
   const dt = (ms) => (ms ? new Date(ms).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : '–');
   const ago = (ms) => {
@@ -92,6 +96,7 @@
   const load = {
     async overview() {
       const o = await api('/admin/overview');
+      syncCurrency(o.revenue.currency);
       stats(q('#ov-stats'), [
         ['Users', o.users.total.toLocaleString(), `+${o.users.d1} today · +${o.users.d7} this week`],
         ['Paying', o.users.paying, `${o.conversion}% of all users`],
@@ -136,9 +141,11 @@
       q('#ud-name').textContent = u.name;
       q('#ud-sub').replaceChildren(`${u.email} · joined ${d(u.createdAt)} · `, u.emailVerified ? 'verified' : 'not verified', u.phone ? ` · ${u.phone}` : '');
       const paid = r.payments.filter((p) => p.status === 'success');
+      const totals = new Map();
+      for (const p of paid) totals.set(p.currency, (totals.get(p.currency) || 0) + p.amount);
       stats(q('#ud-stats'), [
         ['Plan', planBadge(u.plan)],
-        ['Paid in total', money(paid.reduce((s, p) => s + p.amount, 0)), `${paid.length} payments`],
+        ['Paid in total', [...totals].map(([currency, amount]) => money(amount, currency)).join(' · ') || 'No payments', `${paid.length} payments`],
         ['This month', `${u.plan.freeUsed} of ${u.plan.freeLimit}`, 'free schedules used'],
         ['Extension', u.extension ? 'Connected' : 'Not connected', `${r.sessions.length} active sign-ins`],
       ]);
@@ -169,6 +176,22 @@
 
     async plans() {
       const r = await api('/admin/plans');
+      syncCurrency(r.currency);
+      const select = q('#billing-currency');
+      select.replaceChildren(...r.supportedCurrencies.map(code => h('option', { value: code }, code)));
+      select.value = r.currency;
+      const preview = () => {
+        const code = select.value;
+        q('#currency-preview').textContent = r.priceBooks[code].filter(p => p.active).map(p => `${p.name}: ${money(p.amount, code)}`).join(' · ');
+        q('#save-billing-currency').disabled = code === r.currency;
+        q('#save-billing-currency').textContent = `Use ${code} for new purchases`;
+      };
+      select.onchange = preview;
+      preview();
+      q('#billing-currency-form').onsubmit = e => {
+        e.preventDefault();
+        act(q('#save-billing-currency'), () => api('/admin/billing-currency', { method: 'PATCH', body: { currency: select.value } }), 'Billing currency updated across the website', load.plans).then(() => select.dispatchEvent(new Event('change')));
+      };
       const root = q('#plan-editor');
       const nodes = [];
       for (const product of r.products) {
@@ -187,7 +210,7 @@
           );
           form.onsubmit = (e) => {
             e.preventDefault();
-            const body = { name: form.elements.name.value.trim(), amount: Number(form.elements.amount.value), active: form.elements.active.checked };
+            const body = { name: form.elements.name.value.trim(), amount: Number(form.elements.amount.value), active: form.elements.active.checked, currency: r.currency };
             act(form.querySelector('button'), () => api(`/admin/plans/${plan.id}`, { method: 'PATCH', body }), 'Plan updated everywhere', load.plans);
           };
           nodes.push(card);
@@ -199,6 +222,7 @@
     async payments() {
       const params = new URLSearchParams({ status: q('#p-status').value, from: q('#p-from').value, to: q('#p-to').value });
       const r = await api(`/admin/payments?${params}`);
+      syncCurrency(r.currency);
       q('#p-total').textContent = `${r.count} paid · ${money(r.total)}${r.matching > r.shown ? ` · showing the latest ${r.shown} of ${r.matching} (export has all)` : ''}`;
       table(
         q('#p-table'),
@@ -356,7 +380,7 @@
     q('#ud-offer').addEventListener('submit', (e) => {
       e.preventDefault();
       const f = e.target;
-      const body = { product: f.product.value, amount: Number(f.amount.value), days: Number(f.days.value), note: f.note.value };
+      const body = { product: f.product.value, amount: Number(f.amount.value), days: Number(f.days.value), note: f.note.value, currency: PLAN_CURRENCY };
       if (!window.confirm(`Email ${state.user.email} a ${PRODUCT[body.product]} offer of ${money(body.amount)} for ${body.days} days?`)) return;
       act(f.querySelector('button'), () => api(`/admin/users/${state.user.id}/offers`, { method: 'POST', body }), 'Offer sent', () => {
         f.reset();

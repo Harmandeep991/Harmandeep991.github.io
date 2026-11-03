@@ -17,17 +17,9 @@ const ACCOUNT = {
   EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba', 'bhgeefkodfophbongdghjgmjkceoaimi'],
 };
 
-// Fast, offline-safe defaults. `/plans` replaces these before a price is
-// displayed or checkout starts, so the admin catalogue remains authoritative.
-let PLANS = {
-  monthly: { id: 'monthly', product: 'extension', interval: 'monthly', name: 'Monthly', price: 3, days: 30, period: '30 days' },
-  annual: { id: 'annual', product: 'extension', interval: 'annual', name: 'Annual', price: 29, days: 365, period: '365 days' },
-  'forms-monthly': { id: 'forms-monthly', product: 'forms', interval: 'monthly', name: 'Timed Forms Monthly', price: 5, days: 30, period: '30 days' },
-  'forms-annual': { id: 'forms-annual', product: 'forms', interval: 'annual', name: 'Timed Forms Annual', price: 49, days: 365, period: '365 days' },
-  'scheduler-monthly': { id: 'scheduler-monthly', product: 'scheduler', interval: 'monthly', name: 'Webhook Scheduler Monthly', price: 7, days: 30, period: '30 days' },
-  'scheduler-annual': { id: 'scheduler-annual', product: 'scheduler', interval: 'annual', name: 'Webhook Scheduler Annual', price: 69, days: 365, period: '365 days' },
-};
-let PLAN_CURRENCY = 'USD';
+// Prices are loaded from the same catalogue used by checkout.
+let PLANS = {};
+let PLAN_CURRENCY = '';
 let PRODUCTS = {
   extension: { id: 'extension', name: 'Button Scheduler', description: 'Schedule button presses, repeating actions and WhatsApp Web messages from Chrome.' },
   forms: { id: 'forms', name: 'Timed Forms', description: 'Connect a Google Form, manage its response window and present it in a branded page or website embed.' },
@@ -108,10 +100,12 @@ async function request(path, { method = 'GET', body, auth = false } = {}) {
   return data;
 }
 
-async function loadPlanCatalog() {
+async function loadPlanCatalog({ force = false } = {}) {
+  if (force) planCatalogPromise = null;
   planCatalogPromise ||= request('/plans')
     .then((catalog) => {
-      PLAN_CURRENCY = catalog.currency || PLAN_CURRENCY;
+      if (!['INR', 'USD'].includes(catalog.currency) || !Array.isArray(catalog.plans) || !Array.isArray(catalog.products)) throw new Error('Invalid price catalogue');
+      PLAN_CURRENCY = catalog.currency;
       PRODUCTS = Object.fromEntries((catalog.products || []).map((p) => [p.id, p]));
       PLANS = Object.fromEntries(
         (catalog.plans || [])
@@ -120,7 +114,11 @@ async function loadPlanCatalog() {
       );
       return catalog;
     })
-    .catch(() => ({ currency: PLAN_CURRENCY, products: Object.values(PRODUCTS), plans: Object.values(PLANS) }));
+    .catch(() => {
+      planCatalogPromise = null;
+      PLANS = {};
+      return { currency: PLAN_CURRENCY, products: Object.values(PRODUCTS), plans: [] };
+    });
   return planCatalogPromise;
 }
 
@@ -158,7 +156,7 @@ function formatMoney(amount, currency = PLAN_CURRENCY) {
       maximumFractionDigits: 2,
     }).format(Number(amount));
   } catch {
-    return `$${Number(amount).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+    return Number(amount).toLocaleString(undefined, { maximumFractionDigits: 2 });
   }
 }
 
@@ -932,16 +930,26 @@ async function goToCheckout(res) {
 // What to buy: a plan id ('monthly', 'annual') or { offer: id } for a custom plan.
 const startCheckout = (what, phone) => {
   const body = typeof what === 'string' ? { plan: what } : { offer: what.offer };
+  const shown = typeof what === 'string' ? PLANS[what] : what;
+  if (!shown) throw new ApiError('Reload pricing before starting checkout.', { code: 'PRICE_CHANGED' });
+  body.expected = { amount: shown.price ?? shown.amount, currency: shown.currency || PLAN_CURRENCY };
   if (phone) body.phone = phone;
   return api('/checkout', { method: 'POST', body });
 };
-const whatLabel = (what) => (typeof what === 'string' ? `${PLANS[what].name} plan · ${formatMoney(PLANS[what].price)}` : `Custom plan · ${formatMoney(what.amount)} for ${what.days} days`);
+const whatLabel = (what) => (typeof what === 'string' ? `${PLANS[what].name} plan · ${formatMoney(PLANS[what].price)}` : `Custom plan · ${formatMoney(what.amount, what.currency)} for ${what.days} days`);
 
 function showCheckoutError(err) {
   const box = $('#buy-notice');
   notice(box, err.code === 'PAYMENTS_OFF' ? 'info' : 'bad', messageFor(err));
   box.scrollIntoView({ block: 'center' });
   box.focus({ preventScroll: true });
+}
+
+async function refreshChangedPricing(err) {
+  if (!['PRICE_CHANGED', 'OFFER_CURRENCY'].includes(err.code)) return;
+  await loadPlanCatalog({ force: true });
+  renderProductPlans();
+  await loadOffers();
 }
 
 async function buy(what, btn) {
@@ -953,6 +961,7 @@ async function buy(what, btn) {
   } catch (err) {
     if (err.code === 'PHONE_REQUIRED' || err.field === 'phone') return askPhone(what, err);
     showCheckoutError(err);
+    await refreshChangedPricing(err);
     if (err.code === 'OFFER_GONE' || err.code === 'OFFER_PAYING') loadOffers();
   } finally {
     setBusy(btn, false);
@@ -985,6 +994,7 @@ function askPhone(what, error) {
       // Anything else isn't about the number: show it on the page.
       dialog.close();
       showCheckoutError(err);
+      await refreshChangedPricing(err);
       if (err.code === 'OFFER_GONE' || err.code === 'OFFER_PAYING') loadOffers();
     } finally {
       setBusy(btn, false);

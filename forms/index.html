@@ -15,21 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
   <link rel="stylesheet" href="style.css">
-  <script type="application/ld+json" id="forms-structured-data">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "Submit Later Timed Forms",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web",
-    "description": "Connect, edit, schedule and embed existing Google Forms inside branded, timezone-aware pages.",
-    "url": "https://submitlater.co.in/forms/",
-    "offers": [
-      { "@type": "Offer", "name": "Timed Forms Monthly", "price": "5", "priceCurrency": "USD" },
-      { "@type": "Offer", "name": "Timed Forms Annual", "price": "49", "priceCurrency": "USD" }
-    ]
-  }
-  </script>
+  <script type="application/ld+json" id="forms-structured-data">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later Timed Forms","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Connect, edit, schedule and embed existing Google Forms inside branded, timezone-aware pages.","url":"https://submitlater.co.in/forms/"}</script>
 </head>
 <body>
 
@@ -342,13 +328,13 @@
         <input type="checkbox" id="annual-toggle" onchange="toggleAnnual(this)">
         <span class="pt-slider"></span>
       </label>
-      <span class="pt-label">Annual <span class="pt-save" id="forms-plan-saving">Save $11</span></span>
+      <span class="pt-label">Annual <span class="pt-save" id="forms-plan-saving">Annual savings</span></span>
     </div>
 
     <div class="pricing-cards">
       <div class="plan-card">
         <div class="plan-name">Account trial</div>
-        <div class="plan-price"><span class="plan-amt">$0</span></div>
+        <div class="plan-price"><span class="plan-amt">Free</span></div>
         <div class="plan-tagline">Explore the workflow before choosing a Forms plan.</div>
         <ul class="plan-features">
           <li><span class="pf-yes">✓</span> Create an account without a card</li>
@@ -364,7 +350,7 @@
         <div class="plan-popular">Timed Forms</div>
         <div class="plan-name">Forms plan</div>
         <div class="plan-price">
-          <span class="plan-amt" id="forms-plan-amt" data-monthly="$5" data-annual="$49">$5</span>
+          <span class="plan-amt" id="forms-plan-amt" data-monthly="Loading…" data-annual="Loading…">Loading…</span>
           <span class="plan-per">/30 days</span>
         </div>
         <div class="plan-tagline">A dedicated plan for people who only need timed Google Form links.</div>
@@ -379,7 +365,7 @@
         <a href="/signup.html?plan=forms-monthly" class="plan-cta btn-primary" id="forms-plan-cta">Choose Timed Forms</a>
       </div>
     </div>
-    <p class="pricing-note" id="forms-pricing-note">Prices are in USD. Monthly access is $5 for 30 days; annual access is $49 for 365 days. Checkout shows the final amount before payment.</p>
+    <p class="pricing-note" id="forms-pricing-note">Choose monthly or annual access. Checkout shows the currency and final amount before payment.</p>
   </div>
 </section>
 
@@ -513,6 +499,6 @@
   </div>
 </footer>
 
-<script src="site.js"></script>
+<script src="site.js?v=20261103-currency"></script>
 </body>
 </html>
