@@ -514,7 +514,7 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; box-s
   .section-head h2, .block > h2 { font-size: 36px; }
   .main-nav a { padding: 7px 9px; }
 }
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .menu-btn { display: grid; }
   .main-nav {
     display: none; position: absolute; left: 0; right: 0; top: 66px; margin: 0; padding: 10px 16px 16px; flex-direction: column; gap: 2px;
@@ -525,6 +525,8 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; box-s
   .nav-login { display: none; }
   .main-nav .nav-mobile-cta { display: block !important; margin-top: 6px; text-align: center; border-radius: 12px; border: 1px solid var(--line); color: var(--fg); }
   .main-nav .nav-mobile-cta:last-child { color: #fff; border: 0; background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); }
+}
+@media (max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr; gap: 40px; padding: 48px 24px 64px; }
   .browser { transform: none; }
   .float-a { left: 10px; bottom: -18px; }
@@ -754,3 +756,24 @@ a.contact-card:hover { border-color: var(--accent); text-decoration: none; box-s
   .testimonials-static { grid-template-columns: 1fr; }
   .social-strip { gap: 10px 28px; }
 }
+
+/* Extension 1.0 walkthroughs and entry points. */
+.automation-section { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); align-items: center; gap: 48px; }
+.automation-copy h2 { margin: 14px 0; font-size: clamp(28px,3vw,38px); line-height: 1.2; letter-spacing: -.025em; }
+.automation-copy > p, .automation-points { color: var(--muted); line-height: 1.7; }
+.automation-points { padding-left: 22px; margin: 20px 0; }
+.automation-points li { margin: 9px 0; }
+.automation-points li::marker { color: var(--accent); }
+.automation-links { display: flex; flex-wrap: wrap; gap: 12px; }
+.automation-copy .automation-note { margin-top: 18px; font-size: 13px; }
+.automation-preview { margin: 0; border: 1px solid var(--line); border-radius: 20px; background: var(--card); padding: 26px; box-shadow: var(--shadow); }
+.automation-preview figcaption { display: grid; gap: 5px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.automation-preview figcaption b { font-size: 18px; }
+.automation-preview figcaption span, .automation-preview small { color: var(--muted); font-size: 13px; }
+.automation-preview ol { list-style: none; padding: 0; margin: 20px 0; display: grid; gap: 16px; }
+.automation-preview li { display: flex; gap: 14px; align-items: center; }
+.automation-preview li > span { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-radius: 10px; background: var(--info); color: var(--accent); font-size: 13px; font-weight: 750; }
+.automation-preview li > div { display: grid; gap: 4px; }
+.automation-preview > p { padding: 14px; margin: 0; border-radius: 10px; background: var(--soft); color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+.support-guide-link { margin: 28px 0 0; font-size: 15px; }
+@media(max-width:800px) { .automation-section { grid-template-columns: minmax(0,1fr); gap: 24px; } }

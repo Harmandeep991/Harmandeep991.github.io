@@ -417,3 +417,12 @@ dialog .acts { justify-content: flex-end; margin-top: 18px; }
   .hub-kpi-tile, .hub-kpi-arrow { transition: none; }
   .hub-kpi-tile:hover, .hub-kpi-tile:active { transform: none; }
 }
+
+/* Contextual guides keep the dashboard and unsaved tasks open. */
+.extension-guide-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; margin: 20px 0; }
+.extension-guide-grid > a { display: flex; flex-direction: column; gap: 9px; padding: 18px; border: 1px solid var(--line); border-radius: 14px; color: var(--fg); }
+.extension-guide-grid > a:hover { border-color: var(--accent); background: var(--soft); text-decoration: none; }
+.extension-guide-grid > a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.extension-guide-grid span { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.extension-guide-grid strong { font-size: 13px; color: var(--accent); margin-top: auto; }
+@media(max-width:1000px) { .extension-guide-grid { grid-template-columns: minmax(0,1fr); } }

@@ -103,7 +103,7 @@
         ['On trial', o.users.trials, `${o.users.free} on the free plan`],
         ['Revenue, 30 days', money(o.revenue.month), `${o.revenue.monthCount} payments · ${money(o.revenue.all)} all time`],
         ['Open requests', o.openRequests, h('a', { href: '#requests' }, 'Answer them →')],
-        ['Active installs', o.installs.active7, `seen this week · ${o.errors7} errors reported`],
+        ['Telemetry check-ins', o.installs.active7, `this week · ${o.errors7} reported errors · excludes extension 1.0` ],
       ]);
       chart(q('#ov-signups'), o.series, [{ key: 'signups', label: 'Sign-ups', cls: 'b1' }]);
       chart(q('#ov-revenue'), o.series, [{ key: 'revenue', label: 'Revenue', cls: 'b2' }], money);
@@ -119,13 +119,13 @@
       q('#u-next').disabled = (state.page + 1) * 50 >= r.count;
       table(
         q('#u-table'),
-        ['User', 'Plan', 'Email', 'Extension', 'Joined', ''],
+        ['User', 'Plan', 'Email', 'Extension activity', 'Joined', ''],
         r.users.map((u) =>
           h('tr', {},
             h('td', {}, h('b', {}, u.name), h('br'), h('small', { class: 'muted' }, u.email)),
             h('td', {}, planBadge(u.plan)),
             h('td', {}, u.emailVerified ? badge('Verified', 'ok') : badge('Not verified', 'off')),
-            h('td', {}, u.extension ? badge('Connected', 'ok') : badge('–', 'off')),
+            h('td', {}, u.extension ? badge('Previously connected', 'ok') : badge('Not yet seen', 'off')),
             h('td', {}, d(u.createdAt)),
             h('td', {}, h('a', { href: `#user/${u.id}` }, 'Open →'))
           )
@@ -147,7 +147,7 @@
         ['Plan', planBadge(u.plan)],
         ['Paid in total', [...totals].map(([currency, amount]) => money(amount, currency)).join(' · ') || 'No payments', `${paid.length} payments`],
         ['This month', `${u.plan.freeUsed} of ${u.plan.freeLimit}`, 'free schedules used'],
-        ['Extension', u.extension ? 'Connected' : 'Not connected', `${r.sessions.length} active sign-ins`],
+        ['Extension activity', u.extension ? 'Previously connected' : 'Not yet seen', `${r.sessions.length} active sign-ins · not a live connection check`],
       ]);
       table(q('#ud-pay'), ['Transaction', 'Plan', 'Amount', 'Status', 'Date'], r.payments.map((p) => h('tr', {}, h('td', {}, p.txnId), h('td', {}, planName(p)), h('td', {}, money(p.amount, p.currency)), h('td', {}, badge(...(STATUS[p.status] || [p.status]))), h('td', {}, dt(p.createdAt)))), 'No payments.');
       const OFFER = { open: ['Waiting for payment', 'warn'], paid: ['Paid', 'ok'], cancelled: ['Cancelled', 'off'] };
@@ -195,7 +195,7 @@
       const root = q('#plan-editor');
       const nodes = [];
       for (const product of r.products) {
-        nodes.push(h('div', { class: 'adm-plan-product' }, h('h2', {}, product.name), h('p', {}, product.description)));
+        nodes.push(h('div', { class: 'adm-plan-product' }, h('h2', {}, product.name), h('p', {}, product.description), h('ul', { class: 'adm-plan-features' }, ...(PRODUCT_FEATURES[product.id] || []).map(feature => h('li', {}, feature)))));
         for (const plan of r.plans.filter((x) => x.product === product.id)) {
           const form = h('form', {},
             h('label', {}, 'Plan name', h('input', { name: 'name', value: plan.name, required: true, maxlength: 80 })),
@@ -268,12 +268,12 @@
     async installs() {
       const r = await api('/admin/installs');
       stats(q('#i-stats'), [
-        ['Active today', r.active1], ['Active this week', r.active7], ['Active this month', r.active30],
-        ['Ever installed', r.total, `${r.uninstalled} uninstalled`],
+        ['Reported today', r.active1], ['Reported this week', r.active7], ['Reported this month', r.active30],
+        ['Reported installations', r.total, `${r.uninstalled} reported uninstalls`],
       ]);
       chart(q('#i-chart'), r.series, [{ key: 'installs', label: 'Installs', cls: 'b1' }, { key: 'uninstalls', label: 'Uninstalls', cls: 'b3' }]);
       const total = r.versions.reduce((s, v) => s + v.count, 0) || 1;
-      q('#i-versions').replaceChildren(...(r.versions.length ? r.versions.map((v) => h('div', { class: 'adm-vrow' }, h('b', {}, v.version), h('span', { class: 'adm-vbar' }, h('i', { style: `width:${(v.count / total) * 100}%` })), h('span', { class: 'muted' }, v.count))) : [h('p', { class: 'muted' }, 'No check-ins yet. They start with extension 0.7.0.')]));
+      q('#i-versions').replaceChildren(...(r.versions.length ? r.versions.map((v) => h('div', { class: 'adm-vrow' }, h('b', {}, v.version), h('span', { class: 'adm-vbar' }, h('i', { style: `width:${(v.count / total) * 100}%` })), h('span', { class: 'muted' }, v.count))) : [h('p', { class: 'muted' }, 'No telemetry check-ins received. Extension 1.0 does not send automatic install or run reports.')]));
     },
 
     async errors() {
@@ -307,6 +307,8 @@
         ['PayU mode', badge(c.payu.mode === 'live' ? 'Live' : 'Test', c.payu.mode === 'live' ? 'ok' : 'warn')], ['PayU key', yes(c.payu.keySet)], ['PayU salt', yes(c.payu.saltSet)],
         ['Google sign-in', yes(c.google, 'On')], ['Keep awake (free Render)', yes(c.keepAwake, 'On')], ['Background jobs', yes(c.runJobs, 'On')],
         ['Plans', c.plans.map((p) => `${p.id}: ${money(p.amount)} for ${p.days} days`).join(' · ')], ['Free plan', `${c.freeMonthlyLimit} schedules a month`],
+        ['Extension 1.0 guest access', 'Nine shared schedules stored in each browser; not tracked or reset by admin'],
+        ['Extension support', h('a', { href: 'help.html#troubleshooting', target: '_blank', rel: 'noopener' }, 'Open the user troubleshooting guide')],
         ['Admins', c.admins.join(', ')],
       ];
       q('#s-list').replaceChildren(...rows.map(([k, v]) => h('div', { class: 'adm-kvrow' }, h('span', { class: 'muted' }, k), h('span', {}, v))));
