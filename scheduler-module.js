@@ -16,6 +16,10 @@ window.schedulerModule = (function () {
 
   function $id(id) { return document.getElementById(id); }
 
+  function _publishJobCount(count) {
+    document.dispatchEvent(new CustomEvent('sl:product-count', { detail: { product: 'jobs', count: count } }));
+  }
+
   function esc(s) {
     return String(s ?? '')
       .replace(/&/g, '&amp;')
@@ -37,6 +41,20 @@ window.schedulerModule = (function () {
 
   var SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  function _detectedTimezone() {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; }
+    catch (_) { return 'UTC'; }
+  }
+
+  function _selectTimezone(el, timezone) {
+    if (!el) return;
+    var value = timezone || _detectedTimezone();
+    if (![...el.options].some(function (option) { return option.value === value; })) {
+      el.add(new Option(value + ' (detected)', value), 0);
+    }
+    el.value = value;
+  }
+
   function _tzShort(tz) {
     var map = {
       'Asia/Kolkata': 'IST',
@@ -54,7 +72,7 @@ window.schedulerModule = (function () {
     if (s.type === 'once') {
       if (!s.runAt) return 'Once';
       try {
-        return 'Once on ' + new Date(s.runAt).toLocaleString('en-IN', {
+        return 'Once on ' + new Date(s.runAt).toLocaleString(undefined, {
           day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
         });
       } catch (_) { return 'Once on ' + s.runAt; }
@@ -139,6 +157,7 @@ window.schedulerModule = (function () {
     try {
       var data = await api('/scheduler/jobs');
       var jobs = data.jobs || [];
+      _publishJobCount(jobs.length);
       if (!list) return;
       if (jobs.length === 0) {
         list.innerHTML = '';
@@ -210,6 +229,9 @@ window.schedulerModule = (function () {
     });
     var methodEl = $id('sc-c-method');
     if (methodEl) methodEl.value = 'POST';
+    ['sc-c-once-tz', 'sc-c-daily-tz', 'sc-c-weekly-tz'].forEach(function (id) {
+      _selectTimezone($id(id));
+    });
 
     // Reset wizard panes
     var p1 = $id('sc-wiz-pane-1'); if (p1) p1.hidden = false;
@@ -275,20 +297,20 @@ window.schedulerModule = (function () {
     if (_schedType === 'once') {
       var date = $id('sc-c-once-date') ? $id('sc-c-once-date').value : '';
       var time = $id('sc-c-once-time') ? $id('sc-c-once-time').value : '';
-      var tz   = $id('sc-c-once-tz')   ? $id('sc-c-once-tz').value   : 'Asia/Kolkata';
+      var tz   = $id('sc-c-once-tz')   ? $id('sc-c-once-tz').value   : 'UTC';
       if (!date || !time) return null;
       return { type: 'once', localDate: date, clockTime: time, timezone: tz };
     }
     if (_schedType === 'daily') {
       var t  = $id('sc-c-daily-time') ? $id('sc-c-daily-time').value : '';
-      var tz = $id('sc-c-daily-tz')   ? $id('sc-c-daily-tz').value   : 'Asia/Kolkata';
+      var tz = $id('sc-c-daily-tz')   ? $id('sc-c-daily-tz').value   : 'UTC';
       if (!t) return null;
       return { type: 'daily', clockTime: t, timezone: tz };
     }
     if (_schedType === 'weekly') {
       var day = parseInt(($id('sc-c-weekly-day') ? $id('sc-c-weekly-day').value : '1'), 10);
       var t   = $id('sc-c-weekly-time') ? $id('sc-c-weekly-time').value : '';
-      var tz  = $id('sc-c-weekly-tz')   ? $id('sc-c-weekly-tz').value   : 'Asia/Kolkata';
+      var tz  = $id('sc-c-weekly-tz')   ? $id('sc-c-weekly-tz').value   : 'UTC';
       if (!t) return null;
       return { type: 'weekly', clockTime: t, dayOfWeek: day, timezone: tz };
     }
@@ -349,6 +371,7 @@ window.schedulerModule = (function () {
       var p3 = $id('sc-wiz-pane-3'); if (p3) p3.hidden = false;
       _setWizStep(3);
       toast(_currentJobId ? 'Job updated' : 'Job created');
+      _loadJobs();
     } catch (e) {
       toast(e.message || 'Failed to save job');
       if (btn) { btn.disabled = false; btn.textContent = 'Create job'; }

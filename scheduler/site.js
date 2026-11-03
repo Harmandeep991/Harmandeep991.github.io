@@ -3,9 +3,7 @@
   'use strict';
 
   const API_URL = 'https://api.submitlater.co.in';
-  const money = new Intl.NumberFormat('en-IN', {
-    style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 2,
-  });
+  let money;
 
   // ── Hero dash mock animation ──
   // Simulates: job firing → log row updates → done
@@ -88,10 +86,14 @@
   };
 
   // Prices are administered by the same catalogue used for checkout. The
-  // HTML values remain useful fallbacks if the API is temporarily unavailable.
+  // HTML placeholders avoid advertising a stale currency or price.
   fetch(API_URL + '/plans', { headers: { Accept: 'application/json' } })
     .then(response => response.ok ? response.json() : Promise.reject(new Error('catalog unavailable')))
     .then(catalog => {
+      const currency = catalog.currency;
+      money = new Intl.NumberFormat('en-US', {
+        style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 2,
+      });
       const monthly = catalog.plans?.find(plan => plan.id === 'scheduler-monthly');
       const annual = catalog.plans?.find(plan => plan.id === 'scheduler-annual');
       const amount = document.querySelector('.plan-amt[data-monthly]');
@@ -116,7 +118,7 @@
           .filter(plan => plan.active !== false)
           .map(plan => `${plan.interval === 'annual' ? 'Annual' : 'Monthly'} access is ${money.format(plan.amount)} for ${plan.days} days`);
         note.textContent = offers.length
-          ? `Prices are in INR. ${offers.join('; ')}. Plans do not renew automatically.`
+          ? `${offers.join('; ')}. Plans do not renew automatically.`
           : 'Webhook Scheduler purchases are temporarily unavailable. Existing access is unchanged.';
       }
 
@@ -125,16 +127,16 @@
         try {
           const data = JSON.parse(schema.textContent);
           data.offers = [
-            { '@type': 'Offer', price: '0', priceCurrency: 'INR', name: 'Free' },
+            { '@type': 'Offer', price: '0', priceCurrency: currency, name: 'Free' },
             ...[monthly, annual]
               .filter(plan => plan.active !== false)
-              .map(plan => ({ '@type': 'Offer', price: String(plan.amount), priceCurrency: catalog.currency || 'INR', name: plan.name })),
+              .map(plan => ({ '@type': 'Offer', price: String(plan.amount), priceCurrency: currency, name: plan.name })),
           ];
           schema.textContent = JSON.stringify(data);
         } catch {}
       }
     })
-    .catch(() => {});
+    .catch(() => { document.querySelectorAll('.plan-amt[data-monthly]').forEach(el => { el.dataset.monthly = el.dataset.annual = el.textContent = 'See plans'; }); });
 
   // ── Smooth scroll ──
   document.querySelectorAll('a[href^="#"]').forEach(a => {

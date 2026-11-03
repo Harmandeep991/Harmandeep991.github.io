@@ -5,9 +5,13 @@
   const qa = (s, root = document) => [...root.querySelectorAll(s)];
   const VIEWS = ['overview', 'users', 'user', 'plans', 'payments', 'requests', 'installs', 'errors', 'emails', 'audit', 'settings'];
   const PRODUCT = { extension: 'Button Scheduler', forms: 'Timed Forms', scheduler: 'Webhook Scheduler' };
-  const inr = (n) => `₹${Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
-  const d = (ms) => (ms ? new Date(ms).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '–');
-  const dt = (ms) => (ms ? new Date(ms).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : '–');
+  const money = (n, currency = PLAN_CURRENCY) => formatMoney(n, currency);
+  const syncCurrency = (currency) => {
+    PLAN_CURRENCY = currency;
+    qa('[data-plan-currency]').forEach(el => { el.textContent = currency; });
+  };
+  const d = (ms) => (ms ? new Date(ms).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '–');
+  const dt = (ms) => (ms ? new Date(ms).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : '–');
   const ago = (ms) => {
     if (!ms) return '–';
     const s = (Date.now() - ms) / 1000;
@@ -92,16 +96,17 @@
   const load = {
     async overview() {
       const o = await api('/admin/overview');
+      syncCurrency(o.revenue.currency);
       stats(q('#ov-stats'), [
-        ['Users', o.users.total.toLocaleString('en-IN'), `+${o.users.d1} today · +${o.users.d7} this week`],
+        ['Users', o.users.total.toLocaleString(), `+${o.users.d1} today · +${o.users.d7} this week`],
         ['Paying', o.users.paying, `${o.conversion}% of all users`],
         ['On trial', o.users.trials, `${o.users.free} on the free plan`],
-        ['Revenue, 30 days', inr(o.revenue.month), `${o.revenue.monthCount} payments · ${inr(o.revenue.all)} all time`],
+        ['Revenue, 30 days', money(o.revenue.month), `${o.revenue.monthCount} payments · ${money(o.revenue.all)} all time`],
         ['Open requests', o.openRequests, h('a', { href: '#requests' }, 'Answer them →')],
         ['Active installs', o.installs.active7, `seen this week · ${o.errors7} errors reported`],
       ]);
       chart(q('#ov-signups'), o.series, [{ key: 'signups', label: 'Sign-ups', cls: 'b1' }]);
-      chart(q('#ov-revenue'), o.series, [{ key: 'revenue', label: 'Revenue', cls: 'b2' }], inr);
+      chart(q('#ov-revenue'), o.series, [{ key: 'revenue', label: 'Revenue', cls: 'b2' }], money);
       table(q('#ov-expiring'), ['User', 'Plan', ''], o.expiring.map((u) => h('tr', {}, h('td', {}, h('b', {}, u.name), h('br'), h('small', { class: 'muted' }, u.email)), h('td', {}, planBadge(u.plan)), h('td', {}, h('a', { href: `#user/${u.id}` }, 'Open →')))), 'Nothing ends soon.');
       setReqBadge(o.openRequests);
     },
@@ -109,7 +114,7 @@
     async users() {
       const params = new URLSearchParams({ q: q('#u-q').value, status: q('#u-status').value, page: state.page });
       const r = await api(`/admin/users?${params}`);
-      q('#u-count').textContent = `${r.count.toLocaleString('en-IN')} users`;
+      q('#u-count').textContent = `${r.count.toLocaleString()} users`;
       q('#u-prev').disabled = state.page === 0;
       q('#u-next').disabled = (state.page + 1) * 50 >= r.count;
       table(
@@ -136,13 +141,15 @@
       q('#ud-name').textContent = u.name;
       q('#ud-sub').replaceChildren(`${u.email} · joined ${d(u.createdAt)} · `, u.emailVerified ? 'verified' : 'not verified', u.phone ? ` · ${u.phone}` : '');
       const paid = r.payments.filter((p) => p.status === 'success');
+      const totals = new Map();
+      for (const p of paid) totals.set(p.currency, (totals.get(p.currency) || 0) + p.amount);
       stats(q('#ud-stats'), [
         ['Plan', planBadge(u.plan)],
-        ['Paid in total', inr(paid.reduce((s, p) => s + p.amount, 0)), `${paid.length} payments`],
+        ['Paid in total', [...totals].map(([currency, amount]) => money(amount, currency)).join(' · ') || 'No payments', `${paid.length} payments`],
         ['This month', `${u.plan.freeUsed} of ${u.plan.freeLimit}`, 'free schedules used'],
         ['Extension', u.extension ? 'Connected' : 'Not connected', `${r.sessions.length} active sign-ins`],
       ]);
-      table(q('#ud-pay'), ['Transaction', 'Plan', 'Amount', 'Status', 'Date'], r.payments.map((p) => h('tr', {}, h('td', {}, p.txnId), h('td', {}, planName(p)), h('td', {}, inr(p.amount)), h('td', {}, badge(...(STATUS[p.status] || [p.status]))), h('td', {}, dt(p.createdAt)))), 'No payments.');
+      table(q('#ud-pay'), ['Transaction', 'Plan', 'Amount', 'Status', 'Date'], r.payments.map((p) => h('tr', {}, h('td', {}, p.txnId), h('td', {}, planName(p)), h('td', {}, money(p.amount, p.currency)), h('td', {}, badge(...(STATUS[p.status] || [p.status]))), h('td', {}, dt(p.createdAt)))), 'No payments.');
       const OFFER = { open: ['Waiting for payment', 'warn'], paid: ['Paid', 'ok'], cancelled: ['Cancelled', 'off'] };
       table(
         q('#ud-offers'),
@@ -155,7 +162,7 @@
           return h('tr', {},
             h('td', {}, `${o.days} days`, o.note ? h('br') : null, o.note ? h('small', { class: 'muted' }, o.note) : null),
             h('td', {}, PRODUCT[o.product] || o.product),
-            h('td', {}, inr(o.amount)),
+            h('td', {}, money(o.amount, o.currency)),
             h('td', {}, expired ? badge('Expired', 'off') : badge(...(OFFER[o.status] || [o.status]))),
             h('td', {}, d(o.createdAt)),
             h('td', {}, cancel));
@@ -169,6 +176,22 @@
 
     async plans() {
       const r = await api('/admin/plans');
+      syncCurrency(r.currency);
+      const select = q('#billing-currency');
+      select.replaceChildren(...r.supportedCurrencies.map(code => h('option', { value: code }, code)));
+      select.value = r.currency;
+      const preview = () => {
+        const code = select.value;
+        q('#currency-preview').textContent = r.priceBooks[code].filter(p => p.active).map(p => `${p.name}: ${money(p.amount, code)}`).join(' · ');
+        q('#save-billing-currency').disabled = code === r.currency;
+        q('#save-billing-currency').textContent = `Use ${code} for new purchases`;
+      };
+      select.onchange = preview;
+      preview();
+      q('#billing-currency-form').onsubmit = e => {
+        e.preventDefault();
+        act(q('#save-billing-currency'), () => api('/admin/billing-currency', { method: 'PATCH', body: { currency: select.value } }), 'Billing currency updated across the website', load.plans).then(() => select.dispatchEvent(new Event('change')));
+      };
       const root = q('#plan-editor');
       const nodes = [];
       for (const product of r.products) {
@@ -176,7 +199,7 @@
         for (const plan of r.plans.filter((x) => x.product === product.id)) {
           const form = h('form', {},
             h('label', {}, 'Plan name', h('input', { name: 'name', value: plan.name, required: true, maxlength: 80 })),
-            h('label', {}, 'Price (₹)', h('input', { name: 'amount', type: 'number', min: 1, max: 200000, step: '.01', value: plan.amount, required: true })),
+            h('label', {}, `Price (${PLAN_CURRENCY})`, h('input', { name: 'amount', type: 'number', min: 0.01, max: 200000, step: '.01', value: plan.amount, required: true })),
             h('label', {}, 'Access period', h('input', { name: 'days', type: 'text', value: `${plan.days} days (${plan.interval})`, readonly: true }), h('small', { class: 'muted' }, 'Fixed for monthly and annual plans; use a custom offer for another term.')),
             h('label', { class: 'plan-enabled' }, h('input', { name: 'active', type: 'checkbox', checked: plan.active }), 'Available for purchase'),
             h('button', { class: 'btn sm primary', type: 'submit' }, 'Save plan')
@@ -187,7 +210,7 @@
           );
           form.onsubmit = (e) => {
             e.preventDefault();
-            const body = { name: form.elements.name.value.trim(), amount: Number(form.elements.amount.value), active: form.elements.active.checked };
+            const body = { name: form.elements.name.value.trim(), amount: Number(form.elements.amount.value), active: form.elements.active.checked, currency: r.currency };
             act(form.querySelector('button'), () => api(`/admin/plans/${plan.id}`, { method: 'PATCH', body }), 'Plan updated everywhere', load.plans);
           };
           nodes.push(card);
@@ -199,7 +222,8 @@
     async payments() {
       const params = new URLSearchParams({ status: q('#p-status').value, from: q('#p-from').value, to: q('#p-to').value });
       const r = await api(`/admin/payments?${params}`);
-      q('#p-total').textContent = `${r.count} paid · ${inr(r.total)}${r.matching > r.shown ? ` · showing the latest ${r.shown} of ${r.matching} (export has all)` : ''}`;
+      syncCurrency(r.currency);
+      q('#p-total').textContent = `${r.count} paid · ${money(r.total)}${r.matching > r.shown ? ` · showing the latest ${r.shown} of ${r.matching} (export has all)` : ''}`;
       table(
         q('#p-table'),
         ['Transaction', 'Customer', 'Plan', 'Amount', 'Status', 'Mode', 'Created', ''],
@@ -210,7 +234,7 @@
           return h('tr', {},
             h('td', {}, p.txnId, p.reason ? h('br') : null, p.reason ? h('small', { class: 'muted' }, p.reason) : null),
             h('td', {}, p.userId ? h('a', { href: `#user/${p.userId}` }, p.email) : p.email),
-            h('td', {}, planName(p), h('br'), h('small', { class: 'muted' }, p.provider === 'cashfree' ? 'Cashfree' : 'PayU')), h('td', {}, inr(p.amount)), h('td', {}, badge(...(STATUS[p.status] || [p.status]))), h('td', {}, p.mode || '–'), h('td', {}, dt(p.createdAt)), h('td', {}, recheck));
+            h('td', {}, planName(p), h('br'), h('small', { class: 'muted' }, p.provider === 'cashfree' ? 'Cashfree' : 'PayU')), h('td', {}, money(p.amount, p.currency)), h('td', {}, badge(...(STATUS[p.status] || [p.status]))), h('td', {}, p.mode || '–'), h('td', {}, dt(p.createdAt)), h('td', {}, recheck));
         }),
         'No payments yet.'
       );
@@ -282,7 +306,7 @@
         ...(c.cashfree ? [['Cashfree mode', badge(c.cashfree.mode === 'live' ? 'Live' : 'Test', c.cashfree.mode === 'live' ? 'ok' : 'warn')], ['Cashfree App ID', yes(c.cashfree.appIdSet)], ['Cashfree secret', yes(c.cashfree.secretSet)]] : []),
         ['PayU mode', badge(c.payu.mode === 'live' ? 'Live' : 'Test', c.payu.mode === 'live' ? 'ok' : 'warn')], ['PayU key', yes(c.payu.keySet)], ['PayU salt', yes(c.payu.saltSet)],
         ['Google sign-in', yes(c.google, 'On')], ['Keep awake (free Render)', yes(c.keepAwake, 'On')], ['Background jobs', yes(c.runJobs, 'On')],
-        ['Plans', c.plans.map((p) => `${p.id}: ₹${p.amount} for ${p.days} days`).join(' · ')], ['Free plan', `${c.freeMonthlyLimit} schedules a month`],
+        ['Plans', c.plans.map((p) => `${p.id}: ${money(p.amount)} for ${p.days} days`).join(' · ')], ['Free plan', `${c.freeMonthlyLimit} schedules a month`],
         ['Admins', c.admins.join(', ')],
       ];
       q('#s-list').replaceChildren(...rows.map(([k, v]) => h('div', { class: 'adm-kvrow' }, h('span', { class: 'muted' }, k), h('span', {}, v))));
@@ -356,8 +380,8 @@
     q('#ud-offer').addEventListener('submit', (e) => {
       e.preventDefault();
       const f = e.target;
-      const body = { product: f.product.value, amount: Number(f.amount.value), days: Number(f.days.value), note: f.note.value };
-      if (!window.confirm(`Email ${state.user.email} a ${PRODUCT[body.product]} offer of ₹${body.amount} for ${body.days} days?`)) return;
+      const body = { product: f.product.value, amount: Number(f.amount.value), days: Number(f.days.value), note: f.note.value, currency: PLAN_CURRENCY };
+      if (!window.confirm(`Email ${state.user.email} a ${PRODUCT[body.product]} offer of ${money(body.amount)} for ${body.days} days?`)) return;
       act(f.querySelector('button'), () => api(`/admin/users/${state.user.id}/offers`, { method: 'POST', body }), 'Offer sent', () => {
         f.reset();
         load.user(state.user.id);
@@ -396,6 +420,8 @@
       return;
     }
     try {
+      await loadPlanCatalog();
+      qa('[data-plan-currency]').forEach((el) => { el.textContent = PLAN_CURRENCY; });
       const me = await api('/admin/me');
       q('#adm-who').textContent = me.email;
     } catch (e) {

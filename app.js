@@ -11,25 +11,16 @@ const ACCOUNT = {
   // Google Identity Services web client ID. While empty, the Google button
   // is hidden and email sign-up still works.
   GOOGLE_CLIENT_ID: '405030855535-69f2jifupvrf3hfostssc590brk7ji2l.apps.googleusercontent.com',
-  // Extension IDs that may receive the sign-in: the Chrome Web Store one,
-  // and the unpacked copy loaded from ~/submit-later for testing.
-  // Store copy, a local unpacked copy of this repo, and the test build (tools/build-test.sh).
+  // Fallbacks for older store/dev builds without website discovery.
   EXTENSION_IDS: ['ofhnlgiipkjicedfmkeppphhjodjbohc', 'pbecnpopmckmengmakceppcpflpkhjba', 'bhgeefkodfophbongdghjgmjkceoaimi'],
 };
 
-// Fast, offline-safe defaults. `/plans` replaces these before a price is
-// displayed or checkout starts, so the admin catalogue remains authoritative.
-let PLANS = {
-  monthly: { id: 'monthly', product: 'extension', interval: 'monthly', name: 'Monthly', price: 49, days: 30, period: '30 days' },
-  annual: { id: 'annual', product: 'extension', interval: 'annual', name: 'Annual', price: 399, days: 365, period: '365 days' },
-  'forms-monthly': { id: 'forms-monthly', product: 'forms', interval: 'monthly', name: 'Timed Forms Monthly', price: 99, days: 30, period: '30 days' },
-  'forms-annual': { id: 'forms-annual', product: 'forms', interval: 'annual', name: 'Timed Forms Annual', price: 799, days: 365, period: '365 days' },
-  'scheduler-monthly': { id: 'scheduler-monthly', product: 'scheduler', interval: 'monthly', name: 'Webhook Scheduler Monthly', price: 149, days: 30, period: '30 days' },
-  'scheduler-annual': { id: 'scheduler-annual', product: 'scheduler', interval: 'annual', name: 'Webhook Scheduler Annual', price: 1199, days: 365, period: '365 days' },
-};
+// Prices are loaded from the same catalogue used by checkout.
+let PLANS = {};
+let PLAN_CURRENCY = '';
 let PRODUCTS = {
   extension: { id: 'extension', name: 'Button Scheduler', description: 'Schedule button presses, repeating actions and WhatsApp Web messages from Chrome.' },
-  forms: { id: 'forms', name: 'Timed Forms', description: 'Share a Google Form through a link that opens and closes on your schedule.' },
+  forms: { id: 'forms', name: 'Timed Forms', description: 'Connect a Google Form, manage its response window and present it in a branded page or website embed.' },
   scheduler: { id: 'scheduler', name: 'Webhook Scheduler', description: 'Run HTTPS requests once or on a recurring schedule, with a clear execution history.' },
 };
 let planCatalogPromise;
@@ -107,9 +98,12 @@ async function request(path, { method = 'GET', body, auth = false } = {}) {
   return data;
 }
 
-async function loadPlanCatalog() {
+async function loadPlanCatalog({ force = false } = {}) {
+  if (force) planCatalogPromise = null;
   planCatalogPromise ||= request('/plans')
     .then((catalog) => {
+      if (!['INR', 'USD'].includes(catalog.currency) || !Array.isArray(catalog.plans) || !Array.isArray(catalog.products)) throw new Error('Invalid price catalogue');
+      PLAN_CURRENCY = catalog.currency;
       PRODUCTS = Object.fromEntries((catalog.products || []).map((p) => [p.id, p]));
       PLANS = Object.fromEntries(
         (catalog.plans || [])
@@ -118,7 +112,11 @@ async function loadPlanCatalog() {
       );
       return catalog;
     })
-    .catch(() => ({ currency: 'INR', products: Object.values(PRODUCTS), plans: Object.values(PLANS) }));
+    .catch(() => {
+      planCatalogPromise = null;
+      PLANS = {};
+      return { currency: PLAN_CURRENCY, products: Object.values(PRODUCTS), plans: [] };
+    });
   return planCatalogPromise;
 }
 
@@ -146,6 +144,24 @@ async function api(path, opts = {}) {
 const $ = (s, root = document) => root.querySelector(s);
 const params = new URLSearchParams(location.search);
 
+function formatMoney(amount, currency = PLAN_CURRENCY) {
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency,
+      currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(Number(amount));
+  } catch {
+    return Number(amount).toLocaleString(undefined, { maximumFractionDigits: 2 });
+  }
+}
+
+function isInternationalPhone(value) {
+  return /^\+[1-9]\d{6,14}$/.test(String(value || '').replace(/[\s().-]/g, ''));
+}
+
 const NOT_READY = 'Accounts are opening in the next few days. You can already install the extension from the Chrome Web Store.';
 
 function messageFor(err) {
@@ -161,7 +177,7 @@ function safeNext(fallback = 'account.html') {
 // Links between sign-up and login keep where the user is headed.
 function carry(page) {
   const keep = new URLSearchParams();
-  for (const k of ['next', 'from', 'plan']) if (params.get(k)) keep.set(k, params.get(k));
+  for (const k of ['next', 'from', 'plan', 'extension']) if (params.get(k)) keep.set(k, params.get(k));
   return keep.size ? `${page}?${keep}` : page;
 }
 
@@ -242,12 +258,28 @@ function initStrength(input, meter) {
   });
 }
 
+function afterSignInUrl() {
+  const plan = PLANS[params.get('plan')] ? `?buy=${params.get('plan')}` : '';
+  const target = new URL(safeNext(`account.html${plan}`), location.href);
+  if (target.pathname === '/account.html') {
+    if (params.get('from') === 'extension') target.searchParams.set('connect', '1');
+    else if (!target.searchParams.has('connect')) target.searchParams.set('connect', 'auto');
+    if (/^[a-p]{32}$/.test(params.get('extension') || '')) target.searchParams.set('extension', params.get('extension'));
+  }
+  return target.pathname + target.search + target.hash;
+}
+
+function reuseExtensionSession() {
+  if (params.get('from') !== 'extension' || !session.get() || params.get('expired') === '1') return false;
+  location.replace(afterSignInUrl());
+  return true;
+}
+
 function signedIn(result) {
   session.set({ accessToken: result.accessToken, refreshToken: result.refreshToken, user: result.user });
   // The theme saved on the account follows you to this browser.
   if (result.user?.prefs) globalThis.SLTheme?.adopt(result.user.prefs);
-  const plan = PLANS[params.get('plan')] ? `?buy=${params.get('plan')}` : '';
-  location.href = safeNext(params.get('from') === 'extension' ? 'account.html?connect=1' : `account.html${plan}`);
+  location.href = afterSignInUrl();
 }
 
 // ---- Google sign-in --------------------------------------------------------
@@ -289,13 +321,14 @@ function initGoogle(box) {
 // ---- Pages -----------------------------------------------------------------
 
 async function initSignup() {
+  if (reuseExtensionSession()) return;
   await loadPlanCatalog();
   const form = $('#signup-form');
   const box = $('#form-notice');
   const plan = params.get('plan');
   if (PLANS[plan]) {
     $('#plan-note').hidden = false;
-    $('#plan-note b').textContent = `${PLANS[plan].name} plan (₹${PLANS[plan].price})`;
+    $('#plan-note b').textContent = `${PLANS[plan].name} plan (${formatMoney(PLANS[plan].price)})`;
   }
   $('#to-login').href = carry('login.html');
   initStrength(form.password, $('.pw-meter'));
@@ -329,6 +362,7 @@ async function initSignup() {
 }
 
 function initLogin() {
+  if (reuseExtensionSession()) return;
   const form = $('#login-form');
   const box = $('#form-notice');
   if (params.get('reset') === '1') notice(box, 'ok', 'Your password has been changed. Log in with the new one.');
@@ -488,7 +522,7 @@ function planInfo(plan) {
       sub: `Active until ${fmtDate(plan.paidUntil)}`,
       left,
       pct: Math.min(1, left / (plan.periodDays || PLANS[plan.plan]?.days || 365)),
-      planName: PLANS[plan.plan] ? `${name} · ₹${PLANS[plan.plan].price}` : plan.plan === 'custom' ? 'Pro (custom plan)' : 'Pro (complimentary)',
+      planName: PLANS[plan.plan] ? `${name} · ${formatMoney(PLANS[plan.plan].price)}` : plan.plan === 'custom' ? 'Pro (custom plan)' : 'Pro (complimentary)',
       endLabel: 'Active until',
       end: fmtDate(plan.paidUntil),
     };
@@ -550,12 +584,12 @@ function renderPlan() {
   $('#pn-end-label').textContent = p.endLabel;
   $('#pn-end').textContent = p.end;
   $('#buy-title').textContent = 'Choose what you need';
-  $('#buy-sub').textContent = 'Button Scheduler, Timed Forms and Webhook Scheduler are billed separately. Annual plans offer the best value.';
+  $('#buy-sub').textContent = 'Button Scheduler, Timed Forms and Webhook Scheduler are billed separately. Choose monthly or annual access for each product.';
 }
 
 const PRODUCT_FEATURES = {
   extension: ['Unlimited button schedules', 'Reopen-and-press and repeating schedules', 'WhatsApp Web scheduling'],
-  forms: ['Up to 20 saved timed form links', 'Countdown, opening and closing pages', 'Access statistics'],
+  forms: ['Up to 20 timed forms', 'Common question editing and managed response windows', 'Branded hosted pages and website embeds'],
   scheduler: ['More scheduled webhook jobs', 'Recurring HTTPS requests', 'Execution history and failure alerts'],
 };
 
@@ -593,9 +627,10 @@ function renderProductPlans() {
         section.append(unavailable);
       }
       for (const plan of plans) {
+        const annualSaving = plan.interval === 'annual' && plans.some(p => p.interval === 'monthly' && plan.price < p.price * 12);
         const card = document.createElement('article');
-        card.className = `pcard${plan.interval === 'annual' ? ' best' : ''}`;
-        if (plan.interval === 'annual') {
+        card.className = `pcard${annualSaving ? ' best' : ''}`;
+        if (annualSaving) {
           const tag = document.createElement('span');
           tag.className = 'pc-tag';
           tag.textContent = 'Best value';
@@ -611,7 +646,7 @@ function renderProductPlans() {
         top.append(name, period);
         const price = document.createElement('div');
         price.className = 'pc-price';
-        price.append(`₹${Number(plan.price).toLocaleString('en-IN')}`, Object.assign(document.createElement('small'), { textContent: ` for ${plan.days} days` }));
+        price.append(formatMoney(plan.price), Object.assign(document.createElement('small'), { textContent: ` for ${plan.days} days` }));
         const list = document.createElement('ul');
         list.className = 'pc-list';
         for (const feature of PRODUCT_FEATURES[product.id] || []) {
@@ -627,7 +662,7 @@ function renderProductPlans() {
         spinner.className = 'spin';
         spinner.setAttribute('aria-hidden', 'true');
         const label = document.createElement('span');
-        label.textContent = `Buy ${plan.interval === 'annual' ? 'annual' : 'monthly'} · ₹${Number(plan.price).toLocaleString('en-IN')}`;
+        label.textContent = `Buy ${plan.interval === 'annual' ? 'annual' : 'monthly'} · ${formatMoney(plan.price)}`;
         button.append(spinner, label);
         button.onclick = () => buy(plan.id, button);
         card.append(top, price, list, button);
@@ -680,11 +715,11 @@ function renderUser() {
 const EXT_TEXT = {
   checking: { chip: 'Checking', title: 'Looking for the extension…', text: '', value: 'Checking…', sub: '' },
   missing: {
-    chip: 'Not installed',
-    title: "The extension isn't installed in this browser",
-    text: 'Add Submit Later from the Chrome Web Store, then come back here to connect it. (This page can only detect it in Google Chrome on a computer.)',
-    value: 'Not installed',
-    sub: 'Install it from the Chrome Web Store',
+    chip: 'Not detected',
+    title: "We couldn't find the extension in this browser",
+    text: 'Already installed? Enable Submit Later in this Chrome profile, allow it on submitlater.co.in, then reload this page. Otherwise, add it from the Chrome Web Store.',
+    value: 'Not detected',
+    sub: 'Enable the extension or add it to Chrome',
   },
   ready: {
     chip: 'Installed',
@@ -708,6 +743,61 @@ const EXT_TEXT = {
     sub: '',
   },
 };
+
+function renderHubState(product, { value, label, state = 'neutral', ariaLabel = '' }) {
+  const tile = $(`#hub-kpi-${product}`);
+  const valueNode = $(`#hub-kpi-${product}-val`);
+  const labelNode = $(`#hub-kpi-${product}-label`);
+  const icon = $(`#hub-kpi-${product}-ic`);
+  if (!tile || !valueNode || !labelNode || !icon) return;
+
+  valueNode.textContent = value;
+  labelNode.textContent = label;
+  tile.dataset.state = state;
+  tile.classList.toggle('is-ok', state === 'ok');
+  tile.classList.toggle('is-warn', state === 'warn');
+  tile.classList.toggle('is-action', state === 'action');
+  icon.className = `hub-kpi-ic${state === 'ok' ? ' ok' : state === 'warn' ? ' warn' : ''}`;
+  tile.setAttribute('aria-label', ariaLabel || `${value}. ${label}`);
+}
+
+function renderHubProductCount(product, count) {
+  const forms = product === 'forms';
+  if (!Number.isInteger(count) || count < 0) {
+    renderHubState(product, {
+      value: forms ? 'Open Timed Forms' : 'Open Webhooks',
+      label: 'Count unavailable · open the tool',
+      state: 'action',
+    });
+    return;
+  }
+  if (count === 0) {
+    renderHubState(product, {
+      value: forms ? 'Create a form' : 'Create a job',
+      label: forms ? 'No timed forms yet' : 'No webhook jobs yet',
+      state: 'action',
+    });
+    return;
+  }
+  renderHubState(product, {
+    value: forms
+      ? `${count} timed ${count === 1 ? 'form' : 'forms'}`
+      : `${count} scheduled ${count === 1 ? 'job' : 'jobs'}`,
+    label: forms ? 'Open Timed Forms' : 'Open Webhook Scheduler',
+    state: 'ok',
+  });
+}
+
+async function loadHubStats() {
+  const [formsResult, jobsResult] = await Promise.allSettled([
+    api('/forms'),
+    api('/scheduler/jobs'),
+  ]);
+  const forms = formsResult.status === 'fulfilled' ? formsResult.value?.forms : null;
+  const jobs = jobsResult.status === 'fulfilled' ? jobsResult.value?.jobs : null;
+  renderHubProductCount('forms', Array.isArray(forms) ? forms.length : null);
+  renderHubProductCount('jobs', Array.isArray(jobs) ? jobs.length : null);
+}
 
 function renderExt() {
   const s = acct.ext;
@@ -734,6 +824,14 @@ function renderExt() {
   $('#s-ext-sub').textContent = t.sub;
   $('#s-ext-ic').className = `stat-ic${s === 'connected' ? ' ok' : s === 'missing' || s === 'other' ? ' warn' : ''}`;
   $('#nav-ext-dot').hidden = s === 'connected' || s === 'checking';
+  const hubState = {
+    checking: { value: 'Checking…', label: 'Looking for Button Scheduler', state: 'neutral' },
+    missing: { value: 'Set up extension', label: 'Connect Button Scheduler in Chrome', state: 'warn' },
+    ready: { value: 'Connect extension', label: 'Installed · connect this account', state: 'action' },
+    other: { value: 'Switch account', label: 'Connected to another account', state: 'warn' },
+    connected: { value: 'Connected', label: 'Open Button Scheduler settings', state: 'ok' },
+  }[s];
+  if (hubState) renderHubState('ext', hubState);
   renderChecklist();
 }
 
@@ -772,7 +870,7 @@ function renderPayments(list) {
       const cells = [
         fmtDate(p.createdAt),
         p.planName || (p.plan === 'custom' ? `${CUSTOM.name} · ${p.days} days` : `${PLANS[p.plan]?.name || p.plan} · ${PLANS[p.plan]?.period || ''}`),
-        `₹${p.amount}`,
+        formatMoney(p.amount, p.currency || PLAN_CURRENCY),
         p.status === 'success' ? 'Paid' : p.status === 'pending' ? 'Pending' : 'Failed',
         p.txnId || '-',
       ];
@@ -816,12 +914,20 @@ let cashfreeSdk;
 function loadCashfree() {
   cashfreeSdk ||= new Promise((resolve, reject) => {
     const s = document.createElement('script');
-    s.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
-    s.onload = () => (globalThis.Cashfree ? resolve(globalThis.Cashfree) : reject(new Error('Cashfree did not load')));
-    s.onerror = () => {
+    const fail = () => {
+      clearTimeout(timer);
+      s.remove();
       cashfreeSdk = null;
       reject(Object.assign(new Error("The payment page couldn't load. Check your connection and try again."), { code: 'SDK' }));
     };
+    const timer = setTimeout(fail, 15000);
+    s.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
+    s.onload = () => {
+      clearTimeout(timer);
+      if (globalThis.Cashfree) resolve(globalThis.Cashfree);
+      else fail();
+    };
+    s.onerror = fail;
     document.head.append(s);
   });
   return cashfreeSdk;
@@ -841,10 +947,27 @@ async function goToCheckout(res) {
 // What to buy: a plan id ('monthly', 'annual') or { offer: id } for a custom plan.
 const startCheckout = (what, phone) => {
   const body = typeof what === 'string' ? { plan: what } : { offer: what.offer };
+  const shown = typeof what === 'string' ? PLANS[what] : what;
+  if (!shown) throw new ApiError('Reload pricing before starting checkout.', { code: 'PRICE_CHANGED' });
+  body.expected = { amount: shown.price ?? shown.amount, currency: shown.currency || PLAN_CURRENCY };
   if (phone) body.phone = phone;
   return api('/checkout', { method: 'POST', body });
 };
-const whatLabel = (what) => (typeof what === 'string' ? `${PLANS[what].name} plan · ₹${PLANS[what].price}` : `Custom plan · ₹${what.amount} for ${what.days} days`);
+const whatLabel = (what) => (typeof what === 'string' ? `${PLANS[what].name} plan · ${formatMoney(PLANS[what].price)}` : `Custom plan · ${formatMoney(what.amount, what.currency)} for ${what.days} days`);
+
+function showCheckoutError(err) {
+  const box = $('#buy-notice');
+  notice(box, err.code === 'PAYMENTS_OFF' ? 'info' : 'bad', messageFor(err));
+  box.scrollIntoView({ block: 'center' });
+  box.focus({ preventScroll: true });
+}
+
+async function refreshChangedPricing(err) {
+  if (!['PRICE_CHANGED', 'OFFER_CURRENCY'].includes(err.code)) return;
+  await loadPlanCatalog({ force: true });
+  renderProductPlans();
+  await loadOffers();
+}
 
 async function buy(what, btn) {
   const box = $('#buy-notice');
@@ -853,25 +976,30 @@ async function buy(what, btn) {
   try {
     await goToCheckout(await startCheckout(what));
   } catch (err) {
-    setBusy(btn, false);
-    if (err.code === 'PHONE_REQUIRED') return askPhone(what);
-    notice(box, err.code === 'PAYMENTS_OFF' ? 'info' : 'bad', messageFor(err));
+    if (err.code === 'PHONE_REQUIRED' || err.field === 'phone') return askPhone(what, err);
+    showCheckoutError(err);
+    await refreshChangedPricing(err);
     if (err.code === 'OFFER_GONE' || err.code === 'OFFER_PAYING') loadOffers();
+  } finally {
+    setBusy(btn, false);
   }
 }
 
-// The payment partner needs a mobile number for the receipt; asked once, then remembered.
-function askPhone(what) {
+// The payment partner needs a phone number for the receipt; asked once, then remembered.
+function askPhone(what, error) {
   const dialog = $('#phone-dialog');
   const form = $('#phone-form');
   clearErrors(form);
+  setBusy(form.querySelector('button[type=submit]'), false);
+  if (!form.phone.value) form.phone.value = acct.user?.phone || '';
+  if (error?.field === 'phone' && error.code !== 'PHONE_REQUIRED') fieldError(form, 'phone', messageFor(error));
   $('#phone-plan').textContent = whatLabel(what);
   form.onsubmit = async (e) => {
     e.preventDefault();
     clearErrors(form);
     const phone = form.phone.value.trim();
-    if (!/^(?:\+?91|0)?[6-9]\d{9}$/.test(phone.replace(/[\s-]/g, ''))) {
-      fieldError(form, 'phone', 'Enter a valid 10-digit mobile number.');
+    if (!isInternationalPhone(phone)) {
+      fieldError(form, 'phone', 'Enter a valid phone number with country code, such as +1 415 555 0123.');
       return form.phone.focus();
     }
     const btn = form.querySelector('button[type=submit]');
@@ -879,12 +1007,14 @@ function askPhone(what) {
     try {
       await goToCheckout(await startCheckout(what, phone));
     } catch (err) {
-      setBusy(btn, false);
       if (err.field === 'phone') return fieldError(form, 'phone', messageFor(err));
       // Anything else isn't about the number: show it on the page.
       dialog.close();
-      notice($('#buy-notice'), err.code === 'PAYMENTS_OFF' ? 'info' : 'bad', messageFor(err));
+      showCheckoutError(err);
+      await refreshChangedPricing(err);
       if (err.code === 'OFFER_GONE' || err.code === 'OFFER_PAYING') loadOffers();
+    } finally {
+      setBusy(btn, false);
     }
   };
   $('#phone-cancel').onclick = () => dialog.close();
@@ -910,7 +1040,7 @@ async function loadOffers() {
       title.textContent = `Your custom ${PRODUCTS[o.product]?.name || 'product'} plan for ${o.days} days`;
       const sub = document.createElement('div');
       sub.className = 'muted';
-      sub.textContent = `₹${o.amount} · prepaid, never renews · pay by ${fmtDate(o.expiresAt)}`;
+      sub.textContent = `${formatMoney(o.amount, o.currency || PLAN_CURRENCY)} · prepaid, never renews · pay by ${fmtDate(o.expiresAt)}`;
       main.append(title, sub);
       if (o.note) {
         const note = document.createElement('p');
@@ -923,7 +1053,7 @@ async function loadOffers() {
       btn.className = 'btn btn-block';
       btn.style.width = 'auto';
       btn.innerHTML = '<span class="spin" aria-hidden="true"></span><span></span>';
-      btn.lastChild.textContent = `Pay ₹${o.amount}`;
+      btn.lastChild.textContent = `Pay ${formatMoney(o.amount, o.currency || PLAN_CURRENCY)}`;
       btn.onclick = () => buy({ offer: o.id, amount: o.amount, days: o.days }, btn);
       if (o.paying) {
         // A payment for it is still being confirmed: don't invite a second one.
@@ -949,11 +1079,20 @@ function askCustom() {
   form.message.setSelectionRange(form.message.value.length, form.message.value.length);
 }
 
-// The extension accepts messages from this site (externally_connectable).
-function sendTo(id, msg) {
+// Only the public ID crosses the DOM. Session tokens go directly to the
+// selected extension through Chrome, never through discovery events or URLs.
+const discoveredExtensions = new Set();
+window.addEventListener('submit-later:extension', (event) => {
+  if (typeof event.detail === 'string' && /^[a-p]{32}$/.test(event.detail)) {
+    discoveredExtensions.add(event.detail);
+  }
+});
+
+// Sign-in can involve two 15-second API calls; a ping just reads local storage.
+function sendTo(id, msg, timeout = msg.type === 'signin' ? 35000 : 2500) {
   return new Promise((resolve) => {
     if (!globalThis.chrome?.runtime?.sendMessage) return resolve(null);
-    const timer = setTimeout(() => resolve(null), 1500);
+    const timer = setTimeout(() => resolve(null), timeout);
     try {
       chrome.runtime.sendMessage(id, msg, (res) => {
         clearTimeout(timer);
@@ -966,26 +1105,37 @@ function sendTo(id, msg) {
   });
 }
 
-// The first installed copy that answers (store or testing) gets the messages.
 let extensionId = null;
-async function toExtension(msg) {
-  if (extensionId) return sendTo(extensionId, msg);
-  for (const id of ACCOUNT.EXTENSION_IDS) {
-    const res = await sendTo(id, msg);
-    if (res) {
-      extensionId = id;
-      return res;
-    }
-  }
-  return null;
+const requestedExtensionId = /^[a-p]{32}$/.test(params.get('extension') || '') ? params.get('extension') : null;
+const sameEmail = (a, b) => !!a && !!b && String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
+async function findExtension() {
+  window.dispatchEvent(new Event('submit-later:discover'));
+  const ids = [...new Set([...discoveredExtensions, ...ACCOUNT.EXTENSION_IDS])];
+  const replies = await Promise.all(ids.map(async (id) => ({ id, ping: await sendTo(id, { type: 'ping' }) })));
+  const installed = replies.filter(({ ping }) => ping?.ok === true && ping.enabled !== false);
+  // If more than one copy is installed, prefer the one already using this
+  // account. Otherwise keep the chosen copy, then prefer a discovered build.
+  // An extension-initiated login must return to that same installation. A URL
+  // alone cannot add a recipient: it must also be discovered or a legacy ID.
+  const selected = requestedExtensionId ? installed.find(({ id }) => id === requestedExtensionId)
+    : installed.find(({ ping }) => sameEmail(ping.email, acct.user?.email))
+      || installed.find(({ id }) => id === extensionId) || installed[0];
+  extensionId = selected?.id || null;
+  return selected?.ping || null;
 }
 
-async function checkExtension() {
-  acct.ext = 'checking';
-  renderExt();
-  const ping = await toExtension({ type: 'ping' });
+async function toExtension(msg) {
+  if (!extensionId) await findExtension();
+  if (!extensionId) return null;
+  // Never retry a sign-in token against another installation.
+  const reply = await sendTo(extensionId, msg);
+  if (!reply) extensionId = null;
+  return reply;
+}
+
+function updateExtensionState(ping) {
   if (!ping) acct.ext = 'missing';
-  else if (ping.email === acct.user.email) acct.ext = 'connected';
+  else if (sameEmail(ping.email, acct.user?.email)) acct.ext = 'connected';
   else if (ping.email) {
     acct.ext = 'other';
     acct.extEmail = ping.email;
@@ -993,18 +1143,36 @@ async function checkExtension() {
   renderExt();
 }
 
+let extensionCheck = null;
+let extensionConnecting = false;
+function checkExtension({ quiet = false } = {}) {
+  if (!acct.user || extensionConnecting) return Promise.resolve();
+  if (extensionCheck) return extensionCheck;
+  if (!quiet) {
+    acct.ext = 'checking';
+    renderExt();
+  }
+  extensionCheck = findExtension().then(updateExtensionState).finally(() => { extensionCheck = null; });
+  return extensionCheck;
+}
+
 async function connectExtension(btn) {
+  if (extensionConnecting) return;
+  extensionConnecting = true;
   if (btn) setBusy(btn, true);
   try {
+    if (extensionCheck) await extensionCheck;
+    if (!await findExtension()) throw new Error('Extension not found');
     const { refreshToken } = await api('/auth/extension-session', { method: 'POST' });
     const res = await toExtension({ type: 'signin', refreshToken, user: acct.user });
-    if (!res?.ok) throw new Error();
-    acct.ext = 'connected';
-    renderExt();
+    if (!res?.ok || !sameEmail(res.email, acct.user.email)) throw new Error('Sign-in not confirmed');
+    updateExtensionState(res);
     toast('Extension connected. You can close this tab.');
   } catch (err) {
+    updateExtensionState(await findExtension());
     toast(err instanceof ApiError ? messageFor(err) : "Couldn't reach the extension. Make sure it's installed and turned on.");
   } finally {
+    extensionConnecting = false;
     if (btn) setBusy(btn, false);
   }
 }
@@ -1017,6 +1185,11 @@ async function logout() {
 }
 
 function initAccountUi() {
+  document.addEventListener('sl:product-count', (event) => {
+    const product = event.detail?.product;
+    if (product === 'forms' || product === 'jobs') renderHubProductCount(product, event.detail?.count);
+  });
+
   // Views
   addEventListener('hashchange', () => {
     const view = location.hash.slice(1);
@@ -1062,6 +1235,10 @@ function initAccountUi() {
   $('#ask-custom')?.addEventListener('click', askCustom);
   document.querySelectorAll('[data-connect]').forEach((b) => (b.onclick = () => connectExtension(b)));
   $('#ext-recheck').onclick = checkExtension;
+  window.addEventListener('focus', () => checkExtension({ quiet: true }));
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) checkExtension({ quiet: true });
+  });
 
   const resend = async (b) => {
     try {
@@ -1098,7 +1275,7 @@ function initAccountUi() {
     const phone = form.phone.value.trim();
     const ok = [
       fieldError(form, 'name', name ? '' : 'Enter your name.'),
-      fieldError(form, 'phone', !phone || /^(?:\+?91|0)?[6-9]\d{9}$/.test(phone.replace(/[\s-]/g, '')) ? '' : 'Enter a valid 10-digit mobile number.'),
+      fieldError(form, 'phone', !phone || isInternationalPhone(phone) ? '' : 'Include the country code, such as +1 415 555 0123.'),
     ].every(Boolean);
     if (!ok) return form.querySelector('.invalid input')?.focus();
     const b = form.querySelector('button[type=submit]');
@@ -1191,6 +1368,7 @@ async function initAccount() {
   renderPlan();
   renderProductPlans();
   renderExt();
+  loadHubStats();
 
   if (PLANS[params.get('buy')] && pay !== 'success') {
     location.hash = 'billing';
@@ -1205,9 +1383,16 @@ async function initAccount() {
   if (params.get('custom') === '1') askCustom();
 
   await checkExtension();
-  if (params.get('connect') === '1' && (acct.ext === 'ready' || acct.ext === 'other')) {
-    showView('extension');
-    connectExtension($('#ext-connect'));
+  const connect = params.get('connect');
+  if (connect === '1' || connect === 'auto') {
+    // A refresh must not silently reconnect after the user signs out later.
+    const clean = new URL(location.href);
+    clean.searchParams.delete('connect');
+    history.replaceState(null, '', clean.pathname + clean.search + clean.hash);
+    if (acct.ext === 'ready' || (connect === '1' && acct.ext === 'other')) {
+      if (connect === '1') showView('extension');
+      await connectExtension($('#ext-connect'));
+    }
   }
 }
 
