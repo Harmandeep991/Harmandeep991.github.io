@@ -1,504 +1,96 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage, Schedule and Embed Google Forms | Submit Later</title>
-  <meta name="description" content="Connect a Google Form, edit common question types, choose a branded page design, schedule its response window and embed the live form on your website.">
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://submitlater.co.in/forms/">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Manage, Schedule and Embed Google Forms | Submit Later">
-  <meta property="og:description" content="Import a Google Form into one timed, branded page that can also be embedded on your own website.">
-  <meta property="og:url" content="https://submitlater.co.in/forms/">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
-  <link rel="stylesheet" href="style.css">
-  <script type="application/ld+json" id="forms-structured-data">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later Timed Forms","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Connect, edit, schedule and embed existing Google Forms inside branded, timezone-aware pages.","url":"https://submitlater.co.in/forms/"}</script>
-</head>
-<body>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q9BV7VECQZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-<!-- ══════════════════════════ NAV ══════════════════════════ -->
-<header class="nav">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <rect width="28" height="28" rx="8" fill="#6366f1"/>
-        <path d="M8 14h4l2-5 3 10 2-5h3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span>Submit Later <strong>Timed Forms</strong></span>
-    </a>
-    <nav class="nav-links">
-      <a href="#how">How it works</a>
-      <a href="#compare">Compare</a>
-      <a href="#pricing">Pricing</a>
-    <a href="/help.html#timed-forms">User guide</a></nav>
-    <div class="nav-actions">
-      <a href="/login.html?next=account.html%23forms" class="btn-ghost">Sign in</a>
-      <a href="/signup.html?next=account.html%23forms" class="btn-primary">Start free</a>
+  // Only the page path is sent, never the query string: reset and verify
+  // links carry one-time tokens that must not leave the site.
+  gtag('config', 'G-Q9BV7VECQZ', { page_location: location.origin + location.pathname });
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schedule, Edit and Embed Google Forms | Submit Later</title>
+<meta name="description" content="Import a Google Form, edit supported questions, set its response window and embed it in a branded page. Use one Submit Later account for every tool.">
+<link rel="canonical" href="https://submitlater.co.in/forms/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Submit Later">
+<meta property="og:title" content="Schedule, Edit and Embed Google Forms | Submit Later">
+<meta property="og:description" content="Import a Google Form, edit supported questions, set its response window and embed it in a branded page. Use one Submit Later account for every tool.">
+<meta property="og:url" content="https://submitlater.co.in/forms/">
+<meta property="og:image" content="https://submitlater.co.in/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/icon32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap">
+<script src="/theme.js"></script>
+<link rel="stylesheet" href="/style.css?v=20261104-products">
+<link rel="stylesheet" href="/products.css?v=20261104-products">
+<script type="application/ld+json" id="site-structured-data">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Submit Later Timed Forms", "applicationCategory": "BusinessApplication", "operatingSystem": "Web", "description": "Import a Google Form, edit supported questions, set its response window and embed it in a branded page. Use one Submit Later account for every tool.", "url": "https://submitlater.co.in/forms/"}</script>
+</head>
+<body class="product-page" data-product="forms">
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="/index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <a href="/index.html#features">Features</a>
+      <a href="/whatsapp-scheduler.html">WhatsApp</a>
+      <a href="/index.html#uses">Use cases</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/help.html">Guides</a>
+      <a class="nav-mobile-cta nav-login" href="/login.html?next=account.html%23forms" data-product-entry="forms" data-auth="login" data-signed-in-label="Account">Log in</a>
+      <a class="nav-mobile-cta" href="/signup.html?next=account.html%23forms" data-product-entry="forms" data-signed-in-label="Open Timed Forms">Get started</a>
+    </nav>
+    <div class="top-actions">
+      <button type="button" class="theme-btn" data-theme-btn aria-label="Choose a theme" title="Theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.9 0-.5-.2-.9-.5-1.3-.3-.3-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="10" cy="7.5" r="1.2"/><circle cx="14.5" cy="7.5" r="1.2"/></svg></button>
+      <a class="nav-login" href="/login.html?next=account.html%23forms" data-product-entry="forms" data-auth="login" data-signed-in-label="Account">Log in</a>
+      <a class="nav-cta" href="/signup.html?next=account.html%23forms" data-product-entry="forms" data-signed-in-label="Open tool">Get started</a>
+      <button type="button" class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="main-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     </div>
-    <button class="nav-burger" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
-      <span></span><span></span><span></span>
-    </button>
   </div>
 </header>
-
-<!-- ══════════════════════════ HERO ══════════════════════════ -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      Connected, timed pages for Google Forms
-    </div>
-    <h1 class="hero-headline">
-      Keep the form on your page.<br>
-      <span class="gradient-text">Control when responses open.</span>
-    </h1>
-    <p class="hero-sub">
-      Connect a Google Form, review its common question types, and publish a branded page. During the response window, the Google Form appears inside your page instead of sending visitors away.
-    </p>
-    <div class="hero-ctas">
-      <a href="/signup.html?next=account.html%23forms" class="btn-primary btn-lg">
-        Connect your first Google Form
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <span class="hero-trust">Google continues to store responses &nbsp;·&nbsp; Website embed included &nbsp;·&nbsp; Timezone-aware</span>
-    </div>
-  </div>
-  <div class="hero-demo">
-    <div class="demo-card demo-before">
-        <div class="demo-label demo-label-bad">Before the access window</div>
-      <div class="demo-form-mock">
-        <div class="dfm-header">
-          <div class="dfm-logo-bar"></div>
-          <div class="dfm-title">MBA Admissions 2025</div>
-          <div class="dfm-sub">Responses open at the scheduled time</div>
-        </div>
-        <div class="dfm-field"></div>
-        <div class="dfm-field dfm-field-sm"></div>
-        <div class="dfm-field"></div>
-        <div class="dfm-submit">Submit Application</div>
-        <div class="dfm-time-bad">Share the timed link in advance</div>
-      </div>
-    </div>
-    <div class="demo-arrow">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 16h20M19 9l7 7-7 7" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <div class="demo-card demo-after">
-      <div class="demo-label demo-label-good">Submit Later Timed Forms</div>
-      <div class="countdown-mock">
-        <div class="cm-org">Masters Union · Admissions</div>
-        <div class="cm-title">MBA Admissions 2025</div>
-        <div class="cm-status">Form opens in</div>
-        <div class="cm-timer" id="hero-timer">
-          <div class="cm-unit"><span class="cm-num" id="t-h">02</span><span class="cm-label">hours</span></div>
-          <div class="cm-sep">:</div>
-          <div class="cm-unit"><span class="cm-num" id="t-m">14</span><span class="cm-label">minutes</span></div>
-          <div class="cm-sep">:</div>
-          <div class="cm-unit"><span class="cm-num" id="t-s">37</span><span class="cm-label">seconds</span></div>
-        </div>
-        <div class="cm-date">Opens 30 Oct 2026, 4:00 PM UTC</div>
-        <div class="cm-prequeue"><span class="cm-pq-icon">✓</span> Google response status is managed with the Forms API</div>
-      </div>
-    </div>
-  </div>
+<main>
+<section class="product-hero">
+ <div class="wrap product-hero-grid">
+  <div class="product-intro"><a class="product-back" href="/index.html#suite">← All Submit Later tools</a><p class="product-eyebrow">Timed Forms · Web tool</p><h1>Your form. Your page.<br>A clear time to respond.</h1><p class="product-lead">Turn an existing Google Form into a registration page that opens and closes on your schedule. Edit common questions, choose your colours and share the page or embed it on your website.</p><div class="product-actions"><a class="btn primary" href="/signup.html?next=account.html%23forms" data-product-entry="forms" data-signed-in-label="Open Timed Forms">Start with a Google Form</a><a class="btn alt" href="#how">See how it works</a></div><p class="product-account-note">One Submit Later account. Your tools together in one dashboard.</p></div>
+  <figure class="product-preview"><figcaption><b>Workshop registration</b><span>Example hosted page · your branding</span></figcaption><div class="product-preview-state"><span class="product-dot"></span> Registration opens Monday, 9:00 AM</div><h3>Join the next workshop</h3><p>A place to learn, ask questions and meet the team.</p><div class="product-preview-field">Your name</div><div class="product-preview-field">Email address</div><div class="product-preview-action">Form appears when registration opens</div><ol class="product-lifecycle"><li><b>Before</b><span>Countdown</span></li><li><b>During</b><span>Google Form</span></li><li><b>After</b><span>Closed page</span></li></ol></figure>
+ </div>
 </section>
-
-<!-- ══════════════════════════ STATS BAR ══════════════════════════ -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat-item">
-      <span class="stat-num">Import</span>
-      <span class="stat-label">connect an existing Google Form</span>
+<nav class="product-topics wrap" aria-label="Timed Forms topics"><a href="#how">How it works</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="/help.html#timed-forms">Step-by-step guide ↗</a></nav>
+<section class="block" id="how"><div class="section-head"><span class="kicker">From setup to the first result</span><h2>Start here. Keep everything in one place.</h2></div><ol class="product-steps"><li><span>1</span><div><h3>Connect your form</h3><p>Sign in to Submit Later, connect the Google account that can edit your form, then import its URL.</p></div></li><li><span>2</span><div><h3>Set the response window</h3><p>Choose opening and closing times, check the timezone, and style the page around your form.</p></div></li><li><span>3</span><div><h3>Share one link</h3><p>Send the hosted link or copy the website embed. Visitors see a countdown, the live form, then a closed page.</p></div></li></ol></section>
+<section class="block product-features" id="features" aria-label="Timed Forms features"><article class="product-feature"><h3>Keep the questions you already have</h3><p>Import an existing Google Form. Add, edit or remove supported text, choice, checkbox and dropdown questions. Changes are saved back to Google.</p></article><article class="product-feature"><h3>Make the page feel like yours</h3><p>Set your organization name, introduction, background, accent and text colours. Google continues to render the form fields inside the page.</p></article><article class="product-feature"><h3>Use it on your own website</h3><p>Allow your website origin, choose the embed height and copy the iframe snippet. The embed uses the same design and response window.</p></article></section>
+<section class="block" id="pricing"><div class="section-head"><span class="kicker">Product-specific pricing</span><h2>Choose the access you need.</h2><p>A new account includes a 30-day trial with up to 20 timed forms. After the trial, the free tier supports up to two forms.</p></div><div class="product-offers"><article class="product-offer"><h3>Monthly</h3><p class="product-price"><span data-plan-price="forms-monthly">Loading…</span><small>/ 30 days</small></p><p>Up to 20 timed forms, supported question editing, managed response windows and branded website embeds.</p><a class="btn primary" href="/signup.html?plan=forms-monthly" data-plan-link data-plan-id="forms-monthly">Choose monthly</a></article><article class="product-offer"><h3>Annual</h3><p class="product-price"><span data-plan-price="forms-annual">Loading…</span><small>/ 365 days</small></p><p>Up to 20 timed forms, supported question editing, managed response windows and branded website embeds.</p><a class="btn alt" href="/signup.html?plan=forms-annual" data-plan-link data-plan-id="forms-annual">Choose annual</a></article></div><p class="product-pricing-note">Plans are prepaid and do not renew automatically. Prices come from the same catalogue as checkout. <a href="/pricing.html">Compare all products →</a></p></section>
+<section class="block product-faq"><div><span class="kicker">A few useful details</span><h2>Before you get started</h2><a href="/help.html#timed-forms">Read the complete walkthrough →</a></div><div><details><summary>Will people still be able to use the original Google Form URL?</summary><p>An embed does not make that URL secret. Managed imports synchronize Google’s accepting-responses setting with your schedule. Check the original form when testing the deadline; legacy links alone do not close it.</p></details><details><summary>Where do responses go?</summary><p>Respondents submit directly to Google Forms. Submit Later manages your page, questions and response window; it does not store their answers.</p></details><details><summary>Do I need the Chrome extension or a second account?</summary><p>No extension is needed. Use your existing Submit Later account. Timed Forms runs in the shared dashboard, and its response window is managed by the server.</p></details></div></section>
+<section class="block product-next"><div><h2>Ready for your first form?</h2><p>Open Timed Forms in your Submit Later account.</p></div><a class="btn primary" href="/signup.html?next=account.html%23forms" data-product-entry="forms" data-signed-in-label="Open Timed Forms">Start with a Google Form</a></section>
+</main>
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <a class="brand" href="/index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
+      <p>Practical scheduling tools for browser actions, managed form response windows and webhooks—one account, with separate plans for each product.</p>
     </div>
-    <div class="stat-div"></div>
-    <div class="stat-item">
-      <span class="stat-num">Edit</span>
-      <span class="stat-label">manage common question types</span>
+    <div>
+      <h4>Product</h4>
+      <a href="/index.html#features">Features</a><a href="/whatsapp-scheduler.html">WhatsApp scheduler</a><a href="/pricing.html">Pricing</a><a href="/help.html">User guide</a><a href="/signup.html?next=account.html%23forms" data-product-entry="forms" data-signed-in-label="Open Timed Forms">Create free account</a><a href="/login.html?next=account.html%23forms" data-product-entry="forms" data-auth="login" data-signed-in-label="Open Timed Forms">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
     </div>
-    <div class="stat-div"></div>
-    <div class="stat-item">
-      <span class="stat-num">Embedded</span>
-      <span class="stat-label">keep the live form on the page</span>
+    <div>
+      <h4>Legal</h4>
+      <a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms &amp; conditions</a><a href="/refund.html">Refund &amp; cancellation</a><a href="/shipping.html">Delivery policy</a>
     </div>
-    <div class="stat-div"></div>
-    <div class="stat-item">
-      <span class="stat-num">Branded</span>
-      <span class="stat-label">choose wrapper colours and background</span>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════ PROBLEM ══════════════════════════ -->
-<section class="problem">
-  <div class="section-inner">
-    <div class="section-label">One managed form experience</div>
-    <h2>Use Google Forms.<br>Present it like your own.</h2>
-    <p class="section-sub">
-      Google keeps the form and its responses. Submit Later adds the connected editing tools, branded wrapper, managed response window and website embed around it.
-    </p>
-    <div class="problem-cards">
-      <div class="prob-card">
-        <div class="prob-icon">🕐</div>
-        <h3>Import without rebuilding</h3>
-        <p>Connect Google, choose an existing form and bring its supported questions into the Timed Forms dashboard.</p>
-      </div>
-      <div class="prob-card">
-        <div class="prob-icon">🖥️</div>
-        <h3>Edit common questions</h3>
-        <p>Add, revise or remove short text, paragraph, multiple-choice, checkbox and dropdown questions from one dashboard.</p>
-      </div>
-      <div class="prob-card">
-        <div class="prob-icon">⚡</div>
-        <h3>Manage response access</h3>
-        <p>Submit Later coordinates the page state and Google Forms response setting before, during and after the scheduled window.</p>
-      </div>
-      <div class="prob-card">
-        <div class="prob-icon">📨</div>
-        <h3>Embed it on your site</h3>
-        <p>Copy a responsive iframe snippet for your own website. Visitors see the same chosen design, countdown, live form and closed state.</p>
-      </div>
+    <div>
+      <h4>Contact</h4>
+      <p style="margin:0">Submit Later<br><a href="mailto:submitlater.review@gmail.com">submitlater.review@gmail.com</a></p>
     </div>
   </div>
-</section>
-
-<!-- ══════════════════════════ HOW IT WORKS ══════════════════════════ -->
-<section class="how" id="how">
-  <div class="section-inner">
-    <div class="section-label">How it works</div>
-    <h2>Connect once.<br>Manage the whole experience.</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <h3>Connect Google and import</h3>
-          <p>Grant access to the Google Form you want to manage. Submit Later reads its structure and responder link; responses remain in Google.</p>
-          <div class="step-visual">
-            <div class="sv-input">
-              <span class="sv-prefix">Connected form</span>
-              <span class="sv-value">MBA Admissions 2026</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="step-connector"></div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <h3>Review, style and schedule</h3>
-          <p>Edit supported questions, choose the wrapper background and accent colours, then set an opening time, closing time and timezone.</p>
-          <div class="step-visual sv-times">
-            <div class="sv-time-row">
-              <span class="sv-time-label">Opens</span>
-              <span class="sv-time-val">30 Oct 2026, 9:00 AM UTC</span>
-            </div>
-            <div class="sv-time-row">
-              <span class="sv-time-label">Closes</span>
-              <span class="sv-time-val">30 Oct 2026, 11:00 AM UTC</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="step-connector"></div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <h3>Share it or embed it</h3>
-          <p>Use the hosted URL in invitations, or copy the iframe snippet into your website. The live Google Form stays inside the branded page.</p>
-          <div class="step-visual">
-            <div class="sv-link">
-              <span class="sv-link-url">api.submitlater.co.in/f/<strong>mba25</strong></span>
-              <button class="sv-copy">Copy link</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p class="compare-note">An embedded form URL can be discovered in browser tools, so Submit Later does not claim to hide it. Managed forms instead switch Google's own response setting with the schedule, including for visitors who know the direct link.</p>
-  </div>
-</section>
-
-<!-- ══════════════════════════ COMPARE ══════════════════════════ -->
-<section class="compare" id="compare">
-  <div class="section-inner">
-    <div class="section-label">Clear ownership</div>
-    <h2>Your presentation and schedule.<br>Google's form and responses.</h2>
-    <p class="section-sub">The integration changes only the connected Google Form and the Submit Later page you configure. Google continues to host the fields and response data.</p>
-    <div class="compare-table-wrap">
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th>Capability</th>
-            <th>Included</th>
-            <th>Visitor experience</th>
-            <th>Scope</th>
-            <th class="compare-us">Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Question import</td><td><span class="cyes">✓</span></td><td>Loads the connected form into your dashboard</td><td>Google Forms API</td><td class="compare-us">Unsupported item types remain read-only</td></tr>
-          <tr><td>Common question editing</td><td><span class="cyes">✓</span></td><td>Add, edit or remove supported questions</td><td>Google Form</td><td class="compare-us">Changes are written back to Google</td></tr>
-          <tr><td>Pre-opening countdown</td><td><span class="cyes">✓</span></td><td>Shows the scheduled opening time and live timer</td><td>Submit Later page</td><td class="compare-us">Uses server time</td></tr>
-          <tr><td>Live embedded form</td><td><span class="cyes">✓</span></td><td>Displays the Google Form inside the branded page</td><td>Google iframe</td><td class="compare-us">Google still renders the form fields</td></tr>
-          <tr><td>Managed closing</td><td><span class="cyes">✓</span></td><td>Shows a closed page and tells Google to stop responses</td><td>Submit Later + Google</td><td class="compare-us">Cloud synchronization can take a brief moment</td></tr>
-          <tr><td>Website embed</td><td><span class="cyes">✓</span></td><td>Uses the same experience on your own site</td><td>Responsive iframe</td><td class="compare-us">Includes countdown, live and closed states</td></tr>
-          <tr><td>Response storage</td><td><span class="cno">Google</span></td><td>Submissions continue to go directly to Google</td><td>Google Form</td><td class="compare-us">Submit Later does not receive response answers</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="compare-note">Wrapper colours and backgrounds style the Submit Later page around the form. They do not rewrite Google's field design or impersonate Google Forms.</p>
-  </div>
-</section>
-
-<!-- ══════════════════════════ LINK LIFECYCLE ══════════════════════════ -->
-<section class="prequeue-spot">
-  <div class="section-inner pq-inner">
-    <div class="pq-text">
-      <div class="section-label">A predictable visitor journey</div>
-      <h2>One link.<br>Three clear states.</h2>
-      <p>Your audience can use the same URL before, during and after the response window. The same experience can also live inside your organization's website.</p>
-      <ul class="pq-benefits">
-        <li>
-          <span class="pq-check">✓</span>
-          Share the timed URL before registration opens
-        </li>
-        <li>
-          <span class="pq-check">✓</span>
-          Pause Google responses before the scheduled opening
-        </li>
-        <li>
-          <span class="pq-check">✓</span>
-          Display the live Google Form inside your chosen wrapper
-        </li>
-        <li>
-          <span class="pq-check">✓</span>
-          Close the page and switch Google response acceptance off
-        </li>
-      </ul>
-      <a href="/signup.html?next=account.html%23forms" class="btn-primary">Connect a Google Form →</a>
-    </div>
-    <div class="pq-visual">
-      <div class="pq-card">
-        <div class="pq-card-header">
-          <div class="pq-card-title">Timed link lifecycle</div>
-          <div class="pq-card-status"><span class="pq-live">● Server-timed</span></div>
-        </div>
-        <div class="pq-entries">
-          <div class="pq-entry pq-entry-you">
-            <span class="pq-pos">01</span>
-            <span class="pq-name">Before opening</span>
-            <span class="pq-badge pq-badge-ready">Countdown</span>
-          </div>
-          <div class="pq-entry">
-            <span class="pq-pos">02</span>
-            <span class="pq-name">Access window</span>
-            <span class="pq-badge">Embedded form</span>
-          </div>
-          <div class="pq-entry">
-            <span class="pq-pos">03</span>
-            <span class="pq-name">After closing</span>
-            <span class="pq-badge">Closed page</span>
-          </div>
-          <div class="pq-entry pq-entry-dim">
-            <span class="pq-pos">—</span>
-            <span class="pq-name">Organization website</span>
-            <span class="pq-badge">Same page embedded</span>
-          </div>
-        </div>
-        <div class="pq-opens">
-          Schedule shown in <strong>UTC</strong>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════ PRICING ══════════════════════════ -->
-<section class="pricing" id="pricing">
-  <div class="section-inner">
-    <div class="section-label">Pricing</div>
-    <h2>Pay for Timed Forms.<br>Nothing you do not need.</h2>
-    <p class="section-sub">Forms is billed separately from the Chrome extension and Webhook Scheduler. Choose monthly or annual access.</p>
-
-    <div class="pricing-toggle">
-      <span class="pt-label">Monthly</span>
-      <label class="pt-switch">
-        <input type="checkbox" id="annual-toggle" onchange="toggleAnnual(this)">
-        <span class="pt-slider"></span>
-      </label>
-      <span class="pt-label">Annual <span class="pt-save" id="forms-plan-saving">Annual savings</span></span>
-    </div>
-
-    <div class="pricing-cards">
-      <div class="plan-card">
-        <div class="plan-name">Account trial</div>
-        <div class="plan-price"><span class="plan-amt">Free</span></div>
-        <div class="plan-tagline">Explore the workflow before choosing a Forms plan.</div>
-        <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> Create an account without a card</li>
-          <li><span class="pf-yes">✓</span> Up to 20 timed forms during the account trial</li>
-          <li><span class="pf-yes">✓</span> Keep up to 2 forms on the free tier afterward</li>
-          <li><span class="pf-yes">✓</span> Connect and import a Google Form</li>
-          <li><span class="pf-yes">✓</span> Test countdown, embedded and closed states</li>
-        </ul>
-        <a href="/signup.html?next=account.html%23forms" class="plan-cta btn-ghost">Create free account</a>
-      </div>
-
-      <div class="plan-card plan-card-featured">
-        <div class="plan-popular">Timed Forms</div>
-        <div class="plan-name">Forms plan</div>
-        <div class="plan-price">
-          <span class="plan-amt" id="forms-plan-amt" data-monthly="Loading…" data-annual="Loading…">Loading…</span>
-          <span class="plan-per">/30 days</span>
-        </div>
-        <div class="plan-tagline">A dedicated plan for people who only need timed Google Form links.</div>
-        <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> Up to 20 timed Google Form links</li>
-          <li><span class="pf-yes">✓</span> Import and edit common question types</li>
-          <li><span class="pf-yes">✓</span> Branded countdown, live and closed pages</li>
-          <li><span class="pf-yes">✓</span> Embedded Google Form during the window</li>
-          <li><span class="pf-yes">✓</span> Managed Google response opening and closing</li>
-          <li><span class="pf-yes">✓</span> Copy-and-paste website embed code</li>
-        </ul>
-        <a href="/signup.html?plan=forms-monthly" class="plan-cta btn-primary" id="forms-plan-cta">Choose Timed Forms</a>
-      </div>
-    </div>
-    <p class="pricing-note" id="forms-pricing-note">Choose monthly or annual access. Checkout shows the currency and final amount before payment.</p>
-  </div>
-</section>
-
-<!-- ══════════════════════════ USE CASES ══════════════════════════ -->
-<section class="usecases">
-  <div class="section-inner">
-    <div class="section-label">Who uses it</div>
-    <h2>Useful wherever one form<br>needs a clear access window.</h2>
-    <div class="uc-grid">
-      <div class="uc-card">
-        <div class="uc-icon">🎓</div>
-        <h3>University Admissions</h3>
-        <p>Publish application links before admissions open and give applicants one clear place to check the schedule.</p>
-      </div>
-      <div class="uc-card">
-        <div class="uc-icon">🏆</div>
-        <h3>Hackathons & Competitions</h3>
-        <p>Share registration details early, then show the connected form inside the event page when entries open.</p>
-      </div>
-      <div class="uc-card">
-        <div class="uc-icon">📚</div>
-        <h3>Coaching & Courses</h3>
-        <p>Give learners a countdown before enrollment and a clear message when the timed link is no longer available.</p>
-      </div>
-      <div class="uc-card">
-        <div class="uc-icon">🏛️</div>
-        <h3>Government & NGO Schemes</h3>
-        <p>Coordinate public application windows while Google continues to hold the form and its response data.</p>
-      </div>
-      <div class="uc-card">
-        <div class="uc-icon">🎪</div>
-        <h3>Events & Workshops</h3>
-        <p>Use a single URL for workshop registration, conference interest forms, and scheduled event sign-ups.</p>
-      </div>
-      <div class="uc-card">
-        <div class="uc-icon">💼</div>
-        <h3>HR & Internal Processes</h3>
-        <p>Import and schedule internal surveys, benefit enrolment and review forms without moving their responses out of Google.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════ FAQ ══════════════════════════ -->
-<section class="faq">
-  <div class="section-inner faq-inner">
-    <div class="faq-left">
-      <div class="section-label">FAQ</div>
-      <h2>What to know<br>before you publish.</h2>
-      <a href="/signup.html?next=account.html%23forms" class="btn-primary">Connect a Google Form →</a>
-    </div>
-    <div class="faq-right">
-      <details class="faq-item" open>
-        <summary>What permission does Submit Later request?</summary>
-        <p>You connect Google separately from sign-in and authorize access for managed Google Forms. Submit Later uses that permission to read the selected form, edit supported questions and change whether it accepts responses. You can disconnect it from the dashboard.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Which questions can I edit?</summary>
-        <p>Short text, paragraph, multiple-choice, checkbox and dropdown questions can be added, edited or removed. Other Google Forms item types are imported as read-only so their structure is not damaged.</p>
-      </details>
-      <details class="faq-item">
-        <summary>What does a visitor see at each stage?</summary>
-        <p>Before opening, they see your branded countdown. During the window, the Google Form appears inside the same page. After closing, the page shows the closed state and Submit Later tells Google to stop accepting responses.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Can I put the timed form on my own website?</summary>
-        <p>Yes. Copy the iframe snippet from the dashboard into your site. It loads the same background, colours, countdown, live embedded form and closed state you configured in Submit Later.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Is the original Google Form URL hidden?</summary>
-        <p>No iframe can make its source URL secret; a visitor can inspect it with browser tools. The protection comes from changing Google's own response setting with the schedule, so knowing the responder URL does not bypass a successfully synchronized closing state.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Does response access change at the exact second?</summary>
-        <p>The Submit Later page changes from server time at the scheduled boundary. Google's response setting is updated over its cloud API and can take a brief moment to synchronize. The dashboard shows connection or synchronization problems that need attention.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Do wrapper colours change the Google Form fields?</summary>
-        <p>No. Your background, accent colour and organization name style the Submit Later wrapper. Google renders the embedded questions and controls, and continues to receive the submitted responses.</p>
-      </details>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════ FINAL CTA ══════════════════════════ -->
-<section class="final-cta">
-  <div class="section-inner fc-inner">
-    <h2>Turn your Google Form<br>into a managed experience.</h2>
-    <p>Import the questions, set the schedule and design, then publish one hosted link or embed it on your website.</p>
-    <a href="/signup.html?next=account.html%23forms" class="btn-primary btn-lg">
-      Connect your first Google Form
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-    <p class="fc-trust">No credit card to create an account · Separate Forms-only monthly and annual plans</p>
-  </div>
-</section>
-
-<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <a href="/" class="nav-logo">
-        <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-          <rect width="28" height="28" rx="8" fill="#6366f1"/>
-          <path d="M8 14h4l2-5 3 10 2-5h3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>Submit Later Timed Forms</span>
-      </a>
-      <p>Connected Google Forms with question editing, managed response windows, branded pages and website embeds.</p>
-    </div>
-    <div class="footer-links">
-      <div class="fl-col">
-        <div class="fl-head">Product</div>
-        <a href="#how">How it works</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#compare">Product scope</a>
-        <a href="/account.html#forms">Dashboard</a>
-      </div>
-      <div class="fl-col">
-        <div class="fl-head">Company</div>
-        <a href="https://submitlater.co.in">Submit Later</a>
-        <a href="https://submitlater.co.in/privacy.html">Privacy</a>
-        <a href="https://submitlater.co.in/terms.html">Terms</a>
-        <a href="mailto:submitlater.review@gmail.com">Contact</a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Submit Later. All rights reserved.</span>
-    <span>A product of <a href="https://submitlater.co.in">Submit Later</a></span>
-  </div>
+  <div class="wrap copy"><span>© 2026 Submit Later. All rights reserved.</span><span>Fill it now. Send it later.</span></div>
 </footer>
-
-<script src="site.js?v=20261103-currency"></script>
+<script src="/site.js?v=20261104-products"></script>
 </body>
 </html>

@@ -269,10 +269,22 @@ function afterSignInUrl() {
   return target.pathname + target.search + target.hash;
 }
 
-function reuseExtensionSession() {
-  if (params.get('from') !== 'extension' || !session.get() || params.get('expired') === '1') return false;
+function reuseSignedInSession() {
+  const current = session.get();
+  if (typeof current?.refreshToken !== 'string' || !current.refreshToken || params.get('expired') === '1') return false;
   location.replace(afterSignInUrl());
   return true;
+}
+
+function showProductAuthContext() {
+  const target = new URL(safeNext(), location.href);
+  const key = target.pathname === '/account.html' ? target.hash.slice(1) : '';
+  const product = { forms: 'Timed Forms', scheduler: 'Webhook Scheduler' }[key];
+  if (!product) return;
+  const lead = $('.auth-card .lead-sm');
+  if (lead) lead.textContent = `${document.body.dataset.page === 'signup' ? 'Create your account' : 'Log in'} to continue to ${product}. One account works across all Submit Later tools.`;
+  const back = $('.auth-top > a');
+  if (back) { back.href = `/${key}/`; back.textContent = `← Back to ${product}`; }
 }
 
 function signedIn(result) {
@@ -321,8 +333,10 @@ function initGoogle(box) {
 // ---- Pages -----------------------------------------------------------------
 
 async function initSignup() {
-  if (reuseExtensionSession()) return;
+  showProductAuthContext();
+  if (!params.get('plan') && reuseSignedInSession()) return;
   await loadPlanCatalog();
+  if (reuseSignedInSession()) return;
   const form = $('#signup-form');
   const box = $('#form-notice');
   const plan = params.get('plan');
@@ -361,8 +375,10 @@ async function initSignup() {
   });
 }
 
-function initLogin() {
-  if (reuseExtensionSession()) return;
+async function initLogin() {
+  showProductAuthContext();
+  if (params.get('plan')) await loadPlanCatalog();
+  if (reuseSignedInSession()) return;
   const form = $('#login-form');
   const box = $('#form-notice');
   if (params.get('reset') === '1') notice(box, 'ok', 'Your password has been changed. Log in with the new one.');

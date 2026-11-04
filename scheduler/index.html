@@ -1,500 +1,96 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webhook Scheduler for HTTPS Requests | Submit Later</title>
-  <meta name="description" content="Schedule one-time or recurring HTTPS webhooks without running a cron server. Configure methods, headers and bodies, then review every execution.">
-  <link rel="canonical" href="https://submitlater.co.in/scheduler/">
-  <meta property="og:title" content="Submit Later Webhook Scheduler">
-  <meta property="og:description" content="Schedule HTTPS requests, inspect execution logs and receive an email after repeated failures.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://submitlater.co.in/scheduler/">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="style.css">
-  <script type="application/ld+json" id="scheduler-schema">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later Webhook Scheduler","applicationCategory":"DeveloperApplication","operatingSystem":"Web","description":"A hosted scheduler for one-time and recurring HTTPS webhook requests."}</script>
-</head>
-<body>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q9BV7VECQZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-<!-- NAV -->
-<header class="nav">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <rect width="28" height="28" rx="8" fill="#6366f1"/>
-        <circle cx="14" cy="14" r="5" stroke="white" stroke-width="2"/>
-        <path d="M14 9V14l3 3" stroke="white" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <span>Submit Later <strong>Webhook Scheduler</strong></span>
-    </a>
-    <nav class="nav-links">
-      <a href="#how">How it works</a>
-      <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
-    <a href="/help.html#webhooks">User guide</a></nav>
-    <div class="nav-actions">
-      <a href="/scheduler/app/" class="btn-ghost">Sign in</a>
-      <a href="/scheduler/app/?signup=1" class="btn-primary">Start free</a>
+  // Only the page path is sent, never the query string: reset and verify
+  // links carry one-time tokens that must not leave the site.
+  gtag('config', 'G-Q9BV7VECQZ', { page_location: location.origin + location.pathname });
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schedule Webhooks and HTTPS Requests | Submit Later</title>
+<meta name="description" content="Schedule HTTPS requests once or on a recurring schedule. Set headers and payloads, inspect run history and manage everything in your Submit Later account.">
+<link rel="canonical" href="https://submitlater.co.in/scheduler/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Submit Later">
+<meta property="og:title" content="Schedule Webhooks and HTTPS Requests | Submit Later">
+<meta property="og:description" content="Schedule HTTPS requests once or on a recurring schedule. Set headers and payloads, inspect run history and manage everything in your Submit Later account.">
+<meta property="og:url" content="https://submitlater.co.in/scheduler/">
+<meta property="og:image" content="https://submitlater.co.in/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/icon32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap">
+<script src="/theme.js"></script>
+<link rel="stylesheet" href="/style.css?v=20261104-products">
+<link rel="stylesheet" href="/products.css?v=20261104-products">
+<script type="application/ld+json" id="site-structured-data">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Submit Later Webhook Scheduler", "applicationCategory": "BusinessApplication", "operatingSystem": "Web", "description": "Schedule HTTPS requests once or on a recurring schedule. Set headers and payloads, inspect run history and manage everything in your Submit Later account.", "url": "https://submitlater.co.in/scheduler/"}</script>
+</head>
+<body class="product-page" data-product="scheduler">
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="/index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <a href="/index.html#features">Features</a>
+      <a href="/whatsapp-scheduler.html">WhatsApp</a>
+      <a href="/index.html#uses">Use cases</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/help.html">Guides</a>
+      <a class="nav-mobile-cta nav-login" href="/login.html?next=account.html%23scheduler" data-product-entry="scheduler" data-auth="login" data-signed-in-label="Account">Log in</a>
+      <a class="nav-mobile-cta" href="/signup.html?next=account.html%23scheduler" data-product-entry="scheduler" data-signed-in-label="Open Webhook Scheduler">Get started</a>
+    </nav>
+    <div class="top-actions">
+      <button type="button" class="theme-btn" data-theme-btn aria-label="Choose a theme" title="Theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.9 0-.5-.2-.9-.5-1.3-.3-.3-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="10" cy="7.5" r="1.2"/><circle cx="14.5" cy="7.5" r="1.2"/></svg></button>
+      <a class="nav-login" href="/login.html?next=account.html%23scheduler" data-product-entry="scheduler" data-auth="login" data-signed-in-label="Account">Log in</a>
+      <a class="nav-cta" href="/signup.html?next=account.html%23scheduler" data-product-entry="scheduler" data-signed-in-label="Open tool">Get started</a>
+      <button type="button" class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="main-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     </div>
-    <button class="nav-burger" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
-      <span></span><span></span><span></span>
-    </button>
   </div>
 </header>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      Hosted webhook scheduling with execution logs
-    </div>
-    <h1 class="hero-headline">
-      Schedule webhooks.<br>
-      <span class="gradient-text">Skip the cron server.</span>
-    </h1>
-    <p class="hero-sub">
-      Send a GET, POST, PUT, PATCH or DELETE request to a public HTTPS endpoint. Choose a date, a daily or weekly time, or an interval. Submit Later runs it server-side and records the result.
-    </p>
-    <div class="hero-ctas">
-      <a href="/scheduler/app/?signup=1" class="btn-primary btn-lg">
-        Create your first webhook job
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <span class="hero-trust">Start free · 5 saved jobs · No credit card</span>
-    </div>
-    <div class="hero-platforms">
-      <span class="hp-label">Works with</span>
-      <span class="hp-chip">Vercel</span>
-      <span class="hp-chip">Netlify</span>
-      <span class="hp-chip">Bubble</span>
-      <span class="hp-chip">Webflow</span>
-      <span class="hp-chip">Make</span>
-      <span class="hp-chip">Zapier</span>
-      <span class="hp-chip">Public HTTPS APIs</span>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <!-- Mock scheduler dashboard -->
-    <div class="dash-mock">
-      <div class="dm-winbar">
-        <span class="dm-dots"><i></i><i></i><i></i></span>
-        <span class="dm-title">Submit Later Webhook Scheduler</span>
-        <span class="dm-status" id="dm-status">● Firing now</span>
-      </div>
-      <div class="dm-body">
-        <div class="dm-job dm-job-firing" id="dm-job-1">
-          <div class="dmj-left">
-            <span class="dmj-method dmj-post">POST</span>
-            <span class="dmj-url">api.myapp.com/cron/weekly-report</span>
-          </div>
-          <div class="dmj-right">
-            <span class="dmj-repeat">Every Monday 9 AM</span>
-            <span class="dmj-status dmj-firing" id="dmj-s1">● Firing…</span>
-          </div>
-        </div>
-        <div class="dm-job">
-          <div class="dmj-left">
-            <span class="dmj-method dmj-get">GET</span>
-            <span class="dmj-url">hooks.slack.com/…/T02ABC/B04</span>
-          </div>
-          <div class="dmj-right">
-            <span class="dmj-repeat">Daily 10:00 AM</span>
-            <span class="dmj-status dmj-ok">✓ 200</span>
-          </div>
-        </div>
-        <div class="dm-job">
-          <div class="dmj-left">
-            <span class="dmj-method dmj-post">POST</span>
-            <span class="dmj-url">api.stripe.com/v1/invoices/pay</span>
-          </div>
-          <div class="dmj-right">
-            <span class="dmj-repeat">Every 7 days</span>
-            <span class="dmj-status dmj-ok">✓ 200</span>
-          </div>
-        </div>
-        <div class="dm-job">
-          <div class="dmj-left">
-            <span class="dmj-method dmj-post">POST</span>
-            <span class="dmj-url">mysite.vercel.app/api/revalidate</span>
-          </div>
-          <div class="dmj-right">
-            <span class="dmj-repeat">Every 6 hours</span>
-            <span class="dmj-status dmj-ok">✓ 200</span>
-          </div>
-        </div>
-        <div class="dm-log-row" id="dm-log">
-          <span class="dl-time" id="dl-time">09:00:00.041</span>
-          <span class="dl-tag dl-tag-ok" id="dl-tag">200 OK</span>
-          <span class="dl-msg" id="dl-msg">POST weekly-report → 200 · 241ms</span>
-        </div>
-      </div>
-    </div>
-  </div>
+<main>
+<section class="product-hero">
+ <div class="wrap product-hero-grid">
+  <div class="product-intro"><a class="product-back" href="/index.html#suite">← All Submit Later tools</a><p class="product-eyebrow">Webhook Scheduler · Web tool</p><h1>Set the request.<br>Let the schedule take over.</h1><p class="product-lead">Start a report, notify your own service or trigger a workflow at a chosen time. Configure the HTTPS request once and check each run from your Submit Later dashboard.</p><div class="product-actions"><a class="btn primary" href="/signup.html?next=account.html%23scheduler" data-product-entry="scheduler" data-signed-in-label="Open Webhook Scheduler">Schedule your first webhook</a><a class="btn alt" href="#how">See how it works</a></div><p class="product-account-note">One Submit Later account. Your tools together in one dashboard.</p></div>
+  <figure class="product-preview"><figcaption><b>Weekday report</b><span>Example job · runs on the server</span></figcaption><div class="product-preview-state"><span class="product-dot"></span> Scheduled · Monday to Friday</div><h3>Prepare the daily summary</h3><dl class="product-request"><div><dt>Request</dt><dd><code>POST /reports/daily</code></dd></div><div><dt>Time</dt><dd>8:30 AM · your timezone</dd></div><div><dt>Payload</dt><dd><code>{"report": "daily"}</code></dd></div></dl><div class="product-preview-result"><b>Example run</b><span>200 OK · response received</span></div><p class="product-preview-note">Inspect the receiving service to confirm the report is ready.</p></figure>
+ </div>
 </section>
-
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">schedule types</span></div>
-    <div class="stat-div"></div>
-    <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">HTTP methods</span></div>
-    <div class="stat-div"></div>
-    <div class="stat-item"><span class="stat-num">30s</span><span class="stat-label">request timeout</span></div>
-    <div class="stat-div"></div>
-    <div class="stat-item"><span class="stat-num">1 KB</span><span class="stat-label">response preview</span></div>
-  </div>
-</div>
-
-<!-- PAIN -->
-<section class="pain">
-  <div class="section-inner">
-    <div class="section-label">The problem</div>
-    <h2>Scheduled work should not require<br>another server to maintain.</h2>
-    <p class="section-sub">A webhook often needs only one thing: a dependable request at the time you choose. Submit Later gives that request a schedule, a history and a place to manage it.</p>
-    <div class="pain-grid">
-      <div class="pain-card">
-        <div class="pain-icon">☁️</div>
-        <h3>Keep deployment separate</h3>
-        <p>Trigger a serverless function, automation workflow or maintenance endpoint without tying its schedule to a particular hosting provider.</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">🖥️</div>
-        <h3>Remove the cron machine</h3>
-        <p>Replace a small VPS and a line of <code>curl</code> with a job you can pause, resume, test and inspect from one dashboard.</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">🔗</div>
-        <h3>Connect no-code workflows</h3>
-        <p>Start a Bubble, Webflow, Make, Zapier or n8n workflow through the public webhook URL it already provides.</p>
-      </div>
-      <div class="pain-card">
-        <div class="pain-icon">🔇</div>
-        <h3>See what happened</h3>
-        <p>Each attempt records its time, HTTP status, duration and a short response preview. Repeated failures trigger an email so they do not disappear silently.</p>
-      </div>
+<nav class="product-topics wrap" aria-label="Webhook Scheduler topics"><a href="#how">How it works</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="/help.html#webhooks">Step-by-step guide ↗</a></nav>
+<section class="block" id="how"><div class="section-head"><span class="kicker">From setup to the first result</span><h2>Start here. Keep everything in one place.</h2></div><ol class="product-steps"><li><span>1</span><div><h3>Describe the request</h3><p>Name the job, enter an HTTPS endpoint and choose the method. Add any headers and request body your service expects.</p></div></li><li><span>2</span><div><h3>Choose when it runs</h3><p>Set a one-time, daily, weekly or interval schedule. Review the timezone and next run before saving.</p></div></li><li><span>3</span><div><h3>Check what happened</h3><p>Open the execution history for the response status, duration and preview. Pause a job or use Run now when you need to test it.</p></div></li></ol></section>
+<section class="block product-features" id="features" aria-label="Webhook Scheduler features"><article class="product-feature"><h3>Use the request your service expects</h3><p>Choose GET, POST, PUT, PATCH or DELETE. Set headers and a request body for an endpoint you are authorized to call.</p></article><article class="product-feature"><h3>Run once or keep a routine</h3><p>Schedule a single event or repeat a request. Jobs run on the server, so you can close Chrome after saving.</p></article><article class="product-feature"><h3>See the result of each run</h3><p>Review HTTP status codes, timing and response previews. Check your receiving service before retrying a request that may already have performed an action.</p></article></section>
+<section class="block" id="pricing"><div class="section-head"><span class="kicker">Product-specific pricing</span><h2>Choose the access you need.</h2><p>Start with up to five saved jobs and 200 runs per month on the free tier. New accounts also receive a 30-day product trial.</p></div><div class="product-offers"><article class="product-offer"><h3>Monthly</h3><p class="product-price"><span data-plan-price="scheduler-monthly">Loading…</span><small>/ 30 days</small></p><p>Up to 20 saved jobs and 5,000 runs per month, recurring schedules and execution history.</p><a class="btn primary" href="/signup.html?plan=scheduler-monthly" data-plan-link data-plan-id="scheduler-monthly">Choose monthly</a></article><article class="product-offer"><h3>Annual</h3><p class="product-price"><span data-plan-price="scheduler-annual">Loading…</span><small>/ 365 days</small></p><p>Up to 20 saved jobs and 5,000 runs per month, recurring schedules and execution history.</p><a class="btn alt" href="/signup.html?plan=scheduler-annual" data-plan-link data-plan-id="scheduler-annual">Choose annual</a></article></div><p class="product-pricing-note">Plans are prepaid and do not renew automatically. Prices come from the same catalogue as checkout. <a href="/pricing.html">Compare all products →</a></p></section>
+<section class="block product-faq"><div><span class="kicker">A few useful details</span><h2>Before you get started</h2><a href="/help.html#webhooks">Read the complete walkthrough →</a></div><div><details><summary>Do I need to leave my browser open?</summary><p>No. Saved webhook jobs run on Submit Later’s server. The receiving endpoint must be reachable when the job runs.</p></details><details><summary>Does a successful run mean my whole workflow finished?</summary><p>A successful HTTP response means the endpoint replied. If that service starts work in the background, check its own logs or status to confirm the final result.</p></details><details><summary>Is this a separate login or subscription?</summary><p>Use the same Submit Later login and dashboard as the other tools. Webhook Scheduler has its own plan, so you can pay for the product you use.</p></details></div></section>
+<section class="block product-next"><div><h2>Ready for your first job?</h2><p>Open Webhook Scheduler in your Submit Later account.</p></div><a class="btn primary" href="/signup.html?next=account.html%23scheduler" data-product-entry="scheduler" data-signed-in-label="Open Webhook Scheduler">Schedule your first webhook</a></section>
+</main>
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <a class="brand" href="/index.html"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Submit Later</a>
+      <p>Practical scheduling tools for browser actions, managed form response windows and webhooks—one account, with separate plans for each product.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="/index.html#features">Features</a><a href="/whatsapp-scheduler.html">WhatsApp scheduler</a><a href="/pricing.html">Pricing</a><a href="/help.html">User guide</a><a href="/signup.html?next=account.html%23scheduler" data-product-entry="scheduler" data-signed-in-label="Open Webhook Scheduler">Create free account</a><a href="/login.html?next=account.html%23scheduler" data-product-entry="scheduler" data-auth="login" data-signed-in-label="Open Webhook Scheduler">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms &amp; conditions</a><a href="/refund.html">Refund &amp; cancellation</a><a href="/shipping.html">Delivery policy</a>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p style="margin:0">Submit Later<br><a href="mailto:submitlater.review@gmail.com">submitlater.review@gmail.com</a></p>
     </div>
   </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how" id="how">
-  <div class="section-inner">
-    <div class="section-label">How it works</div>
-    <h2>From endpoint to scheduled job<br>in three short steps.</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <h3>Enter your URL</h3>
-          <p>Choose GET, POST, PUT, PATCH or DELETE for a public HTTPS endpoint. Add the headers and request body your API expects.</p>
-          <div class="step-visual">
-            <div class="sv-code-row">
-              <span class="svc-method svc-post">POST</span>
-              <span class="svc-url">https://api.myapp.com/cron/cleanup</span>
-            </div>
-            <div class="sv-code-row sv-code-row-sm">
-              <span class="svc-key">Authorization:</span>
-              <span class="svc-val">Bearer sk-…</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="step-connector"></div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <h3>Set the schedule</h3>
-          <p>Run once at a local date and time, every day, every week, or at a minute, hour or day interval. The selected IANA timezone is respected.</p>
-          <div class="step-visual sv-schedule">
-            <div class="svs-row svs-active"><span class="svs-icon">◉</span> Every day at 9:00 AM · America/New_York</div>
-            <div class="svs-row"><span class="svs-icon">○</span> Every Monday</div>
-            <div class="svs-row"><span class="svs-icon">○</span> Once — pick a date</div>
-            <div class="svs-row"><span class="svs-icon">○</span> Every N minutes</div>
-          </div>
-        </div>
-      </div>
-      <div class="step-connector"></div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <h3>Read the execution record</h3>
-          <p>Review the timestamp, HTTP status, duration and first 1 KB of the response. After three consecutive scheduled failures, Submit Later emails the account owner.</p>
-          <div class="step-visual sv-log">
-            <div class="svl-row"><span class="svl-time">09:00:00.041</span><span class="svl-tag svl-ok">200</span><span class="svl-msg">cleanup → 200 · 187ms</span></div>
-            <div class="svl-row"><span class="svl-time">08:00:00.038</span><span class="svl-tag svl-ok">200</span><span class="svl-msg">cleanup → 200 · 203ms</span></div>
-            <div class="svl-row"><span class="svl-time">07:00:00.044</span><span class="svl-tag svl-ok">200</span><span class="svl-msg">cleanup → 200 · 195ms</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section class="features" id="features">
-  <div class="section-inner">
-    <div class="section-label">Features</div>
-    <h2>The controls you need.<br>Nothing hidden behind jargon.</h2>
-    <div class="feat-grid">
-      <div class="feat-card feat-card-wide">
-        <div class="fc-icon">📋</div>
-        <h3>Useful execution history</h3>
-        <p>Every attempt records its timestamp, HTTP status, duration, error and a bounded response preview. Filter the global log by job or outcome.</p>
-      </div>
-      <div class="feat-card">
-        <div class="fc-icon">🗓️</div>
-        <h3>Timezone-aware schedules</h3>
-        <p>Daily and weekly jobs follow the timezone you select, including daylight-saving changes. Interval jobs can run from every minute to every 30 days.</p>
-      </div>
-      <div class="feat-card">
-        <div class="fc-icon">🔔</div>
-        <h3>Failure alerts</h3>
-        <p>After three consecutive scheduled failures, the account owner receives one email with the job, endpoint and latest error.</p>
-      </div>
-      <div class="feat-card">
-        <div class="fc-icon">{ }</div>
-        <h3>Complete request control</h3>
-        <p>Set the HTTP method, custom headers and a JSON or text body. Submit Later validates unsafe transport headers before saving the job.</p>
-      </div>
-      <div class="feat-card">
-        <div class="fc-icon">⚡</div>
-        <h3>Run now</h3>
-        <p>Send a test request from the dashboard without moving the job's next scheduled run. The result appears in the same execution history.</p>
-      </div>
-      <div class="feat-card">
-        <div class="fc-icon">🛡️</div>
-        <h3>Public endpoints only</h3>
-        <p>Jobs require HTTPS. Private, loopback and link-local destinations are blocked, and response size and request duration are bounded.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- USE CASES -->
-<section class="usecases">
-  <div class="section-inner">
-    <div class="section-label">Use cases</div>
-    <h2>What people actually schedule.</h2>
-    <div class="uc-list">
-      <div class="uc-item">
-        <span class="uci-method uci-post">POST</span>
-        <span class="uci-url">api.myapp.com/cron/weekly-digest</span>
-        <span class="uci-desc">Send weekly email digest every Monday 9 AM</span>
-        <span class="uci-repeat">Weekly</span>
-      </div>
-      <div class="uc-item">
-        <span class="uci-method uci-get">GET</span>
-        <span class="uci-url">mysite.vercel.app/api/revalidate-cache</span>
-        <span class="uci-desc">Revalidate Next.js ISR pages every 6 hours</span>
-        <span class="uci-repeat">Every 6h</span>
-      </div>
-      <div class="uc-item">
-        <span class="uci-method uci-post">POST</span>
-        <span class="uci-url">hooks.slack.com/services/T…/B…</span>
-        <span class="uci-desc">Post daily standup reminder to Slack</span>
-        <span class="uci-repeat">Daily</span>
-      </div>
-      <div class="uc-item">
-        <span class="uci-method uci-post">POST</span>
-        <span class="uci-url">api.myapp.com/billing/reconcile</span>
-        <span class="uci-desc">Reconcile billing records every Monday morning</span>
-        <span class="uci-repeat">Weekly</span>
-      </div>
-      <div class="uc-item">
-        <span class="uci-method uci-post">POST</span>
-        <span class="uci-url">n8n.myserver.com/webhook/backup-trigger</span>
-        <span class="uci-desc">Trigger nightly database backup at 2 AM</span>
-        <span class="uci-repeat">Daily</span>
-      </div>
-      <div class="uc-item">
-        <span class="uci-method uci-get">GET</span>
-        <span class="uci-url">api.myapp.com/cron/cleanup-old-files</span>
-        <span class="uci-desc">Clean up temp files every Sunday midnight</span>
-        <span class="uci-repeat">Weekly</span>
-      </div>
-    </div>
-    <p class="uc-note">Use a scoped, revocable credential when an endpoint requires authentication.</p>
-  </div>
-</section>
-
-<!-- COMPARE -->
-<section class="compare">
-  <div class="section-inner">
-    <div class="section-label">Why use a hosted scheduler?</div>
-    <h2>Operate scheduled requests<br>without digging through a server.</h2>
-    <div class="compare-table-wrap">
-      <table class="compare-table">
-        <thead>
-          <tr><th>Capability</th><th>Shell cron</th><th>Workflow workaround</th><th class="ct-us">Submit Later</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Infrastructure</td><td>A running machine</td><td>Another automation</td><td class="ct-us">Hosted for you</td></tr>
-          <tr><td>Timezone schedules</td><td>Manual configuration</td><td>Depends on the tool</td><td class="ct-us">Built into each job</td></tr>
-          <tr><td>Headers and request body</td><td>Command-line setup</td><td>Extra workflow steps</td><td class="ct-us">Configured in one form</td></tr>
-          <tr><td>Execution history</td><td>Build your own logging</td><td>Split across runs</td><td class="ct-us">One searchable dashboard</td></tr>
-          <tr><td>Repeated-failure email</td><td>Build your own alert</td><td>Depends on the tool</td><td class="ct-us"><span class="cyes">Included</span></td></tr>
-          <tr><td>Pause or run now</td><td>Edit or run commands</td><td>Edit the workflow</td><td class="ct-us"><span class="cyes">One click</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section class="pricing" id="pricing">
-  <div class="section-inner">
-    <div class="section-label">Pricing</div>
-    <h2>Start with five jobs.<br>Upgrade when your workload grows.</h2>
-    <p class="section-sub">Webhook Scheduler is billed separately from the Chrome extension and Timed Forms, so you pay only for the product you use.</p>
-
-    <div class="pricing-toggle">
-      <span class="pt-label">Monthly</span>
-      <label class="pt-switch">
-        <input type="checkbox" id="annual-toggle" onchange="toggleAnnual(this)">
-        <span class="pt-slider"></span>
-      </label>
-      <span class="pt-label">Annual <span class="pt-save" id="scheduler-plan-saving">Annual savings</span></span>
-    </div>
-
-    <div class="pricing-cards">
-      <div class="plan-card">
-        <div class="plan-name">Free</div>
-        <div class="plan-price"><span class="plan-amt">Free</span><span class="plan-per">forever</span></div>
-        <div class="plan-tagline">For occasional automations and evaluation.</div>
-        <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> 5 saved jobs</li>
-          <li><span class="pf-yes">✓</span> 200 webhook runs each month</li>
-          <li><span class="pf-yes">✓</span> One-time and recurring schedules</li>
-          <li><span class="pf-yes">✓</span> Custom headers and request body</li>
-          <li><span class="pf-yes">✓</span> 90-day execution history</li>
-          <li><span class="pf-yes">✓</span> Repeated-failure email</li>
-        </ul>
-        <a href="/scheduler/app/?signup=1" class="plan-cta btn-ghost">Start free</a>
-      </div>
-
-      <div class="plan-card plan-card-featured">
-        <div class="plan-popular">More capacity</div>
-        <div class="plan-name">Webhook Scheduler Pro</div>
-        <div class="plan-price">
-          <span class="plan-amt" data-monthly="Loading…" data-annual="Loading…">Loading…</span>
-          <span class="plan-per" data-monthly="/30 days" data-annual="/365 days">/30 days</span>
-        </div>
-        <div class="plan-tagline">For production workflows and growing projects.</div>
-        <ul class="plan-features">
-          <li><span class="pf-yes">✓</span> 20 saved jobs</li>
-          <li><span class="pf-yes">✓</span> 5,000 webhook runs each month</li>
-          <li><span class="pf-yes">✓</span> One-time and recurring schedules</li>
-          <li><span class="pf-yes">✓</span> Custom headers and request body</li>
-          <li><span class="pf-yes">✓</span> 90-day execution history</li>
-          <li><span class="pf-yes">✓</span> Repeated-failure email</li>
-        </ul>
-        <a href="/signup.html?plan=scheduler-monthly" class="plan-cta btn-primary" id="scheduler-plan-cta">Choose Scheduler Pro</a>
-      </div>
-    </div>
-    <p class="pricing-note" id="scheduler-pricing-note">Purchases add 30 or 365 days and do not renew automatically.</p>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="faq" id="faq">
-  <div class="section-inner faq-inner">
-    <div class="faq-left">
-      <div class="section-label">FAQ</div>
-      <h2>Common questions.</h2>
-      <a href="/scheduler/app/?signup=1" class="btn-primary">Try it free →</a>
-    </div>
-    <div class="faq-right">
-      <details class="faq-item" open>
-        <summary>How precise is the timing?</summary>
-        <p>The scheduler checks for due work every 30 seconds, then starts the request as soon as a worker picks it up. It suits reports, reminders, cache refreshes and routine automations; it is not intended for sub-second or safety-critical timing.</p>
-      </details>
-      <details class="faq-item">
-        <summary>What happens when a request fails?</summary>
-        <p>A timeout, connection error or non-2xx response is recorded as a failed execution. Requests stop after 30 seconds. After three consecutive scheduled failures, we email the account owner; Submit Later does not automatically retry a failed request.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Can I pass authentication headers?</summary>
-        <p>Yes. You can add Authorization, X-API-Key, Content-Type and other request headers. They are stored with the job configuration, so use scoped, revocable credentials rather than a primary account secret.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Does my server need to be publicly reachable?</summary>
-        <p>Yes. The endpoint must use HTTPS and resolve to a public network address. Localhost, private networks and link-local destinations are blocked.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Can I use this instead of Vercel's cron?</summary>
-        <p>Yes. Point a job at the public HTTPS URL for your function. Create separate jobs when staging and production need different endpoints or schedules.</p>
-      </details>
-      <details class="faq-item">
-        <summary>How long are execution logs kept?</summary>
-        <p>Execution logs expire after 90 days. Each record includes the job name, request time, HTTP status, duration, any connection error and up to 1 KB of response text.</p>
-      </details>
-    </div>
-  </div>
-</section>
-
-<!-- FINAL CTA -->
-<section class="final-cta">
-  <div class="section-inner fc-inner">
-    <div class="fc-code-block">
-      <span class="fcb-comment"># Your current cron setup</span>
-      <span class="fcb-cmd">0 9 * * * curl -s https://api.myapp.com/cron 2&gt;/dev/null</span>
-      <span class="fcb-comment"># Logging and alerts still need to be built</span>
-    </div>
-    <svg class="fc-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12l7 7 7-7" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round"/></svg>
-    <div class="fc-code-block fc-code-good">
-      <span class="fcb-comment"># With Submit Later Webhook Scheduler</span>
-      <span class="fcb-cmd">Job: POST api.myapp.com/cron · Daily 9:00 AM</span>
-      <span class="fcb-line"><span class="fcb-ok">✓</span> Logged · Failure email · Pause or run now · Dashboard</span>
-    </div>
-    <a href="/scheduler/app/?signup=1" class="btn-primary btn-lg" style="margin-top:32px">
-      Schedule your first request free
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-    <p class="fc-trust">Free plan · No credit card · Upgrade only when you need more jobs</p>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <a href="/" class="nav-logo">
-        <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-          <rect width="28" height="28" rx="8" fill="#6366f1"/>
-          <circle cx="14" cy="14" r="5" stroke="white" stroke-width="2"/>
-          <path d="M14 9V14l3 3" stroke="white" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <span>Submit Later Webhook Scheduler</span>
-      </a>
-      <p>Hosted HTTPS webhook scheduling with a clear execution history.</p>
-    </div>
-    <div class="footer-links">
-      <div class="fl-col">
-        <div class="fl-head">Product</div>
-        <a href="#how">How it works</a>
-        <a href="#features">Features</a>
-        <a href="#pricing">Pricing</a>
-        <a href="/scheduler/app/">Dashboard</a>
-      </div>
-      <div class="fl-col">
-        <div class="fl-head">Company</div>
-        <a href="https://submitlater.co.in">Submit Later</a>
-        <a href="https://submitlater.co.in/forms/">Forms product</a>
-        <a href="https://submitlater.co.in/privacy.html">Privacy</a>
-        <a href="https://submitlater.co.in/contact.html">Contact</a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Submit Later. All rights reserved.</span>
-    <span>A product of <a href="https://submitlater.co.in">Submit Later</a></span>
-  </div>
+  <div class="wrap copy"><span>© 2026 Submit Later. All rights reserved.</span><span>Fill it now. Send it later.</span></div>
 </footer>
-
-<script src="site.js?v=20261103-currency"></script>
+<script src="/site.js?v=20261104-products"></script>
 </body>
 </html>

@@ -1,55 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta http-equiv="refresh" content="5;url=/account.html#forms">
-  <title>Opening Timed Forms — Submit Later</title>
-  <style>
-    :root { color-scheme: light dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    * { box-sizing: border-box; }
-    body { min-height: 100vh; min-height: 100dvh; margin: 0; display: grid; place-items: center; padding: 24px; background: #0b0b14; color: #f7f7ff; }
-    main { width: min(100%, 500px); padding: clamp(28px, 7vw, 48px); border: 1px solid rgba(255,255,255,.12); border-radius: 22px; background: #151526; box-shadow: 0 24px 80px rgba(0,0,0,.35); text-align: center; }
-    .mark { width: 48px; height: 48px; margin: 0 auto 22px; display: grid; place-items: center; border-radius: 14px; background: #6366f1; font-size: 24px; font-weight: 800; }
-    h1 { margin: 0 0 12px; font-size: clamp(26px, 7vw, 36px); line-height: 1.15; }
-    p { margin: 0 0 24px; color: #b8b8d0; line-height: 1.65; }
-    a { display: inline-flex; min-height: 46px; align-items: center; justify-content: center; padding: 11px 20px; border-radius: 10px; background: #6366f1; color: #fff; font-weight: 700; text-decoration: none; }
-    a:focus-visible { outline: 3px solid #c7d2fe; outline-offset: 3px; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="refresh" content="5;url=/account.html#forms">
+<title>Opening Timed Forms | Submit Later</title>
+<script src="/theme.js"></script>
+<link rel="stylesheet" href="/style.css?v=20261104-products">
 </head>
-<body>
-  <main>
-    <div class="mark" aria-hidden="true">↗</div>
-    <h1>Timed Forms has moved</h1>
-    <p id="migration-status" role="status" aria-live="polite">Opening the Timed Forms dashboard in your Submit Later account.</p>
-    <a href="/account.html#forms">Open Timed Forms</a>
-    <noscript><p>JavaScript is off, so use the button above to continue.</p></noscript>
-  </main>
-  <script>
-    (() => {
-      const destination = '/account.html#forms';
-      const isSession = value => value && typeof value === 'object' && !Array.isArray(value)
-        && typeof value.refreshToken === 'string' && value.refreshToken.length > 0;
-      const read = key => {
-        try { return JSON.parse(localStorage.getItem(key) || 'null'); }
-        catch { return null; }
-      };
-
-      try {
-        const current = read('sl-session');
-        const legacy = read('sl-forms-session');
-        if (!isSession(current) && isSession(legacy)) {
-          localStorage.setItem('sl-session', JSON.stringify(legacy));
-          if (isSession(read('sl-session'))) localStorage.removeItem('sl-forms-session');
-        }
-      } catch {
-        const status = document.getElementById('migration-status');
-        if (status) status.textContent = 'Your browser blocked session migration. You can still continue and sign in again.';
-      }
-
-      location.replace(destination);
-    })();
-  </script>
+<body data-product="forms">
+<main class="wrap page-body"><section class="prose">
+<a class="brand" href="/index.html">Submit Later</a>
+<h1>Timed Forms is in your account dashboard</h1>
+<p id="migration-status" role="status">Opening Timed Forms with your shared Submit Later login and theme.</p>
+<a class="btn primary" id="continue-product" href="/account.html#forms">Continue to Timed Forms</a>
+<noscript><p>Use the button above to continue to your account.</p></noscript>
+</section></main>
+<script src="/product-redirect.js?v=20261104-products"></script>
 </body>
 </html>

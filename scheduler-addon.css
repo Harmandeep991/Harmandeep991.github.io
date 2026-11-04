@@ -808,3 +808,11 @@
   .sc-detail-stats     { grid-template-columns: repeat(2, 1fr); }
   .sc-sched-type-grid  { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Shared dashboard controls retained from the former standalone scheduler. */
+.sc-list-tools { display:flex; align-items:flex-start; gap:16px; justify-content:space-between; margin:0 0 20px; }
+.sc-manage-jobs { max-width:340px; font-size:13px; }
+.sc-manage-jobs summary { cursor:pointer; color:var(--muted); padding:8px 0; }
+.sc-log-filters { display:flex; flex-wrap:wrap; gap:16px; margin:20px 0; }
+.sc-log-filters label { display:grid; gap:6px; color:var(--muted); font-size:13px; }
+.sc-log-filters select { max-width:100%; padding:8px 12px; background:var(--card); color:var(--fg); border:1px solid var(--line); border-radius:8px; }

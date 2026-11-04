@@ -9,6 +9,46 @@ const PLAN_CATALOG_URL = 'https://api.submitlater.co.in/plans';
 // home page. While empty, the reviews section stays hidden.
 const BACKEND_URL = '';
 
+function hasSiteSession() {
+  try {
+    const value = JSON.parse(localStorage.getItem('sl-session'));
+    return typeof value?.refreshToken === 'string' && value.refreshToken.length > 0;
+  } catch { return false; }
+}
+
+function planForLink(link) {
+  if (link.dataset.planAnnual) return document.body.dataset.billing === 'monthly' ? link.dataset.planMonthly : link.dataset.planAnnual;
+  const url = new URL(link.getAttribute('href') || '/', location.href);
+  return link.dataset.planId || url.searchParams.get('plan') || url.searchParams.get('buy');
+}
+
+// Root-relative destinations work on the main site and both product URL aliases.
+// A second tab's login/logout updates these links without reloading the page.
+function syncAccountLinks() {
+  const signedIn = hasSiteSession();
+  document.querySelectorAll('[data-product-entry]').forEach(link => {
+    const product = link.dataset.productEntry;
+    if (!['forms', 'scheduler'].includes(product)) return;
+    link.dataset.guestLabel ||= link.textContent.trim();
+    link.href = signedIn ? `/account.html#${product}` : `/${link.dataset.auth === 'login' ? 'login' : 'signup'}.html?next=${encodeURIComponent(`account.html#${product}`)}`;
+    link.textContent = signedIn ? link.dataset.signedInLabel : link.dataset.guestLabel;
+  });
+  document.querySelectorAll('.nav-login:not([data-product-entry])').forEach(link => {
+    link.href = signedIn ? '/account.html' : '/login.html';
+    link.textContent = signedIn ? 'Account' : 'Log in';
+  });
+  document.querySelectorAll('[data-plan-link]').forEach(link => {
+    const planId = planForLink(link);
+    if (!planId) return;
+    link.dataset.planId = planId;
+    if (globalThis.SLPlanCatalogue) SLPlanCatalogue.syncPlanLink(link, planId);
+    else link.href = `${signedIn ? '/account.html?buy=' : '/signup.html?plan='}${encodeURIComponent(planId)}`;
+  });
+}
+addEventListener('storage', event => { if (event.key === 'sl-session' || event.key === null) syncAccountLinks(); });
+addEventListener('pageshow', syncAccountLinks);
+addEventListener('focus', syncAccountLinks);
+
 if (STORE_URL) {
   document.querySelectorAll('[data-store-link]').forEach((a) => {
     a.href = STORE_URL;
@@ -38,10 +78,6 @@ async function hydratePlanCatalogue() {
     document.querySelectorAll('[data-plan-currency-code]').forEach((element) => {
       element.textContent = currency;
     });
-    const signedIn = (() => {
-      try { return !!JSON.parse(localStorage.getItem('sl-session'))?.refreshToken; } catch { return false; }
-    })();
-
     const syncPlanLink = (link, planId) => {
       const plan = plans.get(planId);
       if (!plan) return;
@@ -54,7 +90,7 @@ async function hydratePlanCatalogue() {
         link.textContent = 'Currently unavailable';
         return;
       }
-      link.href = `${signedIn ? 'account.html?buy=' : 'signup.html?plan='}${encodeURIComponent(planId)}`;
+      link.href = `${hasSiteSession() ? '/account.html?buy=' : '/signup.html?plan='}${encodeURIComponent(planId)}`;
       link.removeAttribute('aria-disabled');
       link.removeAttribute('tabindex');
       link.classList.remove('is-disabled');
@@ -97,10 +133,7 @@ async function hydratePlanCatalogue() {
     });
 
     document.querySelectorAll('[data-plan-link]').forEach((link) => {
-      const billing = document.body.dataset.billing || 'annual';
-      const planId = link.dataset.planAnnual
-        ? billing === 'monthly' ? link.dataset.planMonthly : link.dataset.planAnnual
-        : new URL(link.getAttribute('href'), location.href).searchParams.get('plan');
+      const planId = planForLink(link);
       if (planId) syncPlanLink(link, planId);
     });
 
@@ -109,7 +142,7 @@ async function hydratePlanCatalogue() {
       try {
         const schema = JSON.parse(structured.textContent);
         schema.offers = [...plans.values()]
-          .filter((plan) => plan.active !== false)
+          .filter((plan) => plan.active !== false && (!document.body.dataset.product || plan.product === document.body.dataset.product))
           .map((plan) => ({
             '@type': 'Offer',
             name: plan.name,
@@ -128,22 +161,7 @@ async function hydratePlanCatalogue() {
 
 hydratePlanCatalogue();
 
-// Signed in (see app.js)? Show "Account" instead of "Log in", and send the
-// pricing buttons straight to checkout instead of sign-up.
-let hasSession = false;
-try {
-  hasSession = !!JSON.parse(localStorage.getItem('sl-session'))?.refreshToken;
-} catch {}
-if (hasSession) {
-  document.querySelectorAll('.nav-login').forEach((a) => {
-    a.href = 'account.html';
-    a.textContent = 'Account';
-  });
-  document.querySelectorAll('[data-plan-link]').forEach((a) => {
-    const plan = new URL(a.href).searchParams.get('plan');
-    a.href = plan ? `account.html?buy=${plan}` : 'account.html';
-  });
-}
+syncAccountLinks();
 
 // Header: highlight the current page, and the menu button on small screens.
 const here = location.pathname.split('/').pop() || 'index.html';

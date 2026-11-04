@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="auth.css">
 <link rel="stylesheet" href="dashboard.css?v=20261103-feature-guides">
 <link rel="stylesheet" href="forms-addon.css">
-<link rel="stylesheet" href="scheduler-addon.css">
+<link rel="stylesheet" href="scheduler-addon.css?v=20261104-products">
 </head>
 <body data-page="account" class="dash-body">
 <svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
@@ -546,7 +546,14 @@
     <section class="view" data-view="scheduler" hidden>
       <div class="view-head sc-view-head"><div><h1>Webhook Scheduler</h1><p class="view-sub">Hosted scheduling for HTTPS requests, with a record of every run.</p><p><a href="help.html#webhooks" target="_blank" rel="noopener">Set up your first webhook →</a></p></div><button class="btn sc-new-top-btn" id="sc-new-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>New job</button></div>
       <div id="sc-usage-wrap" class="sc-usage-outer"></div>
+      <div id="sc-subview-logs" hidden>
+        <button type="button" class="sc-back-link" onclick="schedulerModule._backToList()">← Back to jobs</button>
+        <div class="sc-detail-card"><div class="sc-dc-header"><div><h2>Execution log</h2><p class="muted small">The latest 50 matching runs across your webhook jobs.</p></div><button class="sc-ghost-btn" type="button" id="sc-refresh-global">Refresh</button></div>
+        <div class="sc-log-filters"><label for="sc-log-job">Job<select id="sc-log-job"><option value="">All jobs</option></select></label><label for="sc-log-status">Result<select id="sc-log-status"><option value="">All results</option><option value="ok">Success (2xx)</option><option value="fail">Failure</option></select></label></div>
+        <div id="sc-global-logs" class="sc-logs-table" role="status" aria-live="polite"></div></div>
+      </div>
       <div id="sc-subview-list">
+        <div class="sc-list-tools"><button type="button" class="sc-ghost-btn" id="sc-show-logs">Execution log</button><details class="sc-manage-jobs"><summary>Manage jobs</summary><p class="muted small">Remove all your saved webhook jobs and their execution logs. This cannot be undone.</p><button type="button" class="sc-ghost-btn sc-btn-danger" id="sc-delete-all" disabled>Delete all jobs</button></details></div>
         <div id="sc-list" class="sc-grid"></div>
         <div id="sc-empty" class="sc-empty-state" hidden>
           <div class="sc-es-icon"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect width="48" height="48" rx="14" fill="rgba(99,102,241,.12)"/><circle cx="24" cy="24" r="9" stroke="#6366f1" stroke-width="2.2"/><path d="M24 16v8l5 5" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 36h4M30 36h4" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" opacity=".4"/></svg></div>
@@ -634,27 +641,14 @@
   // Default to the products hub when no specific view is requested
   if (!location.hash || location.hash === '#') location.hash = '#hub';
 
-  // Pass the current session token to the forms/scheduler sub-apps via localStorage
-  // so users don't have to log in again. The sub-apps read 'sl-session' on init.
-  function passTokenToProduct(e, href) {
-    try {
-      const s = JSON.parse(localStorage.getItem('sl-session'));
-      if (s?.refreshToken) {
-        // The sub-apps check 'sl-session' before showing their own login screen
-        // Nothing extra to do — token is already in localStorage under 'sl-session'
-      }
-    } catch {}
-    // Allow normal navigation to proceed
-  }
-
   // Populate the hub greeting with the user's name once app.js loads the account
   document.addEventListener('sl:account-loaded', function(e) {
     const el = document.getElementById('hub-hello');
     if (el && e.detail?.name) el.textContent = 'Welcome back, ' + e.detail.name.split(' ')[0];
   });
 </script>
-<script src="app.js?v=20261103-feature-guides"></script>
+<script src="app.js?v=20261104-products"></script>
 <script src="forms-module.js?v=20261103-google-status"></script>
-<script src="scheduler-module.js?v=20261102-dashboard-status"></script>
+<script src="scheduler-module.js?v=20261104-products"></script>
 </body>
 </html>
