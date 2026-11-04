@@ -346,11 +346,11 @@
         <section id="webhooks" aria-labelledby="webhooks-title">
           <p class="guide-eyebrow">Web tool · runs on the server</p>
           <h2 id="webhooks-title">Schedule an HTTPS request</h2>
-          <div class="guide-example"><b>Example: start a weekday report</b><p>Have your own reporting service generate a summary at 8:30 AM on weekdays. First use a test endpoint you control so you can inspect the request.</p></div>
+          <div class="guide-example"><b>Example: start a daily report</b><p>Have your own reporting service generate a summary at 8:30 AM each day. First use a test endpoint you control so you can inspect the request.</p></div>
           <ol class="guide-steps">
             <li>Open <a href="account.html#scheduler" target="_blank" rel="noopener">Webhook Scheduler in your account</a> and click <b>New job</b>.</li>
             <li>In <b>Request</b>, name the job and enter the full HTTPS endpoint. Select the method your service expects, such as GET or POST. Add its required headers and request body.</li>
-            <li>In <b>Schedule</b>, choose a one-time or recurring schedule and its timezone. Review the next-run date and time. Use weekdays for the report example.</li>
+            <li>In <b>Schedule</b>, choose a one-time or recurring schedule and its timezone. Review the next-run date and time. Choose Daily for the report example.</li>
             <li>Review and save the job. Open its details and check the request and schedule before letting it run.</li>
             <li>To check the integration immediately, use <b>Run now</b> with your test endpoint. This sends a real request. Inspect the execution log's status, duration and response preview.</li>
             <li>Check the receiving service for the expected report or event. Use <b>Pause</b> to stop future scheduled runs while changing or troubleshooting the job, then resume when ready.</li>
