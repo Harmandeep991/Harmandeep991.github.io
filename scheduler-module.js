@@ -11,6 +11,8 @@ window.schedulerModule = (function () {
   let _currentJobId = null;
   let _newJobId = null;
   let _schedType = 'once';
+  let _logRequest = 0;
+  let _deletingAll = false;
 
   // ── DOM helpers ──────────────────────────────────────────────────────────────
 
@@ -31,7 +33,7 @@ window.schedulerModule = (function () {
   // ── Sub-view switcher ────────────────────────────────────────────────────────
 
   function _showSub(name) {
-    ['list', 'create', 'detail'].forEach(function (n) {
+    ['list', 'create', 'detail', 'logs'].forEach(function (n) {
       var el = $id('sc-subview-' + n);
       if (el) el.hidden = (n !== name);
     });
@@ -153,10 +155,19 @@ window.schedulerModule = (function () {
   async function _loadJobs() {
     var list  = $id('sc-list');
     var empty = $id('sc-empty');
+    var deleteAll = $id('sc-delete-all');
+    if (deleteAll) deleteAll.disabled = true;
     if (list) list.innerHTML = '<div class="sc-loading">Loading jobs…</div>';
     try {
       var data = await api('/scheduler/jobs');
       var jobs = data.jobs || [];
+      if (deleteAll) deleteAll.disabled = _deletingAll || jobs.length === 0;
+      var filter = $id('sc-log-job');
+      if (filter) {
+        var selected = filter.value;
+        filter.replaceChildren(new Option('All jobs', ''), ...jobs.map(job => new Option(job.name, job._id)));
+        if (jobs.some(job => job._id === selected)) filter.value = selected;
+      }
       _publishJobCount(jobs.length);
       if (!list) return;
       if (jobs.length === 0) {
@@ -437,7 +448,7 @@ window.schedulerModule = (function () {
     }
   }
 
-  function _renderLogs(logs) {
+  function _renderLogs(logs, showJob) {
     return logs.map(function (l) {
       var code = l.statusCode;
       var ok = code >= 200 && code < 300;
@@ -446,6 +457,7 @@ window.schedulerModule = (function () {
       var label = timeout ? 'Timeout' : (code || (l.error ? 'Error' : '—'));
       var time  = l.firedAt ? new Date(l.firedAt).toLocaleString() : '—';
       var snippet = l.error || (l.responseBody ? String(l.responseBody).slice(0, 80) : '—');
+      if (showJob) snippet = (l.jobName || 'Job') + ' · ' + snippet;
       return (
         '<div class="sc-log-row">' +
           '<span class="sc-lr-dot ' + cls + '"></span>' +
@@ -507,6 +519,47 @@ window.schedulerModule = (function () {
     }
   }
 
+  // Preserve the standalone dashboard's combined history and bulk cleanup in
+  // the shared account UI. These use the same authenticated server endpoints.
+  async function _loadGlobalLogs() {
+    var request = ++_logRequest;
+    var container = $id('sc-global-logs');
+    var query = new URLSearchParams({ limit: '50' });
+    if ($id('sc-log-job').value) query.set('jobId', $id('sc-log-job').value);
+    if ($id('sc-log-status').value) query.set('status', $id('sc-log-status').value);
+    container.textContent = 'Loading executions…';
+    try {
+      var data = await api('/scheduler/logs?' + query);
+      if (request !== _logRequest) return;
+      if (data.logs?.length) container.innerHTML = _renderLogs(data.logs, true);
+      else container.textContent = 'No executions match these filters.';
+    } catch (error) {
+      if (request === _logRequest) container.textContent = 'Could not load executions. ' + error.message;
+    }
+  }
+
+  async function _deleteAllJobs() {
+    if (_deletingAll || $id('sc-delete-all').disabled) return;
+    if (!confirm('Delete all your webhook jobs and their execution logs? This cannot be undone.')) return;
+    _deletingAll = true;
+    $id('sc-delete-all').disabled = true;
+    try {
+      await api('/scheduler/jobs', { method: 'DELETE' });
+      _currentJobId = null;
+      _newJobId = null;
+      ++_logRequest;
+      $id('sc-global-logs').textContent = '';
+      _showSub('list');
+      toast('All webhook jobs and execution logs deleted');
+    } catch (error) {
+      toast(error.message || 'Could not delete jobs');
+    } finally {
+      _deletingAll = false;
+      await _loadJobs();
+      _loadUsage();
+    }
+  }
+
   // ── Public init ───────────────────────────────────────────────────────────────
 
   function init() {
@@ -515,6 +568,11 @@ window.schedulerModule = (function () {
 
     var newBtn = $id('sc-new-btn');
     if (newBtn) newBtn.addEventListener('click', function () { showCreate(); });
+    $id('sc-show-logs')?.addEventListener('click', function () { _showSub('logs'); _loadGlobalLogs(); });
+    $id('sc-refresh-global')?.addEventListener('click', _loadGlobalLogs);
+    $id('sc-log-job')?.addEventListener('change', _loadGlobalLogs);
+    $id('sc-log-status')?.addEventListener('change', _loadGlobalLogs);
+    $id('sc-delete-all')?.addEventListener('click', _deleteAllJobs);
 
     _loadJobs();
     _loadUsage();

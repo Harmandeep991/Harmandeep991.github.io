@@ -19,7 +19,7 @@ const ACCOUNT = {
 let PLANS = {};
 let PLAN_CURRENCY = '';
 let PRODUCTS = {
-  extension: { id: 'extension', name: 'Button Scheduler', description: 'Schedule button presses, repeating actions and WhatsApp Web messages from Chrome.' },
+  extension: { id: 'extension', name: 'Button Scheduler', description: 'Schedule button presses and WhatsApp messages, or record and replay multi-step Action Flows in Chrome.' },
   forms: { id: 'forms', name: 'Timed Forms', description: 'Connect a Google Form, manage its response window and present it in a branded page or website embed.' },
   scheduler: { id: 'scheduler', name: 'Webhook Scheduler', description: 'Run HTTPS requests once or on a recurring schedule, with a clear execution history.' },
 };
@@ -269,10 +269,22 @@ function afterSignInUrl() {
   return target.pathname + target.search + target.hash;
 }
 
-function reuseExtensionSession() {
-  if (params.get('from') !== 'extension' || !session.get() || params.get('expired') === '1') return false;
+function reuseSignedInSession() {
+  const current = session.get();
+  if (typeof current?.refreshToken !== 'string' || !current.refreshToken || params.get('expired') === '1') return false;
   location.replace(afterSignInUrl());
   return true;
+}
+
+function showProductAuthContext() {
+  const target = new URL(safeNext(), location.href);
+  const key = target.pathname === '/account.html' ? target.hash.slice(1) : '';
+  const product = { forms: 'Timed Forms', scheduler: 'Webhook Scheduler' }[key];
+  if (!product) return;
+  const lead = $('.auth-card .lead-sm');
+  if (lead) lead.textContent = `${document.body.dataset.page === 'signup' ? 'Create your account' : 'Log in'} to continue to ${product}. One account works across all Submit Later tools.`;
+  const back = $('.auth-top > a');
+  if (back) { back.href = `/${key}/`; back.textContent = `← Back to ${product}`; }
 }
 
 function signedIn(result) {
@@ -321,8 +333,10 @@ function initGoogle(box) {
 // ---- Pages -----------------------------------------------------------------
 
 async function initSignup() {
-  if (reuseExtensionSession()) return;
+  showProductAuthContext();
+  if (!params.get('plan') && reuseSignedInSession()) return;
   await loadPlanCatalog();
+  if (reuseSignedInSession()) return;
   const form = $('#signup-form');
   const box = $('#form-notice');
   const plan = params.get('plan');
@@ -361,8 +375,10 @@ async function initSignup() {
   });
 }
 
-function initLogin() {
-  if (reuseExtensionSession()) return;
+async function initLogin() {
+  showProductAuthContext();
+  if (params.get('plan')) await loadPlanCatalog();
+  if (reuseSignedInSession()) return;
   const form = $('#login-form');
   const box = $('#form-notice');
   if (params.get('reset') === '1') notice(box, 'ok', 'Your password has been changed. Log in with the new one.');
@@ -554,7 +570,7 @@ function renderPlan() {
   $('#np-title').textContent = p.value;
   $('#np-bar').style.width = `${p.pct * 100}%`;
   $('#np-sub').textContent =
-    p.status === 'trial' ? 'Try every product, then keep only the ones you need.' : p.status === 'active' ? "Doesn't renew automatically." : 'Upgrade Button Scheduler for repeats, reopen mode and WhatsApp.';
+    p.status === 'trial' ? 'Try every product, then keep only the ones you need.' : p.status === 'active' ? "Doesn't renew automatically." : 'Button Scheduler Pro includes Action Flows, repeats, reopen mode and WhatsApp.';
   $('#np-cta').textContent = p.status === 'active' ? 'Add more time' : p.status === 'trial' ? 'See Pro plans' : 'Go Pro';
 
   // Overview card
@@ -579,7 +595,7 @@ function renderPlan() {
       ? 'Every Pro feature is included. After the trial you move to the free plan, or buy Pro any time; it starts when your trial ends, so you lose nothing.'
       : p.status === 'active'
         ? "Your plan doesn't renew automatically. We'll email you 3 days before it ends."
-        : 'Schedule up to 5 buttons a month for free. Pro adds unlimited schedules, reopen-and-press, repeats, WhatsApp messages and waiting for buttons to be ready.';
+        : 'Schedule up to 5 buttons a month for free. Pro adds unlimited button schedules, Action Flows, reopen-and-press, repeats and WhatsApp messages.';
   $('#pn-plan').textContent = p.planName;
   $('#pn-end-label').textContent = p.endLabel;
   $('#pn-end').textContent = p.end;
@@ -588,7 +604,7 @@ function renderPlan() {
 }
 
 const PRODUCT_FEATURES = {
-  extension: ['Unlimited button schedules', 'Reopen-and-press and repeating schedules', 'WhatsApp Web scheduling'],
+  extension: ['Unlimited button schedules', 'Record, edit and run multi-step Action Flows', 'Reopen-and-press and repeating schedules', 'WhatsApp text, photos, videos and batches'],
   forms: ['Up to 20 timed forms', 'Common question editing and managed response windows', 'Branded hosted pages and website embeds'],
   scheduler: ['More scheduled webhook jobs', 'Recurring HTTPS requests', 'Execution history and failure alerts'],
 };
@@ -724,7 +740,7 @@ const EXT_TEXT = {
   ready: {
     chip: 'Installed',
     title: 'Connect the extension to this account',
-    text: "It's installed but not signed in yet. Connect it so it can use your trial or plan.",
+    text: "Guest schedules work without a Submit Later login. Connect this installation to use your account's trial or plan.",
     value: 'Not connected',
     sub: 'Installed · one click to connect',
   },
