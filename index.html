@@ -30,7 +30,95 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap">
 <script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
-<script type="application/ld+json" id="site-structured-data">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later","applicationCategory":"BusinessApplication","operatingSystem":"Web, Google Chrome","description":"Scheduling tools for browser actions, managed Google Form response windows and HTTPS webhooks.","url":"https://submitlater.co.in/","downloadUrl":"https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc"}</script>
+<style>
+/* ── Unslop overrides ────────────────────────────────────────────────────
+   Passes: color · type · icons · motion · details
+   Applied to index.html only; style.css is shared across all pages.
+──────────────────────────────────────────────────────────────────────── */
+
+/* 1. Kicker: solid accent text instead of gradient */
+.kicker{background:none;-webkit-background-clip:initial;background-clip:initial;
+  color:var(--accent);font-weight:600;letter-spacing:.03em;text-transform:none;font-size:12.5px}
+
+/* 2. Features heading: strip gradient text */
+.section-head.glow-head h2,.glow-head h2{
+  background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--fg)}
+
+/* 3. Hero h1 em: plain white, no italic */
+.hero h1 em{background:none;-webkit-background-clip:initial;background-clip:initial;
+  color:inherit;font-style:normal}
+
+/* 4. Hero radial blobs: remove */
+.hero::after{background:none}
+
+/* 5. Features gradient wash: remove */
+#features::before{background:none}
+
+/* 6. Install band: flat accent, no decorative orb */
+.install-band{background:var(--accent);box-shadow:0 20px 48px color-mix(in srgb,var(--accent) 28%,transparent)}
+.install-band::after{display:none}
+
+/* 7. Button sweep shimmer: remove */
+.btn::after{display:none}
+
+/* 8. PRO badge: solid accent, real radius */
+.pro-badge{background:var(--accent);border-radius:6px;font-weight:600;letter-spacing:.01em}
+
+/* 9. Logo mark: flat accent */
+.logo{background:var(--accent);box-shadow:none}
+
+/* 10. Nav CTA: flat */
+.nav-cta{background:var(--accent);box-shadow:none}
+
+/* 11. Primary button: flat accent */
+.btn.primary,main .btn.primary{background:var(--accent);box-shadow:none}
+.btn.primary:hover,main .btn.primary:hover{box-shadow:none;filter:brightness(1.07)}
+
+/* 12. Active filter: flat */
+.filters button.on{background:var(--accent)}
+
+/* 13. Pricing ribbon: flat, real radius */
+.mt .rib{background:var(--accent);border-radius:6px}
+
+/* 14. Case icon box: neutral, icons inherit muted color */
+.case-ic{background:var(--soft);color:var(--muted);font-size:0;display:grid;place-items:center}
+.case-ic svg{width:20px;height:20px}
+
+/* 15. Case-btn: sentence-case label, real radius on action pill */
+.case-btn span{text-transform:none;letter-spacing:0;font-weight:500}
+.case-btn b{border-radius:8px;background:var(--accent);letter-spacing:0}
+
+/* 16. Mock-ui: flat card, no gradient surface */
+.mock-ui{background:var(--card)}
+
+/* 17. Popup card header + action button: flat accent */
+.mui-head{background:var(--accent)}
+.mui-btn{background:var(--accent)}
+
+/* 18. Gradient icon containers → single tones */
+.g1{background:#0ea5e9}.g2{background:var(--accent)}.g3{background:#8b5cf6}
+.g4{background:#059669}.g5{background:#d97706}.g-wa{background:#22c55e}
+
+/* 19. Flows mock card decorative blobs: remove */
+.flows-mock::before,.flows-mock::after{display:none}
+
+/* 20. Flows active step: no glow */
+.fm-step.fm-active{box-shadow:none;border-color:color-mix(in srgb,var(--accent) 28%,transparent)}
+.fm-dot.active{background:var(--accent);box-shadow:none}
+
+/* 21. Eyebrow: real radius */
+.eyebrow{border-radius:8px}
+.eyebrow .tag{border-radius:6px;font-weight:600}
+
+/* 22. New-badge pill → quiet text tag */
+.new-badge{border-radius:6px!important;font-weight:500!important;letter-spacing:0!important;
+  text-transform:none!important;background:var(--soft)!important;
+  color:var(--accent)!important;font-size:12px!important;padding:3px 10px!important}
+
+/* 23. Step counter: very light so it doesn't compete with content */
+.step::after{color:var(--line)}
+</style>
+<script type="application/ld+json" id="site-structured-data">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Submit Later","applicationCategory":"BusinessApplication","operatingSystem":"Web, Google Chrome","description":"Scheduling tools for browser actions, managed Google Form response windows and HTTPS webhooks.","url":"https://submitlater.co.in/","downloadUrl":"https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc","sameAs":["https://x.com/submitlater_","https://www.instagram.com/submitlater.review/"]}</script>
 </head>
 <body>
 <header class="top">
@@ -61,66 +149,60 @@
 .hc-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .hc-tab{
   flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
-  padding:8px 12px;border-radius:999px;cursor:pointer;font-family:inherit;
-  font-size:12.5px;font-weight:600;white-space:nowrap;letter-spacing:-.01em;
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
-  color:rgba(255,255,255,.65);transition:background .15s,color .15s,border-color .15s;
+  padding:8px 12px;border-radius:10px;cursor:pointer;font-family:inherit;
+  font-size:12.5px;font-weight:500;white-space:nowrap;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.6);transition:background .15s,color .15s,border-color .15s;
   position:relative;overflow:hidden
 }
-.hc-tab:hover{background:rgba(255,255,255,.18);color:rgba(255,255,255,.9)}
-.hc-tab.hc-on{background:rgba(255,255,255,.94);color:#1e1b4b;border-color:transparent}
+.hc-tab:hover{background:rgba(255,255,255,.16);color:rgba(255,255,255,.9)}
+.hc-tab.hc-on{background:rgba(255,255,255,.92);color:#111;border-color:transparent}
 .hc-prog{
-  position:absolute;bottom:0;left:0;height:3px;
-  background:#6366f1;transform:scaleX(0);transform-origin:left
+  position:absolute;bottom:0;left:0;height:2px;
+  background:#4f46e5;transform:scaleX(0);transform-origin:left
 }
 .hc-tab.hc-on .hc-prog{animation:hcprog 5s linear forwards}
 @keyframes hcprog{to{transform:scaleX(1)}}
 .hc-slide{display:none}
-.hc-slide.hc-on{display:block;animation:hcin .35s ease}
-@keyframes hcin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hc-slide.hc-on{display:block;animation:hcin .3s ease}
+@keyframes hcin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* Timed Forms slide content */
 .hcs-tf{background:#fff;border-radius:0 0 10px 10px;padding:24px 20px;font-family:inherit}
 .hcs-tf-hdr{display:flex;align-items:center;gap:10px;padding-bottom:16px;border-bottom:1px solid #eee;margin-bottom:16px}
-.hcs-tf-icon{width:36px;height:36px;background:#6741d9;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
-.hcs-tf-title{font-size:15px;font-weight:700;color:#111;margin:0}
-.hcs-tf-sub{font-size:11.5px;color:#888;margin:0}
-.hcs-tf-label{text-align:center;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888;margin:0 0 12px}
+.hcs-tf-icon{width:36px;height:36px;background:#4f46e5;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
+.hcs-tf-title{font-size:14px;font-weight:600;color:#111;margin:0}
+.hcs-tf-sub{font-size:12px;color:#666;margin:0}
+.hcs-tf-label{text-align:center;font-size:12px;font-weight:400;color:#666;margin:0 0 12px}
 .hcs-cd{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:14px}
-.hcs-cd-tile{background:#f4f1ff;border:1px solid #e2d9f3;border-radius:10px;padding:10px 6px;min-width:58px;text-align:center}
-.hcs-cd-num{font-size:24px;font-weight:800;letter-spacing:-.04em;color:#4f46e5;font-variant-numeric:tabular-nums}
-.hcs-cd-lbl{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-top:2px}
-.hcs-cd-sep{font-size:20px;font-weight:700;color:#ccc;align-self:flex-start;padding-top:10px}
+.hcs-cd-tile{background:#f1f4f9;border:1px solid #e3e8f1;border-radius:10px;padding:10px 6px;min-width:58px;text-align:center}
+.hcs-cd-num{font-size:24px;font-weight:500;letter-spacing:-.02em;color:#111;font-variant-numeric:tabular-nums}
+.hcs-cd-lbl{font-size:10px;color:#888;margin-top:3px}
+.hcs-cd-sep{font-size:18px;font-weight:400;color:#ccc;align-self:flex-start;padding-top:12px}
 .hcs-tf-note{text-align:center;font-size:12px;color:#888;margin:0 0 12px}
-.hcs-tf-lock{display:inline-flex;align-items:center;gap:5px;background:#fff0f0;color:#e53e3e;font-size:11.5px;font-weight:600;padding:5px 12px;border-radius:999px;border:1px solid #fecaca;margin:0 auto;display:flex;justify-content:center}
+.hcs-tf-lock{display:flex;align-items:center;justify-content:center;gap:5px;background:#fff0f0;color:#c62828;font-size:11.5px;font-weight:500;padding:5px 12px;border-radius:8px;border:1px solid #fecaca}
 
 /* Webhook Scheduler slide content */
-.hcs-wh{background:#0f0f17;border-radius:0 0 10px 10px;font-family:"JetBrains Mono",monospace,sans-serif;overflow:hidden}
+.hcs-wh{background:#0d1117;border-radius:0 0 10px 10px;font-family:"JetBrains Mono",ui-monospace,monospace;overflow:hidden}
 .hcs-wh-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
-.hcs-wh-dot{width:8px;height:8px;border-radius:50%;background:#10b981;flex:none;animation:whdot 2s ease-in-out infinite}
-@keyframes whdot{0%,100%{opacity:1}50%{opacity:.3}}
-.hcs-wh-name{font-size:13.5px;font-weight:700;color:#e5e7eb;flex:1}
-.hcs-wh-badge{font-size:11px;font-weight:700;background:rgba(16,185,129,.15);color:#10b981;border-radius:999px;padding:3px 10px}
-.hcs-wh-section{padding:8px 18px 4px;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.hcs-wh-dot{width:7px;height:7px;border-radius:50%;background:#3fb950;flex:none}
+.hcs-wh-name{font-size:13px;font-weight:500;color:#e6edf3;flex:1}
+.hcs-wh-badge{font-size:11px;font-weight:500;background:rgba(63,185,80,.14);color:#3fb950;border-radius:6px;padding:2px 8px}
+.hcs-wh-section{padding:10px 18px 4px;font-size:11px;font-weight:400;color:rgba(255,255,255,.3)}
 .hcs-wh-row{display:flex;align-items:center;gap:10px;padding:9px 18px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px}
 .hcs-wh-row:last-of-type{border-bottom:none}
-.hcs-wh-ok{background:rgba(16,185,129,.15);color:#10b981;font-weight:700;padding:2px 8px;border-radius:5px;font-size:11px;min-width:54px;text-align:center;flex:none}
-.hcs-wh-url{color:rgba(255,255,255,.7);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hcs-wh-dur{color:rgba(255,255,255,.35);font-size:11px;flex:none}
-.hcs-wh-time{color:rgba(255,255,255,.35);font-size:11px;flex:none;margin-left:auto}
-.hcs-wh-foot{padding:10px 18px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.45)}
-.hcs-wh-next{color:rgba(255,255,255,.75);font-weight:600}
-@keyframes rowfade{0%,100%{opacity:0;transform:translateY(-3px)}8%,88%{opacity:1;transform:none}}
-.hcs-wh-row:nth-child(1){animation:rowfade 7s ease 0s infinite}
-.hcs-wh-row:nth-child(2){animation:rowfade 7s ease .9s infinite}
-.hcs-wh-row:nth-child(3){animation:rowfade 7s ease 1.8s infinite}
-.hcs-wh-row:nth-child(4){animation:rowfade 7s ease 2.7s infinite}
+.hcs-wh-ok{background:rgba(63,185,80,.14);color:#3fb950;font-weight:500;padding:2px 8px;border-radius:5px;font-size:11px;min-width:54px;text-align:center;flex:none;font-variant-numeric:tabular-nums}
+.hcs-wh-url{color:rgba(255,255,255,.65);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hcs-wh-dur{color:rgba(255,255,255,.3);font-size:11px;flex:none;font-variant-numeric:tabular-nums}
+.hcs-wh-time{color:rgba(255,255,255,.3);font-size:11px;flex:none;margin-left:auto}
+.hcs-wh-foot{padding:10px 18px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.4)}
+.hcs-wh-next{color:rgba(255,255,255,.7);font-weight:500}
 </style>
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
       <a class="eyebrow" href="whatsapp-scheduler.html"><span>Schedule WhatsApp messages on PC</span><span class="tag">New</span></a>
-      <h1>Prepare it now.<br><em>Run it on schedule.</em></h1>
+      <h1>Prepare it now.<br>Run it on schedule.</h1>
       <p class="lead">Prepare the message, form or request now. Submit Later handles the timed action later—with focused tools for browser buttons, managed Google Form response windows and HTTPS webhooks.</p>
       <div class="cta-row">
         <a class="btn light lg" href="signup.html">Sign up free</a>
@@ -185,7 +267,7 @@
             </div>
           </div>
         </div>
-        <div class="float-card float-a" style="background:rgba(79,70,229,.92);border-color:rgba(99,102,241,.3)"><span class="ok-dot" style="background:rgba(255,255,255,.2);color:#fff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span style="color:#fff"><b>Countdown live</b><small>Shared link opens on schedule</small></span></div>
+        <div class="float-card float-a"><span class="ok-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>Countdown live</b><small>Shared link opens on schedule</small></span></div>
       </div>
 
       <!-- Slide 3: Webhook Scheduler -->
@@ -229,7 +311,7 @@
             </div>
           </div>
         </div>
-        <div class="float-card float-a" style="background:rgba(5,10,20,.9);border-color:rgba(16,185,129,.3)"><span class="ok-dot" style="background:rgba(16,185,129,.15);color:#10b981"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span style="color:#e5e7eb"><b>4 / 4 runs succeeded</b><small>Hosted scheduling</small></span></div>
+        <div class="float-card float-a"><span class="ok-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span><b>4 / 4 runs succeeded</b><small>Hosted scheduling</small></span></div>
       </div>
     </div>
   </div>
@@ -306,18 +388,18 @@
 /* Countdown mockup */
 .cd-mock{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px 28px;max-width:420px;width:100%}
 .cd-mock-header{display:flex;align-items:center;gap:10px;margin-bottom:24px}
-.cd-mock-icon{width:36px;height:36px;border-radius:10px;background:rgba(99,102,241,.14);display:flex;align-items:center;justify-content:center;color:#6366f1;flex:none}
-.cd-mock-title{font-size:15px;font-weight:700;color:var(--fg)}
+.cd-mock-icon{width:36px;height:36px;border-radius:8px;background:var(--soft);display:flex;align-items:center;justify-content:center;color:var(--accent);flex:none}
+.cd-mock-title{font-size:14px;font-weight:600;color:var(--fg)}
 .cd-mock-sub{font-size:12px;color:var(--muted)}
 .cd-tiles{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
-.cd-tile{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 10px;min-width:68px;text-align:center}
-.cd-tile-num{font-size:28px;font-weight:800;letter-spacing:-0.04em;color:var(--fg);font-variant-numeric:tabular-nums;font-family:inherit}
-.cd-tile-lbl{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px}
-.cd-sep{font-size:24px;font-weight:700;color:var(--muted);align-self:center;margin-bottom:20px}
+.cd-tile{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:14px 10px;min-width:68px;text-align:center}
+.cd-tile-num{font-size:28px;font-weight:500;letter-spacing:-0.02em;color:var(--fg);font-variant-numeric:tabular-nums;font-family:inherit}
+.cd-tile-lbl{font-size:10px;color:var(--muted);margin-top:3px}
+.cd-sep{font-size:22px;font-weight:400;color:var(--muted);align-self:center;margin-bottom:20px}
 .cd-notice{font-size:12.5px;color:var(--muted);text-align:center;margin-bottom:20px;line-height:1.5}
 .cd-open-state{display:none;text-align:center;padding:16px 0 4px}
-.cd-open-state .cd-open-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(16,185,129,.12);color:#10b981;font-size:13px;font-weight:700;border-radius:999px;padding:6px 14px;margin-bottom:14px}
-.cd-open-state a.cd-open-btn{display:inline-block;background:var(--accent);color:#fff;font-size:14px;font-weight:700;padding:10px 24px;border-radius:10px;text-decoration:none;letter-spacing:-0.01em}
+.cd-open-state .cd-open-badge{display:inline-flex;align-items:center;gap:7px;background:var(--ok-bg);color:var(--ok);font-size:13px;font-weight:500;border-radius:8px;padding:6px 14px;margin-bottom:14px}
+.cd-open-state a.cd-open-btn{display:inline-block;background:var(--accent);color:#fff;font-size:14px;font-weight:600;padding:10px 24px;border-radius:10px;text-decoration:none}
 
 /* Animate the countdown */
 @keyframes tick-sec{0%{content:"47"}10%{content:"46"}20%{content:"45"}30%{content:"44"}40%{content:"43"}50%{content:"42"}60%{content:"41"}70%{content:"40"}80%{content:"39"}90%{content:"38"}100%{content:"37"}}
@@ -328,16 +410,14 @@
 /* Webhook job mockup */
 .wh-mock{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;max-width:420px;width:100%}
 .wh-mock-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
-.wh-mock-dot{width:8px;height:8px;border-radius:50%;background:#10b981;flex:none}
-@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.35}}
-.wh-mock-dot{animation:pulse-dot 2s ease-in-out infinite}
-.wh-mock-name{font-size:14px;font-weight:700;color:var(--fg);flex:1}
-.wh-mock-badge{font-size:11.5px;font-weight:600;background:rgba(16,185,129,.12);color:#10b981;border-radius:999px;padding:3px 10px}
+.wh-mock-dot{width:7px;height:7px;border-radius:50%;background:#3fb950;flex:none}
+.wh-mock-name{font-size:14px;font-weight:500;color:var(--fg);flex:1}
+.wh-mock-badge{font-size:11.5px;font-weight:500;background:var(--ok-bg);color:var(--ok);border-radius:6px;padding:3px 10px}
 .wh-log-row{display:flex;align-items:center;gap:10px;padding:11px 20px;border-bottom:1px solid var(--line);font-size:13px}
 .wh-log-row:last-child{border-bottom:none}
-.wh-log-status{font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;min-width:52px;text-align:center;flex:none}
-.wh-log-status.ok{background:rgba(16,185,129,.12);color:#10b981}
-.wh-log-dur{color:var(--muted);font-size:12px;flex:none}
+.wh-log-status{font-size:12px;font-weight:500;padding:2px 8px;border-radius:5px;min-width:52px;text-align:center;flex:none;font-variant-numeric:tabular-nums}
+.wh-log-status.ok{background:var(--ok-bg);color:var(--ok)}
+.wh-log-dur{color:var(--muted);font-size:12px;flex:none;font-variant-numeric:tabular-nums}
 .wh-log-time{color:var(--muted);font-size:12px;margin-left:auto}
 @keyframes fade-in-row{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .wh-log-row:nth-child(1){animation:fade-in-row .4s ease .2s both}
@@ -350,14 +430,14 @@
 
 <section id="new-tools" class="block new-tools-section">
   <div class="section-head">
-    <span class="kicker new-kicker" style="background:rgba(99,102,241,.12);color:#6366f1">New · Server-side tools</span>
+    <span class="kicker">Server-side tools</span>
     <h2>Server-side timing, without a browser tab.</h2>
     <p>Timed Forms and Webhook Scheduler run from our servers, so their schedules do not depend on Chrome or your computer staying awake.</p>
   </div>
 
   <div class="spot">
     <div class="spot-text">
-      <span class="new-badge" style="display:inline-block;font-size:11.5px;font-weight:700;background:rgba(99,102,241,.12);color:#6366f1;border-radius:999px;padding:3px 11px;margin-bottom:10px;letter-spacing:.02em">NEW TOOL</span>
+      <span class="new-badge">New</span>
       <h3>Timed Forms — manage the full response window</h3>
       <p>Connect a Google Form, choose its schedule and share one branded page. Visitors see a countdown, the embedded form while it is open and a clear closed state afterward.</p>
       <ul class="ticks">
@@ -373,7 +453,7 @@
           <span class="cd-mock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></span>
           <div><div class="cd-mock-title">MBA Admissions 2026</div><div class="cd-mock-sub">api.submitlater.co.in/f/mba26</div></div>
         </div>
-        <p style="text-align:center;font-size:12.5px;font-weight:600;color:var(--muted);margin:0 0 18px;text-transform:uppercase;letter-spacing:.08em">Form opens in</p>
+        <p style="text-align:center;font-size:12px;font-weight:400;color:var(--muted);margin:0 0 18px">Form opens in</p>
         <div class="cd-tiles">
           <div class="cd-tile"><div class="cd-tile-num">00</div><div class="cd-tile-lbl">Days</div></div>
           <div class="cd-sep">:</div>
@@ -394,7 +474,7 @@
 
   <div class="spot rev">
     <div class="spot-text">
-      <span class="new-badge" style="display:inline-block;font-size:11.5px;font-weight:700;background:rgba(99,102,241,.12);color:#6366f1;border-radius:999px;padding:3px 11px;margin-bottom:10px;letter-spacing:.02em">NEW TOOL</span>
+      <span class="new-badge">New</span>
       <h3>Webhook Scheduler — HTTP requests on a schedule</h3>
       <p>Send a GET, POST, PUT, PATCH or DELETE request once, daily, weekly or on a fixed interval. Use it for an integration that needs a clock, not another always-on server.</p>
       <ul class="ticks">
@@ -411,7 +491,7 @@
           <span class="wh-mock-name">Weekly digest email</span>
           <span class="wh-mock-badge">Active</span>
         </div>
-        <div style="padding:10px 20px 6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase">Execution log</div>
+        <div style="padding:10px 20px 6px;font-size:11px;font-weight:400;color:var(--muted)">Execution log</div>
         <div class="wh-log-row">
           <span class="wh-log-status ok">200 OK</span>
           <span style="color:var(--fg);font-weight:500;font-size:13px;flex:1">POST api.myapp.com/cron/weekly</span>
@@ -479,7 +559,7 @@
 </section>
 
 <section id="features" class="block">
-  <div class="section-head glow-head">
+  <div class="section-head">
     <span class="kicker">Features</span>
     <h2>Built for the moments that matter</h2>
     <p>Prepare your work now and choose when the browser should take the next step.</p>
@@ -590,29 +670,29 @@
   </div>
   <div class="filters" role="group" aria-label="Filter use cases" hidden>
     <button type="button" class="on" data-filter="all" aria-pressed="true">All</button>
-    <button type="button" data-filter="msg" aria-pressed="false">💬 Messages &amp; posts</button>
-    <button type="button" data-filter="meet" aria-pressed="false">🎥 Meetings &amp; classes</button>
-    <button type="button" data-filter="forms" aria-pressed="false">📝 Forms &amp; sign-ups</button>
-    <button type="button" data-filter="routine" aria-pressed="false">🔁 Daily routines</button>
-    <button type="button" data-filter="work" aria-pressed="false">💼 Work</button>
+    <button type="button" data-filter="msg" aria-pressed="false">Messages</button>
+    <button type="button" data-filter="meet" aria-pressed="false">Meetings</button>
+    <button type="button" data-filter="forms" aria-pressed="false">Forms</button>
+    <button type="button" data-filter="routine" aria-pressed="false">Routines</button>
+    <button type="button" data-filter="work" aria-pressed="false">Work</button>
   </div>
   <div class="cases">
-    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true">💬</span><h3>WhatsApp messages at the right time</h3><p>Midnight birthday wishes, reminders and follow-ups, sent from WhatsApp Web. WhatsApp itself can't schedule on PC.</p><div class="case-btn"><span>Presses</span><b>Send</b></div></article>
-    <article class="case" data-cat="meet"><span class="case-ic" aria-hidden="true">🎥</span><h3>Join meetings automatically</h3><p>Google Meet, Zoom or Teams: it reopens the meeting page and presses <b>Join now</b>, every weekday if you like.</p><div class="case-btn"><span>Presses</span><b>Join now</b></div></article>
-    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true">🎓</span><h3>Registrations that open at a set time</h3><p>Course enrolment, exam forms and event sign-ups. It waits for <b>Register</b> to unlock, reloading if needed, then presses it.</p><div class="case-btn"><span>Presses</span><b>Register</b></div></article>
-    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true">🎮</span><h3>Discord and Slack messages</h3><p>Discord has no schedule button. Type the message now and it goes out when your team or server is online.</p><div class="case-btn"><span>Presses</span><b>Send</b></div></article>
-    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true">📝</span><h3>Google Forms at the deadline</h3><p>Fill the form while you have time, then schedule the extension to press Submit at the time you choose.</p><div class="case-btn"><span>Presses</span><b>Submit</b></div></article>
-    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true">✉️</span><h3>Schedule email send</h3><p>Write it tonight, send it at 9 AM from Gmail, Outlook or any webmail.</p><div class="case-btn"><span>Presses</span><b>Send</b></div></article>
-    <article class="case" data-cat="meet"><span class="case-ic" aria-hidden="true">🧑‍🏫</span><h3>Live classes and webinars</h3><p>Join a class, webinar or livestream right as it starts, without watching the clock.</p><div class="case-btn"><span>Presses</span><b>Join</b></div></article>
-    <article class="case" data-cat="routine"><span class="case-ic" aria-hidden="true">🔁</span><h3>Daily check-ins and rewards</h3><p>Press <b>Check in</b> or <b>Claim</b> on the same page every day, automatically.</p><div class="case-btn"><span>Presses</span><b>Claim</b></div></article>
-    <article class="case" data-cat="work"><span class="case-ic" aria-hidden="true">📊</span><h3>Timesheets and reports</h3><p>Submit your weekly timesheet or report at 5 PM on Friday, even if you've already left.</p><div class="case-btn"><span>Presses</span><b>Submit</b></div></article>
-    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true">📣</span><h3>Post at peak time</h3><p>Publish on LinkedIn, X, Facebook, Reddit or your blog when your audience is online.</p><div class="case-btn"><span>Presses</span><b>Post</b></div></article>
-    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true">💼</span><h3>Job applications</h3><p>Apply the moment a posting opens, or send your application at a good hour.</p><div class="case-btn"><span>Presses</span><b>Apply</b></div></article>
-    <article class="case" data-cat="routine"><span class="case-ic" aria-hidden="true">🗓️</span><h3>Weekly routines</h3><p>Send the Monday update, start the weekly export or post the weekly reminder, on repeat.</p><div class="case-btn"><span>Presses</span><b>Run</b></div></article>
-    <article class="case" data-cat="meet"><span class="case-ic" aria-hidden="true">📞</span><h3>Start or join a call</h3><p>Press <b>Call</b> or <b>Join</b> in WhatsApp Web, Slack, Discord or Teams at the agreed time.</p><div class="case-btn"><span>Presses</span><b>Join call</b></div></article>
-    <article class="case" data-cat="work"><span class="case-ic" aria-hidden="true">🚀</span><h3>Run a job from any dashboard</h3><p>Start an export, publish a release or trigger a build at a quiet hour.</p><div class="case-btn"><span>Presses</span><b>Run</b></div></article>
-    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true">🏆</span><h3>Contests and hackathons</h3><p>Enter the moment entries open, or submit right before the deadline.</p><div class="case-btn"><span>Presses</span><b>Enter</b></div></article>
-    <article class="case" data-cat="work"><span class="case-ic" aria-hidden="true">🧾</span><h3>Bills and renewals</h3><p>Press <b>Pay</b> or <b>Renew</b> on the day it's due, with everything already filled in.</p><div class="case-btn"><span>Presses</span><b>Renew</b></div></article>
+    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><h3>WhatsApp messages at the right time</h3><p>Midnight birthday wishes, reminders and follow-ups, sent from WhatsApp Web. WhatsApp itself can't schedule on PC.</p><div class="case-btn"><span>Presses</span><b>Send</b></div></article>
+    <article class="case" data-cat="meet"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l4.55-2.27A1 1 0 0 1 21 8.68v6.64a1 1 0 0 1-1.45.9L15 14M3 8h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2z"/></svg></span><h3>Join meetings automatically</h3><p>Google Meet, Zoom or Teams: it reopens the meeting page and presses <b>Join now</b>, every weekday if you like.</p><div class="case-btn"><span>Presses</span><b>Join now</b></div></article>
+    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><h3>Registrations that open at a set time</h3><p>Course enrolment, exam forms and event sign-ups. It waits for <b>Register</b> to unlock, reloading if needed, then presses it.</p><div class="case-btn"><span>Presses</span><b>Register</b></div></article>
+    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><h3>Discord and Slack messages</h3><p>Discord has no schedule button. Type the message now and it goes out when your team or server is online.</p><div class="case-btn"><span>Presses</span><b>Send</b></div></article>
+    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span><h3>Google Forms at the deadline</h3><p>Fill the form while you have time, then schedule the extension to press Submit at the time you choose.</p><div class="case-btn"><span>Presses</span><b>Submit</b></div></article>
+    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span><h3>Schedule email send</h3><p>Write it tonight, send it at 9 AM from Gmail, Outlook or any webmail.</p><div class="case-btn"><span>Presses</span><b>Send</b></div></article>
+    <article class="case" data-cat="meet"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><h3>Live classes and webinars</h3><p>Join a class, webinar or livestream right as it starts, without watching the clock.</p><div class="case-btn"><span>Presses</span><b>Join</b></div></article>
+    <article class="case" data-cat="routine"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-5.49"/></svg></span><h3>Daily check-ins and rewards</h3><p>Press <b>Check in</b> or <b>Claim</b> on the same page every day, automatically.</p><div class="case-btn"><span>Presses</span><b>Claim</b></div></article>
+    <article class="case" data-cat="work"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><h3>Timesheets and reports</h3><p>Submit your weekly timesheet or report at 5 PM on Friday, even if you've already left.</p><div class="case-btn"><span>Presses</span><b>Submit</b></div></article>
+    <article class="case" data-cat="msg"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span><h3>Post at peak time</h3><p>Publish on LinkedIn, X, Facebook, Reddit or your blog when your audience is online.</p><div class="case-btn"><span>Presses</span><b>Post</b></div></article>
+    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span><h3>Job applications</h3><p>Apply the moment a posting opens, or send your application at a good hour.</p><div class="case-btn"><span>Presses</span><b>Apply</b></div></article>
+    <article class="case" data-cat="routine"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><h3>Weekly routines</h3><p>Send the Monday update, start the weekly export or post the weekly reminder, on repeat.</p><div class="case-btn"><span>Presses</span><b>Run</b></div></article>
+    <article class="case" data-cat="meet"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11 19.79 19.79 0 0 1 1.61 2.38 2 2 0 0 1 3.59.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 7.91a16 16 0 0 0 6.09 6.09l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><h3>Start or join a call</h3><p>Press <b>Call</b> or <b>Join</b> in WhatsApp Web, Slack, Discord or Teams at the agreed time.</p><div class="case-btn"><span>Presses</span><b>Join call</b></div></article>
+    <article class="case" data-cat="work"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span><h3>Run a job from any dashboard</h3><p>Start an export, publish a release or trigger a build at a quiet hour.</p><div class="case-btn"><span>Presses</span><b>Run</b></div></article>
+    <article class="case" data-cat="forms"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span><h3>Contests and hackathons</h3><p>Enter the moment entries open, or submit right before the deadline.</p><div class="case-btn"><span>Presses</span><b>Enter</b></div></article>
+    <article class="case" data-cat="work"><span class="case-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span><h3>Bills and renewals</h3><p>Press <b>Pay</b> or <b>Renew</b> on the day it's due, with everything already filled in.</p><div class="case-btn"><span>Presses</span><b>Renew</b></div></article>
   </div>
   <p class="good-to-know"><b>Good to know:</b> Submit Later presses buttons you could press yourself. It can't solve CAPTCHAs or sign in for you, and it keeps Chrome running and your computer awake while something is scheduled. With Pro it can reopen the page itself, so the tab doesn't have to stay open.</p>
 </section>
@@ -699,6 +779,7 @@
     <div>
       <h4>Contact</h4>
       <p style="margin:0">Submit Later<br><a href="mailto:submitlater.review@gmail.com">submitlater.review@gmail.com</a></p>
+      <div class="foot-social"><a href="https://x.com/submitlater_" target="_blank" rel="noopener me" aria-label="Submit Later on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.8-6.3L6.4 22H3.3l7.3-8.3L1 2h6.3l4.4 5.8L18.9 2Zm-1.1 18h1.7L6.3 3.9H4.5L17.8 20Z"/></svg>@submitlater_</a><a href="https://www.instagram.com/submitlater.review/" target="_blank" rel="noopener me" aria-label="Submit Later on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>@submitlater.review</a></div>
     </div>
   </div>
   <div class="wrap copy"><span>© 2026 Submit Later. All rights reserved.</span><span>Fill it now. Send it later.</span></div>
