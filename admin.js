@@ -307,7 +307,7 @@
         ['PayU mode', badge(c.payu.mode === 'live' ? 'Live' : 'Test', c.payu.mode === 'live' ? 'ok' : 'warn')], ['PayU key', yes(c.payu.keySet)], ['PayU salt', yes(c.payu.saltSet)],
         ['Google sign-in', yes(c.google, 'On')], ['Keep awake (free Render)', yes(c.keepAwake, 'On')], ['Background jobs', yes(c.runJobs, 'On')],
         ['Plans', c.plans.map((p) => `${p.id}: ${money(p.amount)} for ${p.days} days`).join(' · ')], ['Free plan', `${c.freeMonthlyLimit} schedules a month`],
-        ['Extension 1.0 guest access', 'Nine shared schedules stored in each browser; not tracked or reset by admin'],
+        ['Extension 1.0 guest access', 'Twelve shared schedules stored in each browser; not tracked or reset by admin'],
         ['Extension support', h('a', { href: 'help.html#troubleshooting', target: '_blank', rel: 'noopener' }, 'Open the user troubleshooting guide')],
         ['Admins', c.admins.join(', ')],
       ];

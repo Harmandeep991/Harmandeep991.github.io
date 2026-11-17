@@ -63,7 +63,8 @@
   <h2>The short version</h2>
   <ul>
     <li>What you schedule (pages, buttons and times), and any contacts, photos and videos you add for WhatsApp, stay in Chrome on your own computer. They're never sent to us.</li>
-    <li>You can try 9 schedules across all extension features without an account. Guest usage and signup-prompt preferences stay on your device; guest scheduling does not contact our account API.</li>
+    <li>When you watch a page for changes, the extension reloads and reads that page in your browser to compare it with before. It keeps only a short fingerprint of the text on your device and never sends the page to us.</li>
+    <li>You can try 12 schedules across all extension features without an account. Guest usage and signup-prompt preferences stay on your device; guest scheduling does not contact our account API.</li>
     <li>For your account we store your name, email, a securely hashed password (or Google account ID), product access, security sessions and payment records.</li>
     <li>If you connect Google Forms, we use the permission you approve to manage only the forms you choose in Timed Forms. Google continues to receive and store every submitted response.</li>
     <li>We don't sell or share your data for advertising, and this website has no ads. It uses Google Analytics to count visits; the extension has no analytics.</li>
@@ -88,6 +89,13 @@
   <p>The scheduling tools run on a tab where you start the button picker yourself and, for Action Flows, reopen-and-press or WhatsApp scheduling, on a specific site for which you grant permission. Chrome asks when that permission has not already been granted; it remains available until you remove it in <code>chrome://extensions</code>. The extension reads enough of the page to identify the chosen button, check basic readiness and attempt the press. It does not upload what you type into forms to Submit Later.</p>
   <p>On submitlater.co.in, a connection script announces the extension's public ID so your account dashboard can find it. It does not read form contents or transmit sign-in tokens. The extension has access to api.submitlater.co.in to authenticate your account and check your plan.</p>
 
+  <h2>Alerts, sync and AI (only when you use them)</h2>
+  <ul>
+    <li><b>Email and webhook alerts:</b> when a watched page changes, the extension sends us the alert headline, a short message, and the page's address and title, so we can email you or relay it to the HTTPS webhook you entered (Discord, Slack, Telegram or your own). We keep a daily count per account for the limit (10 a day free, 200 with Pro), not the alert text; alert emails are logged like other account emails.</li>
+    <li><b>Sync across computers:</b> when you're signed in and sync is on (you can turn it off in the extension's Settings), we store your extension settings, keyword templates, auto-start rules and settings profiles, plus a random id, a name like "Chrome on macOS" and a last-seen time for each computer (3 computers free, 10 with Pro). Contacts, flows, scheduled jobs, messages and page content are never synced.</li>
+    <li><b>Write it with AI:</b> when you click it, your description and part of the page's HTML (up to 12,000 characters, without scripts) are sent to us and to <b>Google</b> (the Gemini API), which runs the AI model, to write a selector, pattern or script. We keep a daily count (5 a day free, 50 with Pro), not the text.</li>
+  </ul>
+
   <h2>Action Flows</h2>
   <p>When you start recording, the extension reads clicks and entries on the sites you allow. Website addresses, element locators, ordinary field values, steps, schedules and run history are stored on your device. Recorded values are replayed into your chosen websites; they are not uploaded to Submit Later. Recognized password, one-time code, payment and ID fields become “Ask me” steps. Review recorded values before saving; use “Ask me” for any private field. You can delete flows and their history from the Action Flows page. The optional alert chime uses an offscreen audio document; it does not record sound or access your microphone.</p>
 
@@ -106,7 +114,8 @@
   <ul>
     <li><b>Cashfree Payments</b> processes payments under its own privacy policy. We never see or store your card or bank details.</li>
     <li><b>MongoDB Atlas</b> hosts our database, and a cloud hosting provider runs our server.</li>
-    <li>An email delivery service sends our account emails.</li>
+    <li>An email delivery service sends our account emails and the watch alert emails you turn on.</li>
+    <li><b>Google</b> (the Gemini API) provides the AI model behind "Write it with AI", only for the text and page sample you send when you use it, under Google's paid API terms.</li>
     <li><b>Google</b> handles “Continue with Google”, the separate Google Forms authorization, the embedded form and every form response. Google's consent screen shows the requested permission before you connect it.</li>
   </ul>
   <p>These providers may process data in countries other than your own, under contracts that require them to protect it.</p>
@@ -114,6 +123,9 @@
   <h2>This website</h2>
   <p>When you log in, the website keeps your sign-in session in your browser's local storage. It uses Google Analytics, which sets cookies to count visits and see which pages are used (pages visited, rough location, device and browser type). Only the page address without any link codes is sent, and no account details. You can block it with your browser's privacy settings or Google's opt-out add-on (tools.google.com/dlpage/gaoptout). It doesn't use advertising cookies. The sign-up and login pages load Google's sign-in script from Google.</p>
   <p>When a live Timed Form is shown—on a Submit Later page or embedded on another website—the page loads a Google Forms iframe. Google receives the visitor's IP address, browser information, the form request and any cookies or account information the browser sends to Google under Google's own privacy policy. Forms that require a Google login can be affected by browser restrictions on third-party cookies.</p>
+
+  <h2>Anonymous usage and error reports</h2>
+  <p>Unless you turn off "Send anonymous usage and error reports" in the extension's Settings, the extension sends us a check-in when it's installed or updated and once a day (a random install ID, the extension version and the Chrome version), and a short report when a scheduled press, reopen or WhatsApp send fails or a reminder is missed (the kind of error, our own error text with button names and numbers removed, the version, and the website's domain only). It never sends web addresses, page content, form data, messages, contacts or account details, and it isn't linked to your account. When you uninstall, the page Chrome opens records the uninstall for that install ID. Error reports are deleted after 90 days; an install's check-in record is deleted 90 days after its last check-in. Private addresses (intranets, IP addresses) are never reported.</p>
 
   <h2>Problem reports and reviews</h2>
   <p>A problem report is sent only when you press "Submit problem" in the extension, and you can see everything in it first: your description, any links and email you add, and optional technical details (extension version, browser, language, time zone, settings and the site's name, never the full page address or form contents). If you share a review, your rating, comment and name (or "Anonymous") are stored, and shown publicly only if you allowed it and we approved it. Reports and reviews are stored in Google Workspace tools we operate.</p>
@@ -145,7 +157,7 @@
     </div>
     <div>
       <h4>Product</h4>
-      <a href="index.html#features">Features</a><a href="whatsapp-scheduler.html">WhatsApp scheduler</a><a href="pricing.html">Pricing</a><a href="help.html">User guide</a><a href="signup.html">Create free account</a><a href="login.html">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
+      <a href="index.html#features">Features</a><a href="whatsapp-scheduler.html">WhatsApp scheduler</a><a href="page-watcher.html">Page watcher</a><a href="pricing.html">Pricing</a><a href="help.html">User guide</a><a href="signup.html">Create free account</a><a href="login.html">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
     </div>
     <div>
       <h4>Legal</h4>

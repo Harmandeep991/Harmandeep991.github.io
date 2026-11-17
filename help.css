@@ -58,6 +58,17 @@
   .guide-nav a { padding: 8px 6px; }
 }
 @media (prefers-reduced-motion: reduce) { .guide-page { scroll-behavior: auto; } html:has(.guide-page) { scroll-behavior: auto; } }
+/* A setting with more than one control (Reminder sound: select + Test) */
+.s-ctl { display: flex; align-items: center; gap: 8px; flex: none; }
+
+/* Settings: sync and profiles */
+.sync-tools { margin-top: 10px; }
+.sync-devices, .profiles { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.sync-devices li, .profiles li { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; }
+.sync-devices li span, .profiles li span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sync-devices li small { color: var(--muted); }
+.profiles li.on { border-color: var(--accent); }
+#sync-status.err { color: var(--bad, #dc2626); }
 
 /* Match the website's tokens and card defaults without changing its other pages. */
 .guide-page { --info-bg: var(--info); }

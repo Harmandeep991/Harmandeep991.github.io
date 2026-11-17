@@ -58,7 +58,7 @@
   </div>
 </header>
 <div class="page-hero"><div class="wrap">
-  <span class="guide-eyebrow">Guides for extension 1.0 and the web tools</span>
+  <span class="guide-eyebrow">Guides for extension 1.3 and the web tools</span>
   <h1>A clear next step for every task.</h1>
   <p>Record your first flow, prepare a message or publish a timed form. Follow a complete example and check the result before making it part of your routine.</p>
 </div></div>
@@ -68,6 +68,7 @@
         <a href="#start">Choose the right tool</a>
         <a href="#button">Schedule a button press</a>
         <a href="#reopen">Reopen a page &amp; repeat</a>
+        <a href="#watch">Watch a page for changes</a>
         <a href="#flows">Record an Action Flow</a>
         <a href="#gmail">Example: prepare a Gmail draft</a>
         <a href="#build">Build &amp; edit steps</a>
@@ -91,6 +92,7 @@
             <a href="#button"><b>“I've filled it in. Send it later.”</b><span>Schedule one button press in the tab you already have open.</span><span class="guide-link">Button scheduling →</span></a>
             <a href="#reopen"><b>“Open the page and click for me.”</b><span>Revisit a saved page for a button that needs no typed information.</span><span class="guide-link">Reopen and press →</span></a>
             <a href="#flows"><b>“Repeat these steps on a website.”</b><span>Open a page, fill fields, choose options and check the result.</span><span class="guide-link">Action Flows →</span></a>
+            <a href="#watch"><b>“Tell me when this page changes.”</b><span>Reload a page on a timer and ring you, or press a button, when text appears, disappears or changes.</span><span class="guide-link">Watch a page →</span></a>
             <a href="#whatsapp"><b>“Send a WhatsApp reminder.”</b><span>Choose people, write messages and add a photo or video.</span><span class="guide-link">WhatsApp scheduling →</span></a>
           </div>
           <h3>Before your first try</h3>
@@ -116,6 +118,7 @@
             <li>Keep that tab open and unchanged until it runs. Do not refresh it, navigate away, discard the draft or sign out. Afterwards, check the website's confirmation or Sent folder.</li>
           </ol>
           <p><b>Need to change something?</b> Cancel the upcoming schedule first, update the page, then pick the button and schedule it again. Dates must be in the future and within 30 days.</p>
+          <p class="guide-note"><b>Rather press it yourself?</b> Choose <b>Remind me, I'll press it</b> in the same dialog. At the time Submit Later plays a chime, shows a notification and highlights the button. It suits buttons behind a CAPTCHA, a one-time code or a payment. One-time reminders are free and never use a schedule; repeating ones need Pro. If a scheduled press meets a CAPTCHA at the time, Submit Later doesn't press and rings you instead.</p>
         </section>
 
         <section id="reopen" aria-labelledby="reopen-title">
@@ -129,6 +132,35 @@
             <li>Click <b>Schedule</b> and check the upcoming entry. You can close the original website tab; keep Chrome running, the computer awake and your website account signed in.</li>
           </ol>
           <p class="guide-note"><b>The page opens fresh.</b> This mode does not refill an email or form you typed earlier. For tasks that need typing, several clicks or a dropdown selection, use <a href="#flows">Action Flows</a>.</p>
+        </section>
+
+        <section id="watch" aria-labelledby="watch-title">
+          <p class="guide-eyebrow">Refresh and alert</p>
+          <h2 id="watch-title">Watch a page for changes</h2>
+          <p>Use this when you are waiting for something to show up: a product back in stock, a seat or appointment opening, a status changing, or a price moving.</p>
+          <div class="guide-example"><b>Example: an appointment slot</b><p>Open the booking page, choose <b>This text disappears</b> with “No slots available”, check every minute, and let it ring you when it changes.</p></div>
+          <ol class="guide-steps">
+            <li>Open the page in a tab and click the Submit Later icon, then <b>Watch this page for changes</b>. Allow access to the site when Chrome asks: watching reloads and reads that page.</li>
+            <li>Under <b>Tell me when</b>, choose <b>This text appears</b> or <b>This text disappears</b> and type the text, or choose <b>Anything changes in an area</b> and click the part of the page to watch. You can limit text to an area too.</li>
+            <li>Choose how often to check (every second to every hour) and when to stop (1 hour to 7 days, or after a number of checks). <b>Vary the timing a little</b> spreads the checks so they look less regular.</li>
+            <li>Under <b>When it happens</b>, choose <b>Ring me</b>, or <b>Press a button for me</b> and click the button. <b>Keep watching</b> rings again on each new change.</li>
+            <li>Click <b>Start watching</b>. A small bar at the bottom of the page shows the next check, with Pause and Stop. The popup lists the watch too.</li>
+          </ol>
+          <p><b>Just want the page refreshed?</b> Choose <b>Just refresh</b> at the top of the box and pick how often, from every second to every hour. Refreshing is free and never uses a schedule. <b>Alt+Shift+R</b> starts or stops it on the current page with your last interval; <b>Alt+Shift+W</b> opens the watch box.</p>
+          <dl class="guide-definitions">
+            <dt>Several keywords, patterns and selectors</dt><dd>Put one keyword per line and choose <b>any</b> or <b>all</b> of them. Match plain text, a pattern (regular expression), a CSS selector or an XPath, in the visible text or the page source. Save a set as a template to reuse it.</dd>
+            <dt>Timing</dt><dd>Check at a random time in a range, start at a set time, or only between set hours on chosen days. <b>Stop when I click or type</b> ends it as soon as you use the page.</dd>
+            <dt>With the tab closed</dt><dd><b>Keep checking even if I close this tab</b> opens the page in the background for each check (at most once a minute), and keeps going after Chrome restarts.</dd>
+            <dt>Live and automatic</dt><dd><b>Check the moment the page changes</b> listens without reloading. <b>Also start this by itself on pages like…</b> creates an auto-start rule for addresses that match a pattern; rules are listed in the popup.</dd>
+            <dt>Email and webhook alerts</dt><dd>Under <b>When it happens</b>, tick <b>Email me</b> (to your account address) or <b>Send to a webhook</b> and paste a Discord, Slack or Telegram webhook, or any HTTPS address. <b>Send a test</b> checks it. Alerts need a free account: 10 of each a day on the free plan, 200 with Pro.</dd>
+            <dt>Actions and scripts</dt><dd>Under <b>More options → Actions</b>, tick ready-made actions to run on each check or when it happens: scroll to the bottom, click "Load more", close cookie banners and pop-ups, expand "Show more" sections, keep the session alive. With Pro you can add your own JavaScript; Chrome asks you to allow user scripts first (<b>Set up custom scripts</b> shows how).</dd>
+            <dt>Write it with AI</dt><dd>Not sure how to write a CSS selector, XPath or pattern? Click <b>Write it with AI</b>, describe it in words, and it fills it in from the page. It needs a free account: 5 suggestions a day free, 50 with Pro.</dd>
+            <dt>Keep the tab open</dt><dd>The watch uses that tab. Closing it, or restarting Chrome, stops the watch. You can still use other tabs.</dd>
+            <dt>It waits while you type</dt><dd>A check never reloads the page while you are typing or clicking in it, and never reloads a tab that has a button press scheduled.</dd>
+            <dt>More options</dt><dd><b>Hard refresh</b> skips the browser's cache. <b>Don't reload</b> only reads the page, for pages that update by themselves.</dd>
+            <dt>When it needs you</dt><dd>If the page shows a CAPTCHA, asks you to slow down, or keeps showing an error, the watch pauses and rings you. Resume it from the page bar or the popup.</dd>
+            <dt>What it costs</dt><dd>Starting a watch uses one schedule (a guest try or a free-plan schedule; unlimited on Pro). The checks are free. Up to 10 watches at a time.</dd>
+          </dl>
         </section>
 
         <section id="flows" aria-labelledby="flows-title">
@@ -296,7 +328,7 @@
         <section id="account" aria-labelledby="account-title">
           <p class="guide-eyebrow">Try first, connect when you need more</p>
           <h2 id="account-title">Guest access and your account</h2>
-          <p>You can try <b>nine schedules without signing in to Submit Later</b>, shared across button presses, reopen-and-press, WhatsApp, repeats and Action Flows. Each WhatsApp recipient, repeat occurrence or flow run (including a test) uses one schedule. Recording and editing a flow are free.</p>
+          <p>You can try <b>twelve schedules without signing in to Submit Later</b>, shared across button presses, reopen-and-press, WhatsApp, repeats and Action Flows. Each WhatsApp recipient, repeat occurrence or flow run (including a test) uses one schedule. Recording and editing a flow are free.</p>
           <ol class="guide-steps">
             <li>Check your remaining guest uses in the extension. Start with one recipient or one flow run so you can see how it works.</li>
             <li>When you need more, use the extension's account link to create an account or log in. Finish in the same Chrome profile so the website connects to this installation.</li>
@@ -314,6 +346,7 @@
             <dt>Reliable clicking</dt><dd>Uses a real mouse-style click for sites that ignore a simple click. Chrome may show a debugging banner while it works.</dd>
             <dt>Bring tab forward</dt><dd>Helps you see the page when a button task runs. Avoid interacting with a tab while an automated task is using it.</dd>
             <dt>Keep computer awake</dt><dd>Requests that the computer stay awake while work is pending. It cannot run Chrome after shutdown or guarantee that a closed laptop stays awake.</dd>
+            <dt>Sync and profiles</dt><dd>Signed in, <b>Sync across computers</b> keeps your settings, keyword templates, auto-start rules and profiles the same on every computer (3 on the free plan, 10 with Pro). Contacts, flows and messages stay on each computer. <b>Settings profiles</b> save your settings under a name, like "Work" or "Home", to switch in one click.</dd>
             <dt>Reminders, shortcut and theme</dt><dd>Choose your reminder preference and default time offset, check or change the picker shortcut, and select a colour theme or light/dark appearance.</dd>
           </dl>
         </section>
@@ -409,7 +442,7 @@
     </div>
     <div>
       <h4>Product</h4>
-      <a href="index.html#features">Features</a><a href="whatsapp-scheduler.html">WhatsApp scheduler</a><a href="pricing.html">Pricing</a><a href="help.html">User guide</a><a href="signup.html">Create free account</a><a href="login.html">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
+      <a href="index.html#features">Features</a><a href="whatsapp-scheduler.html">WhatsApp scheduler</a><a href="page-watcher.html">Page watcher</a><a href="pricing.html">Pricing</a><a href="help.html">User guide</a><a href="signup.html">Create free account</a><a href="login.html">Log in</a><a href="https://chromewebstore.google.com/detail/ofhnlgiipkjicedfmkeppphhjodjbohc?utm_source=website" data-store-link>Chrome Web Store</a>
     </div>
     <div>
       <h4>Legal</h4>
